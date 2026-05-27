@@ -20,10 +20,17 @@ English · [Tiếng Việt](./README-vi.md)
 
 ## What it looks like
 
+![Analytics + AI translation, side-by-side device duo](./examples/analytics-translation-duo.png)
+
+![Heatmaps hero with overlapping device duo](./examples/heatmaps-device-duo.png)
+
 Four templates (`hero-stack`, `hero-split`, `feature-callout`, `product-card`)
 × theme (dark / light) × size (16:9 hero, 1:1 social, 16:9 modal). A
 desktop + mobile screenshot pair auto-becomes a "device duo". Run it and look in
 `outputs/`.
+
+> The examples above use the `pagefly` brand preset. The default `neutral`
+> preset renders without a logo and with a brand-agnostic palette.
 
 ## Requirements
 

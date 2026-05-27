@@ -20,10 +20,17 @@ Render 2 kiểu:
 
 ## Trông như thế nào
 
+![Analytics + AI translation, device duo side-by-side](./examples/analytics-translation-duo.png)
+
+![Heatmaps hero, device duo overlap](./examples/heatmaps-device-duo.png)
+
 4 template (`hero-stack`, `hero-split`, `feature-callout`, `product-card`) ×
 theme (dark / light) × size (16:9 hero, 1:1 social, 16:9 modal). Một cặp
 screenshot desktop + mobile tự thành "device duo". Chạy thử rồi xem trong
 `outputs/`.
+
+> 2 ảnh trên dùng preset `pagefly`. Preset mặc định `neutral` render không có
+> logo và dùng palette trung tính.
 
 ## Yêu cầu
 
