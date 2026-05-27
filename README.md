@@ -39,7 +39,7 @@ Copy the repo into your skills folder so the `/feature-demo` command becomes
 available:
 
 ```bash
-git clone https://github.com/<you>/feature-demo-skill.git
+git clone https://github.com/notdaran/feature-demo-skill.git
 mkdir -p ~/.claude/skills/feature-demo
 cp -r feature-demo-skill/* ~/.claude/skills/feature-demo/
 cp feature-demo-skill/commands/feature-demo.md ~/.claude/commands/feature-demo.md
@@ -55,13 +55,13 @@ If you use the [`skills`](https://www.npmjs.com/package/skills) CLI and this rep
 is public, you can instead run:
 
 ```bash
-npx skills add <you>/feature-demo-skill
+npx skills add notdaran/feature-demo-skill
 ```
 
 ### Option B - standalone (no agent, just the renderer)
 
 ```bash
-git clone https://github.com/<you>/feature-demo-skill.git
+git clone https://github.com/notdaran/feature-demo-skill.git
 cd feature-demo-skill
 npm install
 npx playwright install chromium

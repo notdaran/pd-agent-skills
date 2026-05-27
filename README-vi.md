@@ -38,7 +38,7 @@ screenshot desktop + mobile tự thành "device duo". Chạy thử rồi xem tro
 Copy repo vào thư mục skills để có lệnh `/feature-demo`:
 
 ```bash
-git clone https://github.com/<ban>/feature-demo-skill.git
+git clone https://github.com/notdaran/feature-demo-skill.git
 mkdir -p ~/.claude/skills/feature-demo
 cp -r feature-demo-skill/* ~/.claude/skills/feature-demo/
 cp feature-demo-skill/commands/feature-demo.md ~/.claude/commands/feature-demo.md
@@ -54,13 +54,13 @@ Nếu bạn dùng CLI [`skills`](https://www.npmjs.com/package/skills) và repo 
 public, có thể chạy:
 
 ```bash
-npx skills add <ban>/feature-demo-skill
+npx skills add notdaran/feature-demo-skill
 ```
 
 ### Cách B - chạy độc lập (chỉ renderer, không cần agent)
 
 ```bash
-git clone https://github.com/<ban>/feature-demo-skill.git
+git clone https://github.com/notdaran/feature-demo-skill.git
 cd feature-demo-skill
 npm install
 npx playwright install chromium
