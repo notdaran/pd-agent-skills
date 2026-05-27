@@ -1,0 +1,11 @@
+Poppins is licensed under the SIL Open Font License, Version 1.1.
+
+Copyright 2020 The Poppins Project Authors
+(https://github.com/itfoundry/Poppins)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is available with a FAQ at: https://openfontlicense.org
+
+The font files in this directory (Poppins-200/400/500/700.woff2) are subsets
+redistributed under the OFL. The OFL permits redistribution and bundling with
+software. Full license text: https://openfontlicense.org
