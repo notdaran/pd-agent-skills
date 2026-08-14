@@ -1,0 +1,10 @@
+{
+  "name": "illustra",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Renderer dependencies for the illustra skill. scripts/render.mjs imports playwright-core directly, so it has to resolve from this folder.",
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

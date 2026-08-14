@@ -46,16 +46,17 @@ Bố cục cả trang nhiều thẻ. Chuỗi hoạt hình - việc đó dùng [`
 ## Yêu cầu
 
 - Node.js >= 18
-- `playwright-core` phải tìm thấy được từ chỗ chạy, kèm một bản Chromium
 
 ```bash
-npm install -g playwright-core
-npx playwright install chromium
+cd skills/illustra
+npm install
+npx playwright install chromium-headless-shell
 ```
 
-> Renderer import thẳng `playwright-core` mà skill này không có `package.json`
-> riêng, nên gói đó phải tìm thấy được từ chỗ bạn chạy - cài toàn cục, hoặc chạy
-> từ một project đã có sẵn.
+> Cần cả hai bước. `npm install` kéo về `playwright-core` mà
+> `scripts/render.mjs` import thẳng - cài toàn cục không ăn, vì Node không tra
+> thư mục global cho bare import. Lệnh thứ hai tải bản trình duyệt, npm không
+> tải hộ.
 
 ## Cài đặt
 

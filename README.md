@@ -42,12 +42,12 @@ commands into `~/.claude/commands/`. Because they are symlinks, `git pull` here
 updates the installed skills in place. Existing entries are never overwritten -
 anything already there is reported and skipped.
 
-Two skills need one extra step before first use; both readmes say so, and
+Each skill needs one setup step before first use. Its own readme says so, and
 `install.sh` prints the reminder:
 
 ```bash
 cd skills/feature-demo && npm install && npx playwright install chromium
-npm install -g playwright-core     # illustra's renderer imports it directly
+cd skills/illustra && npm install && npx playwright install chromium-headless-shell
 npx hyperframes doctor             # anima: needs Node >= 22 and FFmpeg
 ```
 

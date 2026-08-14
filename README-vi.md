@@ -41,12 +41,12 @@ slash vào `~/.claude/commands/`. Vì là symlink nên `git pull` ở đây là 
 đã cài tự cập nhật theo. Không bao giờ ghi đè cái đang có - thứ gì đã tồn tại
 thì báo ra rồi bỏ qua.
 
-Hai skill cần thêm một bước trước lần dùng đầu, readme của chúng có ghi và
-`install.sh` cũng nhắc lại:
+Mỗi skill cần một bước chuẩn bị trước lần dùng đầu, readme của từng cái có ghi
+và `install.sh` cũng nhắc lại:
 
 ```bash
 cd skills/feature-demo && npm install && npx playwright install chromium
-npm install -g playwright-core     # renderer cua illustra import thang goi nay
+cd skills/illustra && npm install && npx playwright install chromium-headless-shell
 npx hyperframes doctor             # anima: can Node >= 22 va FFmpeg
 ```
 

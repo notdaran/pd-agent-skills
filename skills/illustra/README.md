@@ -45,16 +45,17 @@ screenshots, nothing else.
 ## Requirements
 
 - Node.js >= 18
-- `playwright-core` resolvable by the renderer, plus a Chromium download
 
 ```bash
-npm install -g playwright-core
-npx playwright install chromium
+cd skills/illustra
+npm install
+npx playwright install chromium-headless-shell
 ```
 
-> The renderer imports `playwright-core` directly and this skill ships no
-> `package.json` of its own, so the package has to be resolvable from where you
-> run it - globally, or from a project that already has it.
+> Both steps are needed. `npm install` pulls `playwright-core`, which
+> `scripts/render.mjs` imports directly - a global install will not do, because
+> Node does not resolve bare imports from the global prefix. The second command
+> downloads the browser binary itself, which npm does not fetch.
 
 ## Install
 
