@@ -1,0 +1,21 @@
+<!-- name: wireframe-page | tier: A | purpose: light "page being built" preview - skeleton bars + image blocks
+     params: compose inner .il-wire__bar (text) / .il-wire__img (image block); width via inline
+     usage: the storefront / page result shown next to the editor -->
+<div class="il-wire" style="width:240px">
+  <span class="il-wire__bar" style="width:42%"></span>
+  <div class="il-wire__img" style="height:96px"></div>
+  <span class="il-wire__bar"></span>
+  <span class="il-wire__bar" style="width:80%"></span>
+  <div class="il-wire__row">
+    <div class="il-wire__img" style="height:60px"></div>
+    <div class="il-wire__img" style="height:60px"></div>
+  </div>
+</div>
+
+<style>
+  .il-wire { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: var(--r-xl); background: var(--inset-bg); box-shadow: var(--inset-shadow); }
+  .il-wire__bar { height: 8px; width: 100%; border-radius: var(--r-pill); background: var(--skeleton-accent); }
+  .il-wire__img { width: 100%; border-radius: var(--r-sm); background: var(--wire-block); }
+  .il-wire__row { display: flex; gap: 12px; }
+  .il-wire__row .il-wire__img { flex: 1; }
+</style>

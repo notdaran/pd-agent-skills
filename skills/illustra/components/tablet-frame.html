@@ -1,0 +1,30 @@
+<!-- name: tablet-frame | tier: A | purpose: tablet device shell that holds a skeleton page (or any screen content) on the dark marketing site - the compact alternative to a full-width page panel when a screenshot panel must stay the primary.
+     params: width/height inline (370x540 portrait default); children go in .il-tablet-frame__screen
+       (position:relative + overflow:hidden - skeleton content and scan-overlay clip to it).
+       Screen bg = --mkdark-page (marketing-dark skeleton palette); bezel = page navy mixed to black.
+     usage: float fully in-frame - a device cut by the stage edge reads amputated (R3 containment
+       guard). Satellites (frost-chip) may overlap its bezel. Keep <=~85% of the primary's
+       width so it stays the satellite (R1). -->
+<div class="il-tablet-frame" style="width: 370px; height: 540px;">
+  <div class="il-tablet-frame__screen">
+    <!-- screen content here (skeleton page bars, scan-overlay, ...) -->
+  </div>
+</div>
+
+<style>
+  .il-tablet-frame {
+    position: absolute;
+    padding: 12px;
+    border-radius: 26px;
+    background: color-mix(in srgb, var(--mkdark-page) 55%, black);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+  }
+  .il-tablet-frame__screen {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 16px;
+    background: var(--mkdark-page);
+    overflow: hidden;
+  }
+</style>

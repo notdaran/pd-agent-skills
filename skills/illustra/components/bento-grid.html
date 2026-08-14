@@ -1,0 +1,23 @@
+<!-- name: bento-grid | tier: A | purpose: "page being built" - dark section blocks, 1 filled hero + empty slots
+     params: add/remove .il-bento__block; mark a filled block with .is-hero; size via inline width
+     usage: the canvas/background layer of an editor illustration; overlay drag-insert + cursor on top -->
+<div class="il-bento" style="width:560px">
+  <div class="il-bento__block is-hero" style="grid-column: span 2"></div>
+  <div class="il-bento__block" style="grid-row: span 2"></div>
+  <div class="il-bento__block" style="grid-column: span 2"></div>
+  <div class="il-bento__block"></div>
+  <div class="il-bento__block"></div>
+  <div class="il-bento__block"></div>
+</div>
+
+<style>
+  .il-bento {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    padding: 20px; border-radius: var(--r-round); background: var(--grad-canvas);
+  }
+  .il-bento__block {
+    min-height: 72px; border-radius: var(--r-lg);
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+  }
+  .il-bento__block.is-hero { background: var(--brand-accent-soft); border-color: transparent; }
+</style>

@@ -1,0 +1,27 @@
+<!-- name: accent-stroke-ring | tier: A | purpose: R5 purple fade-to-transparent gradient border - separates a white panel stacked on another white panel without a heavy line
+     params: --stroke-gradient (brand var: 9D6CFF 100% at top -> 7476FF 0% at bottom, ~150deg);
+       ring thickness via ::after padding (default 2.5px); inherits the host's border-radius.
+     usage: add class il-accent-stroke to a floating-panel that sits ON another white panel. Do NOT
+       use on a panel that sits only on the lavender card bg (soft shadow alone there - R5).
+       The HOST MUST DROP ITS OWN BORDER (border: none, included below): the ring's ::after is laid
+       against the padding box, so any 1px panel border shows as a white rim OUTSIDE the purple ring.
+     impl: mask-composite ring so the gradient shows only as a border; the bottom fades to fully
+       transparent, so separation there comes from the panel's soft shadow (pure CSS,
+       HyperFrames-friendly). -->
+<div class="il-panel il-accent-stroke" style="width:418px">
+  <img src="REPLACE-WITH-SCREENSHOT.png" alt="" />
+</div>
+
+<style>
+  /* The host floating-panel is already position:absolute -> it is the ::after containing block.
+     Do NOT set position:relative here: with equal specificity it would override .il-panel's
+     absolute and drop the panel into normal flow (left/top stop working). If you ever use this
+     ring on a NON-positioned host, add position:relative to THAT host, not to .il-accent-stroke. */
+  .il-accent-stroke { border: none; } /* required - a panel border would rim the ring in white */
+  .il-accent-stroke::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2.5px;
+    background: var(--stroke-gradient); pointer-events: none;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+</style>

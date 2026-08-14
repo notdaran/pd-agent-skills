@@ -1,0 +1,82 @@
+<!-- name: ai-prompt-panel | tier: A | purpose: white in-app "describe -> generate" prompt card (the AI Smart Page input) - gradient AI tile + feature title, an uppercase field label, a textarea showing the REAL prompt the merchant types, and a mint primary action button. The config/INPUT half of a dark-marketing dual-view (pairs with generating-block / a built page as the OUTPUT half).
+     params: title text; field label; prompt text (REAL representative copy - a believable product
+       description, NOT skeleton bars: this surface IS the demo of "describe your product", so dummy
+       bars dilute it - R12); button label; width/height inline (332x296 default). Surfaces = light
+       Polaris (--inset-*); AI tile gradient --mkdark-line -> --mkdark-purple; button = --mkdark-mint
+       with --mkdark-mint-ink text (dark-marketing family) - swap to --brand-accent / --text-100 for
+       a light Mode-A card.
+     usage: the SATELLITE (config side) of a dual-view dark-marketing illustration (style-guide
+       "Dual-view palette roles"); keep it <=~85% of the built-page/output primary's width (R1) and
+       overlap the output panel at a corner (R1/R7). On a dark card bg it carries its own white
+       surface (hard rule 3). No fabricated brand names in the prompt text (R12). -->
+<div class="il-prompt" style="width: 332px; height: 296px;">
+  <div class="il-prompt__head">
+    <span class="il-prompt__tile">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <path d="M12 1C13 8 16 11 23 12C16 13 13 16 12 23C11 16 8 13 1 12C8 11 11 8 12 1Z" fill="var(--text-100)"/>
+      </svg>
+    </span>
+    <span class="il-prompt__title">AI Smart Page</span>
+  </div>
+
+  <div class="il-prompt__field-label">Describe your product</div>
+  <div class="il-prompt__box">
+    <p class="il-prompt__text">Insulated stainless steel water bottle, 24 oz. Keeps drinks cold for 24 hours, in 6 colors.<span class="il-prompt__caret"></span></p>
+  </div>
+
+  <div class="il-prompt__btn">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M12 0C13 7 17 11 24 12C17 13 13 17 12 24C11 17 7 13 0 12C7 11 11 7 12 0Z" fill="var(--mkdark-mint-ink)"/>
+    </svg>
+    Generate page
+  </div>
+</div>
+
+<style>
+  .il-prompt {
+    position: absolute;
+    border-radius: 18px;
+    background: var(--inset-bg);
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-body);
+  }
+  .il-prompt__head { position: absolute; left: 22px; top: 22px; display: flex; align-items: center; gap: 10px; }
+  .il-prompt__tile {
+    width: 30px; height: 30px; border-radius: var(--r-md);
+    background: linear-gradient(135deg, var(--mkdark-line), var(--mkdark-purple));
+    display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  }
+  .il-prompt__title { font-size: 14px; font-weight: var(--fw-bold); color: var(--inset-text-strong); }
+  .il-prompt__field-label {
+    position: absolute; left: 24px; top: 72px;
+    font-size: 10px; font-weight: var(--fw-medium);
+    color: var(--inset-text-soft); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .il-prompt__box {
+    position: absolute; left: 22px; top: 92px;
+    width: 288px; height: 112px;
+    border-radius: var(--r-md);
+    background: var(--inset-bg-2);
+    border: 1px solid var(--inset-border);
+    padding: 15px 17px;
+  }
+  /* REAL typed prompt, not skeleton bars (R12) - the text IS the demo of "describe your product" */
+  .il-prompt__text {
+    margin: 0; font-size: 12px; line-height: 19px; font-weight: 400;
+    color: var(--inset-text); letter-spacing: 0.005em;
+  }
+  .il-prompt__caret {
+    display: inline-block; width: 2px; height: 13px;
+    margin-left: 2px; vertical-align: -1px; border-radius: var(--r-pill);
+    background: var(--brand-accent);
+  }
+  .il-prompt__btn {
+    position: absolute; left: 22px; top: 224px;
+    width: 288px; height: 46px;
+    border-radius: var(--r-pill);
+    background: var(--mkdark-mint);
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--mkdark-mint) 36%, transparent);
+    font-size: 14px; font-weight: var(--fw-bold); color: var(--mkdark-mint-ink);
+  }
+</style>

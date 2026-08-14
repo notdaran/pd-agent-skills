@@ -1,0 +1,388 @@
+{
+  "summary": {
+    "vector-build": {
+      "runs": 2,
+      "objMean": 0.783,
+      "objSpread": 0.15
+    },
+    "checkup-hybrid": {
+      "runs": 2,
+      "objMean": 0.925,
+      "objSpread": 0.15
+    },
+    "cro-dark-strip": {
+      "runs": 2,
+      "objMean": 0.929,
+      "objSpread": 0.142
+    }
+  },
+  "results": [
+    {
+      "brief": "vector-build",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 248008
+        },
+        "brandVarsOnly": {
+          "pass": false,
+          "rawColorCount": 1,
+          "sample": [
+            "rgba(11,16,32,0.30)"
+          ]
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-bento",
+            "il-insert",
+            "il-cursor",
+            "il-picker"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 0,
+          "minImgs": 0
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 7.8,
+          "nodeCount": 54,
+          "band": [
+            3,
+            30
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 720,
+            "h": 520
+          },
+          "maxMarginFrac": 0.07,
+          "margins": {
+            "top": 0.027,
+            "bottom": 0.016,
+            "left": 0.006,
+            "right": 0.07
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.858
+    },
+    {
+      "brief": "vector-build",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 101041
+        },
+        "brandVarsOnly": {
+          "pass": false,
+          "rawColorCount": 3,
+          "sample": [
+            "rgba(34,197,94,0)",
+            "rgba(34,197,94,0.55)",
+            "rgba(15,23,42,0.22)"
+          ]
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-bento",
+            "il-insert",
+            "il-cursor",
+            "il-picker"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 0,
+          "minImgs": 0
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 10.7,
+          "nodeCount": 63,
+          "band": [
+            3,
+            30
+          ]
+        },
+        "tightCrop": {
+          "pass": false,
+          "stage": {
+            "w": 660,
+            "h": 470
+          },
+          "maxMarginFrac": 0.236,
+          "margins": {
+            "top": 0.035,
+            "bottom": 0.064,
+            "left": 0.048,
+            "right": 0.236
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.708
+    },
+    {
+      "brief": "checkup-hybrid",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 214936
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-panel",
+            "pc-scorecard-88.png",
+            "pc-hero",
+            "pc-faq"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 2.9,
+          "nodeCount": 17,
+          "band": [
+            2,
+            15
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 876,
+            "h": 546
+          },
+          "maxMarginFrac": 0.09,
+          "margins": {
+            "top": 0.09,
+            "bottom": 0.004,
+            "left": 0.017,
+            "right": 0.017
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 1
+    },
+    {
+      "brief": "checkup-hybrid",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 171818
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-panel",
+            "pc-scorecard-88.png",
+            "pc-hero",
+            "pc-faq"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 3.3,
+          "nodeCount": 17,
+          "band": [
+            2,
+            15
+          ]
+        },
+        "tightCrop": {
+          "pass": false,
+          "stage": {
+            "w": 860,
+            "h": 600
+          },
+          "maxMarginFrac": 0.199,
+          "margins": {
+            "top": 0.075,
+            "bottom": 0.157,
+            "left": 0.05,
+            "right": 0.199
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.85
+    },
+    {
+      "brief": "cro-dark-strip",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 646531
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "ab-",
+            "funnel",
+            "--mkdark"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 5.1,
+          "nodeCount": 25,
+          "band": [
+            3,
+            20
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 1080,
+            "h": 300
+          },
+          "maxMarginFrac": 0,
+          "margins": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 1
+    },
+    {
+      "brief": "cro-dark-strip",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 693594
+        },
+        "brandVarsOnly": {
+          "pass": false,
+          "rawColorCount": 2,
+          "sample": [
+            "rgba(8,10,40,0.5)",
+            "rgba(8,10,40,0.55)"
+          ]
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "ab-",
+            "funnel",
+            "--mkdark"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 6.3,
+          "nodeCount": 28,
+          "band": [
+            3,
+            20
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 1100,
+            "h": 300
+          },
+          "maxMarginFrac": 0,
+          "margins": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.858
+    }
+  ]
+}

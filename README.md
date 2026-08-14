@@ -1,143 +1,72 @@
-# feature-demo-skill
+# pd-agent-skills
 
-A Claude / agent **skill** that turns a real UI screenshot into a polished,
-brand-framed feature-demo image: App Store hero, social tile, "What's New"
-modal, blog header. It places your screenshot inside a designed frame with a
-heading, bullet pills, background glow, and an optional logo.
+Agent skills I use for product-development work.
 
-**The screenshot is pass-through pixels** - it is embedded unchanged. The agent
-may *look* at the image to decide layout, but never feeds it through a model to
-redraw or regenerate it. What you ship is your real UI.
+A skill is a folder of instructions - plus a renderer, where one is needed -
+that a coding agent loads on demand. They are written for Claude Code, but the
+instructions are plain Markdown, so any agent that can read a folder can use
+them.
 
-Renders two ways:
-
-- **PNG** via Playwright (headless Chromium) - a file you get instantly.
-- **Figma** via the Figma MCP - editable nodes you can fine-tune.
+What they have in common: each one encodes a piece of taste that would otherwise
+have to be re-explained every time. Not "make me an image", but the sixteen
+composition rules, the measured timing, the rule about never letting a model
+redraw a real screenshot.
 
 English · [Tiếng Việt](./README-vi.md)
 
----
+## Skills
 
-## What it looks like
+| Skill | Makes | |
+|---|---|---|
+| [`feature-demo`](./skills/feature-demo) | A real UI screenshot inside a brand frame: App Store hero, social tile, blog header | [readme](./skills/feature-demo/README.md) |
+| [`illustra`](./skills/illustra) | The illustration inside one marketing card: framed screenshots blended with hand-drawn vector UI, exported as a transparent PNG | [readme](./skills/illustra/README.md) |
+| [`anima`](./skills/anima) | A short on-brand motion piece: teaser, announcement video, animated hero | [readme](./skills/anima/README.md) |
 
-![Analytics + AI translation, side-by-side device duo](./examples/analytics-translation-duo.png)
+[`_pf-brand`](./skills/_pf-brand) is not a skill - it is the shared brand
+identity the visual skills read from.
 
-![Heatmaps hero with overlapping device duo](./examples/heatmaps-device-duo.png)
-
-Four templates (`hero-stack`, `hero-split`, `feature-callout`, `product-card`)
-× theme (dark / light) × size (16:9 hero, 1:1 social, 16:9 modal). A
-desktop + mobile screenshot pair auto-becomes a "device duo". Run it and look in
-`outputs/`.
-
-> The examples above use the `pagefly` brand preset. The default `neutral`
-> preset renders without a logo and with a brand-agnostic palette.
-
-## Requirements
-
-- Node.js >= 18
-- One Playwright Chromium download (for PNG mode)
-- A Figma MCP connection (only for Figma mode - optional)
+The three overlap at the edges, so the short version of who does what: a
+screenshot in a frame is `feature-demo`; art drawn around a screenshot is
+`illustra`; anything that moves is `anima`.
 
 ## Install
 
-### Option A - as a Claude Code skill (recommended)
+```bash
+git clone https://github.com/notdaran/pd-agent-skills.git
+cd pd-agent-skills
+./install.sh
+```
 
-Copy the repo into your skills folder so the `/feature-demo` command becomes
-available:
+`install.sh` symlinks each skill into `~/.claude/skills/` and copies any slash
+commands into `~/.claude/commands/`. Because they are symlinks, `git pull` here
+updates the installed skills in place. Existing entries are never overwritten -
+anything already there is reported and skipped.
+
+Two skills need one extra step before first use; both readmes say so, and
+`install.sh` prints the reminder:
 
 ```bash
-git clone https://github.com/notdaran/feature-demo-skill.git
-mkdir -p ~/.claude/skills/feature-demo
-cp -r feature-demo-skill/* ~/.claude/skills/feature-demo/
-cp feature-demo-skill/commands/feature-demo.md ~/.claude/commands/feature-demo.md
-
-cd ~/.claude/skills/feature-demo
-npm install
-npx playwright install chromium
+cd skills/feature-demo && npm install && npx playwright install chromium
+npm install -g playwright-core     # illustra's renderer imports it directly
+npx hyperframes doctor             # anima: needs Node >= 22 and FFmpeg
 ```
 
-Then in Claude Code: `/feature-demo <feature-spec-path> <screenshot-path>`.
+## Brand
 
-If you use the [`skills`](https://www.npmjs.com/package/skills) CLI and this repo
-is public, you can instead run:
+The visual skills are brand-neutral engines with PageFly as the default preset,
+not PageFly-only tools. To use your own brand, swap the preset inside the skill:
+`presets/` for `feature-demo`, `references/brand.css` for `illustra` and
+`anima`.
 
-```bash
-npx skills add notdaran/feature-demo-skill
-```
+That story is further along in `feature-demo`, which already ships a `neutral`
+preset selected by an environment variable, than in the other two, which
+currently ship only the PageFly values. [`_pf-brand`](./skills/_pf-brand)
+documents where the duplication currently sits.
 
-### Option B - standalone (no agent, just the renderer)
+## Licence and assets
 
-```bash
-git clone https://github.com/notdaran/feature-demo-skill.git
-cd feature-demo-skill
-npm install
-npx playwright install chromium
-```
+Code is MIT - see [LICENSE](./LICENSE).
 
-## Usage (direct CLI)
-
-```bash
-npx tsx scripts/run-render.tsx png \
-  --template=hero-stack --variation=top \
-  --screenshots=path/to/desktop.png,path/to/mobile.png \
-  --theme=dark \
-  --heading="Your headline" \
-  --bullets="First point,Second point,Third point" \
-  --size=1600x900
-```
-
-- `mode` (first arg): `png` | `figma` | `paper`
-- `--template`: `hero-stack` | `hero-split` | `feature-callout` | `product-card`
-- `--variation`: `top` / `bottom` / `left` / `right` / `upper` / `lower` (per template)
-- `--screenshots`: comma-separated paths (max 3)
-- `--theme`: `dark` | `light`
-- `--size`: `WIDTHxHEIGHT` or a preset (`app-store` 1600x900, `modal` 1200x675, `social` 1080x1080)
-- `--pair`: `overlap` (default) | `beside` - only for a desktop+mobile duo
-
-Output lands in `outputs/` (gitignored).
-
-## Brand presets
-
-Branding lives in **presets**. The default is `neutral` (a brand-agnostic slate
-+ blue palette, no logo) so it works for anyone out of the box. Switch presets
-with the `FEATURE_DEMO_BRAND` env var:
-
-```bash
-FEATURE_DEMO_BRAND=pagefly npx tsx scripts/run-render.tsx png ...
-```
-
-### Use your own brand
-
-1. Copy `presets/neutral.ts` to `presets/<yourbrand>.ts` and edit the colors,
-   fonts, radii, and `glowPalette`.
-2. To add a logo: drop `logo-light.png` + `logo-dark.png` into `assets/logos/`
-   and set `logo: { light: 'logo-light.png', dark: 'logo-dark.png' }` in your
-   preset. Leave `logo: null` for no logo.
-3. Register your preset in `brand.ts` (add it to the `presets` map).
-4. Run with `FEATURE_DEMO_BRAND=<yourbrand>`.
-
-> Fonts: the repo ships Poppins (SIL OFL, free to redistribute). To use a
-> different font, replace the `.woff2` files in `assets/fonts/` and update the
-> `@font-face` / `fonts.check` references in `renderers/shared/html-shell.ts`
-> and `renderers/playwright-renderer.tsx`.
-
-## How it fits together
-
-```
-brand.ts          -> picks a preset by FEATURE_DEMO_BRAND (default: neutral)
-presets/          -> brand token sets (neutral, pagefly, your own)
-types.ts          -> Zod schemas (AssetSpec, BrandTokens, ...)
-templates/        -> 4 layout recipes (PNG component + Figma intent builder)
-renderers/        -> playwright (PNG), figma (MCP plan), paper (stub)
-scripts/          -> run-render.tsx (CLI), agent-entry.tsx (agent helpers)
-prompts/          -> sub-prompts the agent uses (pick template, write copy, ...)
-assets/           -> fonts, logos, decor, a placeholder screenshot
-commands/         -> the /feature-demo slash command for Claude Code
-SKILL.md          -> skill manifest the agent reads
-```
-
-## License
-
-MIT (see [LICENSE](./LICENSE)). Poppins is under the SIL Open Font License 1.1.
-The PageFly logo in `assets/logos/` belongs to its owner and is only the
-optional `pagefly` preset - remove it if you are not authorized to use it.
+The PageFly logo and product screenshots inside the example folders belong to
+their owner and are there as worked examples. Remove them if you are not
+authorised to use them.

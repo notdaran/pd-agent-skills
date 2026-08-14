@@ -1,0 +1,41 @@
+<!-- name: floating-panel | tier: A | purpose: white rounded screenshot-frame that lifts a real app-UI crop off a light (Mode A) card - the Mode-A workhorse (was re-inlined every illustration)
+     params: width/height inline; built on --inset-bg / --inset-border / --inset-shadow-soft.
+       .bleed-bottom / .bleed-right -> square the corners on a bled edge (R3b).
+       inline mask -> fade a base layer toward its bleed edge (R4):
+       style="-webkit-mask-image:var(--mask-fade-bottom); mask-image:var(--mask-fade-bottom)"
+     usage: wrap a real screenshot crop; layer 2-3 panels in a STAGGERED CASCADE - offset on BOTH
+       axes, vary sizes, overlap only at a corner (~20-30%) so each panel keeps its own shadow +
+       corners (R1); never equal-size flush on a shared edge. Foreground panel on another white
+       panel? add class il-accent-stroke (accent-stroke-ring part, R5).
+       Screenshot on the light card bg washing out? add class il-matte (white matte + visible ~2px
+       slate hairline) so its edge reads - the hairline separates even where the screenshot edge is
+       white; the faint 1px --inset-border alone does not (R10).
+       BUT if this panel also has a fade-mask (the inline mask above, R4): use class il-edge-soft
+       INSTEAD of il-matte. A mask clips box-shadow, so the il-matte ring is erased entirely - the
+       soft direct border survives (stays on top+sides, dissolves at the bottom with the mask). It
+       has no white buffer so it is far softer (~0.2) than il-matte's 0.5 line, else it reads black (R10b).
+     RULE: real app UI is a screenshot crop, never vector-redrawn (intake rule 2); the screenshot
+       passes through untouched (hard rule 2). -->
+<div class="il-panel" style="width:409px">
+  <img src="REPLACE-WITH-SCREENSHOT.png" alt="" />
+</div>
+
+<style>
+  .il-panel {
+    position: absolute; overflow: hidden;
+    border-radius: var(--r-xl);
+    border: 1px solid var(--inset-border);
+    background: var(--inset-bg);
+    box-shadow: var(--inset-shadow-soft);
+  }
+  .il-panel img { display: block; width: 100%; height: auto; }
+  /* R3b - square the corners on a bled edge so the panel reads as continuing past the frame */
+  .il-panel.bleed-bottom { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .il-panel.bleed-right  { border-top-right-radius: 0;    border-bottom-right-radius: 0; }
+  /* R10 - white matte + visible outer hairline so a screenshot reads a defined edge on the light card.
+     NO fade-mask only: a mask clips this box-shadow ring entirely. */
+  .il-panel.il-matte { box-shadow: var(--panel-matte-ring), var(--inset-shadow-soft); }
+  /* R10b - for a MASKED panel: soft direct border (survives the mask; sits on the edge, fades at the
+     bottom with the screenshot). Far lighter than il-matte's line - no white buffer, else it reads black. */
+  .il-panel.il-edge-soft { border: 1.5px solid var(--panel-edge-soft); }
+</style>

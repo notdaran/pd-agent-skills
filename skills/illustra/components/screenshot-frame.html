@@ -1,0 +1,12 @@
+<!-- name: screenshot-frame | tier: A | purpose: rounded container for a REAL screenshot (passes through untouched)
+     params: img src + alt; size via inline; --r override
+     usage: embed a product / page capture; wrap with selection-frame to mark it selected.
+     RULE: never recolor or AI-redraw the screenshot (style-guide rule 2). -->
+<div class="il-shot" style="width:240px; height:300px">
+  <img src="REPLACE-WITH-SCREENSHOT.png" alt="" />
+</div>
+
+<style>
+  .il-shot { border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-lg); }
+  .il-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+</style>

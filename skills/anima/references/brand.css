@@ -1,0 +1,51 @@
+/* anima brand preset - swap this whole file to rebrand. PF is the default preset. */
+/* Components reference var(--...) only; never hardcode hex. */
+/* Layer A identity + badge palette below are SYNCED BY HAND from the shared source of truth
+   .claude/skills/_pf-brand/brand-identity.css. Edit there first, then re-sync here - the HF
+   renderer needs tokens inlined, so anima copies them rather than linking. */
+:root {
+  /* ===== Layer A - brand identity (source: feature-demo/brand.ts) ===== */
+  --brand-accent: #535AF7;        /* PF primary purple */
+  --brand-accent-soft: #A6ACFF;   /* light purple - labels, secondary */
+  --brand-cyan: #67DCF9;          /* scan beam only */
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Poppins", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;  /* diagnostic readouts */
+  --fw-extralight: 200;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* ===== Badge palette (synced from _pf-brand/brand-identity.css) =====
+     Use var(--badge-*) for chips / eyebrows; never re-invent inline. Pick by contrast,
+     never same-hue-on-hue. Soft 8px radius, Poppins, sentence case (see _pf-brand/label-rules.md). */
+  --badge-purple: #8b5cf6;
+  --badge-gray:   #94a3b8;
+  --badge-green:  #22c55e;
+  --badge-blue:   #3b82f6;
+  --badge-yellow: #eab308;
+  --badge-neutral:#e2e8f0;
+  --badge-radius: 8px;
+  --badge-text-dark: #0f172a;
+
+  /* ===== Layer B - video surface palette (video-tuned for navy legibility) ===== */
+  --bg: #030712;                  /* canvas / every scene */
+  --surface: #11141E;             /* cards / chips, tinted navy */
+  --border: #1E222B;
+  --text: rgba(255, 255, 255, 0.96);
+  --text-muted: #8A8FA3;
+
+  /* semantic gauge (score health) - concrete video hexes */
+  --sem-critical: #FF5C5C;        /* <50 */
+  --sem-warning: #FFC453;         /* 50-69 */
+  --sem-success: #22C55E;         /* >=70 */
+
+  /* radii */
+  --r-sm: 8px;
+  --r-md: 16px;
+  --r-pill: 9999px;
+
+  /* glows (purple radial depth, not heavy shadow) */
+  --glow-accent: rgba(83, 90, 247, 0.30);
+  --glow-blue: rgba(61, 107, 255, 0.20);
+}

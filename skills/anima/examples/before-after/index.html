@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-composition-variables='[
+  {"id":"title","type":"string","label":"Title","default":"Page <span style=\"color:var(--brand-accent-soft)\">Checkup</span>"},
+  {"id":"kicker","type":"string","label":"Kicker","default":"New in PageFly"},
+  {"id":"subtitle","type":"string","label":"Subtitle","default":"Score your page. Fix what&#39;s costing you conversions."},
+  {"id":"scoreFrom","type":"number","label":"Score from","default":68},
+  {"id":"scoreTo","type":"number","label":"Score to","default":88},
+  {"id":"statusBefore","type":"string","label":"Status before","default":"Almost there · reach 70"},
+  {"id":"statusAfter","type":"string","label":"Status after","default":"Conversion-ready"}
+]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* tokens synced from references/brand.css - keep in sync when the preset changes */
+      :root {
+        /* Layer A - brand identity */
+        --brand-accent: #535AF7;
+        --brand-accent-soft: #A6ACFF;
+        --brand-cyan: #67DCF9;
+        /* fonts: the renderer auto-resolves LITERAL family names only, NOT var(--font-*).
+           Use the literal names in font-family rules below; keep these in sync on rebrand. */
+        --font-heading: "Poppins", sans-serif;
+        --font-body: "Poppins", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --fw-extralight: 200;
+        --fw-regular: 400;
+        --fw-medium: 500;
+        --fw-bold: 700;
+        /* Layer B - video surface palette */
+        --bg: #030712;
+        --surface: #11141E;
+        --border: #1E222B;
+        --text: rgba(255, 255, 255, 0.96);
+        --text-muted: #8A8FA3;
+        --sem-critical: #FF5C5C;
+        --sem-warning: #FFC453;
+        --sem-success: #22C55E;
+        --r-sm: 8px;
+        --r-md: 16px;
+        --r-pill: 9999px;
+        --glow-accent: rgba(83, 90, 247, 0.30);
+        --glow-blue: rgba(61, 107, 255, 0.20);
+        /* Badge palette (synced from _pf-brand/brand-identity.css) - chips / eyebrows */
+        --badge-purple: #8b5cf6;
+        --badge-gray:   #94a3b8;
+        --badge-green:  #22c55e;
+        --badge-blue:   #3b82f6;
+        --badge-yellow: #eab308;
+        --badge-neutral:#e2e8f0;
+        --badge-radius: 8px;
+        --badge-text-dark: #0f172a;
+      }
+
+      body {
+        margin: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Poppins", sans-serif;
+        color: var(--text);
+      }
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #s1 { z-index: 1; }
+      #s2 { z-index: 2; opacity: 0; }
+      #loopveil {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        background: var(--bg);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* brand glows — diffuse blue/purple, low opacity, blended into navy */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(150px);
+      }
+      .kicker {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0;
+        color: var(--brand-accent-soft);
+      }
+      .accent-bar {
+        height: 6px;
+        background: var(--brand-accent);
+        border-radius: 9999px;
+        transform-origin: left center;
+      }
+      .scan-beam {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 150px;
+        height: 900px;
+        background: linear-gradient(90deg, rgba(103,220,249,0) 0%, rgba(103,220,249,0.5) 50%, rgba(103,220,249,0) 100%);
+        box-shadow: 0 0 70px var(--brand-cyan);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 30;
+      }
+
+      /* ===== Scene 1 — intro ===== */
+      .s1-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #s1-logo {
+        display: block;
+        height: 64px;
+        width: auto;
+        margin-bottom: 36px;
+      }
+
+      /* ===== Scene 2 — before / after ===== */
+      .topbar {
+        position: absolute;
+        top: 60px;
+        left: 80px;
+        width: 1440px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand-row { display: flex; align-items: center; gap: 20px; }
+      .brand-name { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
+      .beta-sm {
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--brand-accent-soft);
+        border: 1.5px solid rgba(166,172,255,0.4);
+        background: rgba(83,90,247,0.14);
+        border-radius: 9999px;
+        padding: 4px 16px;
+      }
+      .state-chip {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0;
+        padding: 9px 20px;
+        border-radius: var(--badge-radius, 8px);
+      }
+      .state-before { color: var(--sem-warning); border: 2px solid rgba(255,196,83,0.45); background: rgba(255,196,83,0.10); }
+      .state-after  { color: var(--sem-success); border: 2px solid rgba(34,197,94,0.5);  background: rgba(34,197,94,0.12); opacity: 0; }
+      .divider {
+        position: absolute;
+        top: 132px;
+        left: 80px;
+        width: 1440px;
+        height: 2px;
+        background: var(--border);
+        transform-origin: left center;
+      }
+
+      .card {
+        position: absolute;
+        overflow: hidden;
+        border-radius: 16px;
+        border: 2px solid var(--border);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+        background: #fff;
+      }
+      .card-page { left: 80px; top: 198px; width: 980px; height: 520px; }
+      .card-drawer { left: 1120px; top: 198px; width: 400px; height: 470px; }
+      .shot { position: absolute; top: 0; left: 0; display: block; }
+      .shot-cover { width: 100%; height: 100%; object-fit: cover; }
+      .shot-top { width: 100%; height: auto; }
+
+      /* dim overlay on the BEFORE hero (drops its prominence = low-score feel) */
+      .page-dim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.30);
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      /* page hero markers */
+      .page-mark {
+        position: absolute;
+        left: 40px;
+        top: 40px;
+        z-index: 12;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 24px;
+        font-weight: 600;
+        padding: 12px 22px;
+        border-radius: 9999px;
+        backdrop-filter: blur(4px);
+        white-space: nowrap;
+      }
+      .page-mark.before { color: var(--sem-critical); background: rgba(11,7,7,0.66); border: 2px solid rgba(255,92,92,0.6); }
+      .page-mark.after  { color: #fff; background: #15803d; border: 2px solid var(--sem-success); box-shadow: 0 4px 14px rgba(0,0,0,0.35); opacity: 0; }
+      .mk-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--sem-critical); box-shadow: 0 0 16px var(--sem-critical); flex-shrink: 0; }
+
+      /* score halo over drawer gauge */
+      .score-ring {
+        position: absolute;
+        left: 1178px;
+        top: 296px;
+        width: 270px;
+        height: 270px;
+        border-radius: 50%;
+        border: 4px solid var(--sem-warning);
+        box-shadow: 0 0 50px rgba(255,196,83,0.55);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      /* bottom emphasis bar (HTML annotation) */
+      .emphasis {
+        position: absolute;
+        left: 80px;
+        top: 752px;
+        width: 1440px;
+        height: 108px;
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 44px;
+        box-sizing: border-box;
+        z-index: 10;
+      }
+      .em-left { display: flex; align-items: center; gap: 28px; }
+      .em-label { font-size: 22px; font-weight: 500; letter-spacing: 0; color: var(--text-muted); }
+      .em-score {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 70px;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--sem-warning);
+        font-variant-numeric: tabular-nums;
+      }
+      .em-delta {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 30px;
+        font-weight: 700;
+        /* Solid family - green-on-green tint is same-hue-on-hue and fails AA (label-rules rule 5) */
+        color: var(--badge-text-dark);
+        background: color-mix(in srgb, var(--badge-green) 46%, white);
+        border: 1.5px solid transparent;
+        border-radius: 9999px;
+        padding: 8px 20px;
+        opacity: 0;
+      }
+      .em-status { position: relative; height: 56px; min-width: 460px; }
+      .em-pill {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 30px;
+        font-weight: 600;
+        padding: 11px 26px;
+        border-radius: 9999px;
+        white-space: nowrap;
+      }
+      /* Solid family (_pf-brand/badges.html): dark text on a light tint of the hue. Tint - same-hue
+         text ON its own hue - measured 2.55-2.77:1 here and fails AA (needs 3:1). Both pills share
+         the family + size and differ only by color, per label-rules rule 5. */
+      .em-pill.before { color: var(--badge-text-dark); background: color-mix(in srgb, var(--badge-yellow) 46%, white); border: 2px solid transparent; }
+      .em-pill.after  { color: var(--badge-text-dark); background: color-mix(in srgb, var(--badge-green) 46%, white); border: 2px solid transparent; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-width="1600"
+      data-height="900"
+      data-start="0"
+      data-duration="10"
+    >
+      <!-- ============ SCENE 1 — INTRO ============ -->
+      <!-- clip window: without it #s1 stays in the DOM for all 10s under #s2, and every scene-1
+           text node reports occlusion / bad contrast against scene-2 pixels. See
+           ../../references/style-guide.md -> QA gotchas. 3.0 = T2 2.3 + the 0.6s crossfade + slack. -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="3.0" data-track-index="1">
+        <div id="s1-glow-p" class="glow" data-layout-ignore style="width:920px;height:920px;background:var(--glow-accent);top:-300px;right:-200px;opacity:0;"></div>
+        <div id="s1-glow-b" class="glow" data-layout-ignore style="width:840px;height:840px;background:var(--glow-blue);bottom:-300px;left:-180px;filter:blur(175px);opacity:0;"></div>
+        <div class="s1-ring" data-layout-ignore style="position:absolute;top:50%;left:50%;width:900px;height:900px;border:2px solid rgba(166,172,255,0.12);border-radius:50%;transform:translate(-50%,-50%);"></div>
+        <div class="s1-ring" data-layout-ignore style="position:absolute;top:50%;left:50%;width:1240px;height:1240px;border:2px solid rgba(166,172,255,0.07);border-radius:50%;transform:translate(-50%,-50%);"></div>
+
+        <div class="s1-center">
+          <img id="s1-logo" src="assets/pf-logo.svg" alt="PageFly" />
+          <div id="s1-kick" class="kicker">New in PageFly</div>
+          <div id="s1-titlewrap" style="display:flex;align-items:center;gap:30px;margin-top:30px;">
+            <div id="s1-title" style="font-size:142px;font-weight:700;letter-spacing:-0.03em;line-height:1;">Page <span style="color:#a6acff;">Checkup</span></div>
+          </div>
+          <div id="s1-bar" class="accent-bar" style="width:300px;margin-top:38px;"></div>
+          <div id="s1-sub" style="font-size:42px;font-weight:200;color:rgba(255,255,255,0.9);margin-top:42px;text-align:center;width:1120px;line-height:1.3;">Score your page. Fix what's costing you conversions.</div>
+        </div>
+
+        <div id="s1-beam" style="position:absolute;left:0;top:0;width:1600px;height:6px;background:linear-gradient(90deg,rgba(103,220,249,0) 0%,var(--brand-cyan) 50%,rgba(103,220,249,0) 100%);box-shadow:0 0 34px var(--brand-cyan);opacity:0;"></div>
+      </div>
+
+      <!-- ============ SCENE 2 — BEFORE / AFTER ============ -->
+      <div id="s2" class="scene">
+        <div id="s2-glow-p" class="glow" data-layout-ignore style="width:820px;height:820px;background:rgba(83,90,247,0.24);top:-240px;left:-200px;"></div>
+        <div id="s2-glow-b" class="glow" data-layout-ignore style="width:760px;height:760px;background:rgba(61,107,255,0.18);bottom:-260px;right:-200px;filter:blur(175px);"></div>
+
+        <!-- top bar -->
+        <div class="topbar">
+          <div id="s2-brand" class="brand-row">
+            <span id="s2-brand-name" class="brand-name">Page Checkup</span>
+            <span class="beta-sm">Beta</span>
+          </div>
+          <div style="position:relative;width:240px;height:60px;">
+            <div id="s2-state-before" class="state-chip state-before">Before</div>
+            <div id="s2-state-after" class="state-chip state-after">After</div>
+          </div>
+        </div>
+        <div id="s2-divider" class="divider"></div>
+
+        <!-- page preview card -->
+        <div id="s2-page" class="card card-page">
+          <img id="s2-page-before" class="shot shot-cover" src="assets/page-before-crop.png" style="object-position:18% 50%;" />
+          <img id="s2-page-after" class="shot shot-cover" src="assets/page-after-crop.png" style="object-position:50% 0%;opacity:0;" />
+          <div id="s2-page-dim" class="page-dim"></div>
+          <div id="s2-mark-before" class="page-mark before mark-b"><span class="mk-dot"></span>Hero has no image</div>
+          <div id="s2-mark-before-2" class="page-mark before mark-b" style="top:auto;bottom:38px;"><span class="mk-dot"></span>No CTA button</div>
+          <div id="s2-mark-before-3" class="page-mark before mark-b" style="left:auto;right:40px;"><span class="mk-dot"></span>No product image</div>
+          <div id="s2-mark-after" class="page-mark after mark-a">
+            <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Image hero added
+          </div>
+          <div id="s2-mark-after-2" class="page-mark after mark-a" style="top:auto;bottom:38px;">
+            <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Clear CTAs added
+          </div>
+          <div id="s2-mark-after-3" class="page-mark after mark-a" style="left:auto;right:40px;">
+            <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Countdown timer added
+          </div>
+        </div>
+
+        <!-- drawer card (real Page Checkup panel) -->
+        <div id="s2-drawer" class="card card-drawer">
+          <img id="s2-drawer-before" class="shot shot-top" data-layout-allow-overflow src="assets/drawer-before-crop.png" />
+          <img id="s2-drawer-after" class="shot shot-top" data-layout-allow-overflow src="assets/drawer-after-88.png" style="opacity:0;" />
+        </div>
+        <div id="s2-ring" class="score-ring"></div>
+
+        <!-- bottom emphasis bar -->
+        <div id="s2-emphasis" class="emphasis">
+          <div class="em-left">
+            <span class="em-label">Health score</span>
+            <span id="s2-score" class="em-score">68</span>
+            <span id="s2-delta" class="em-delta">+20</span>
+          </div>
+          <div class="em-status">
+            <div id="s2-status-before" class="em-pill before">Almost there &middot; reach 70</div>
+            <div id="s2-status-after" class="em-pill after">
+              <svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13 L11 19 L21 6" fill="none" stroke="#0f172a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              <span id="s2-status-after-label">Conversion-ready</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="s2-beam" class="scan-beam" data-layout-allow-overflow></div>
+      </div>
+
+      <div id="loopveil"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      // Case variables (HF runtime). Standalone/validate falls back to the inline defaults below.
+      var v = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : null;
+      if (v) {
+        document.getElementById("s1-title").innerHTML = v.title;            // accent span ok
+        document.getElementById("s1-kick").textContent = v.kicker;
+        document.getElementById("s1-sub").textContent = v.subtitle;
+        var _t = document.createElement("div"); _t.innerHTML = v.title;     // tag-strip for plain name
+        document.getElementById("s2-brand-name").textContent = _t.textContent;
+        document.getElementById("s2-score").textContent = v.scoreFrom;
+        document.getElementById("s2-delta").textContent = "+" + (v.scoreTo - v.scoreFrom);
+        document.getElementById("s2-status-before").textContent = v.statusBefore;
+        document.getElementById("s2-status-after-label").textContent = v.statusAfter;
+      }
+      var scoreFrom = v ? v.scoreFrom : 68;
+      var scoreTo   = v ? v.scoreTo   : 88;
+
+      var tl = gsap.timeline({ paused: true });
+
+      var T2 = 2.3; // scene 2 enters
+
+      /* ===== SCENE 1 — INTRO (0 .. T2) ===== */
+      // glows start hidden via inline opacity:0 so the loop seam (t=10 -> t=0) lands on pure navy.
+      tl.to(["#s1-glow-p", "#s1-glow-b"], { opacity: 1, duration: 0.9, ease: "power2.out" }, 0.1);
+      tl.to("#s1-glow-p", { scale: 1.12, duration: 2.0, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.1);
+      tl.to("#s1-glow-b", { scale: 1.16, duration: 2.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.3);
+      tl.fromTo(".s1-ring", { scale: 0.84, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.3, stagger: 0.14, ease: "power2.out" }, 0.1);
+      tl.fromTo("#s1-logo", { y: -28, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0.1);
+      tl.fromTo("#s1-kick", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 0.25);
+      tl.fromTo("#s1-title", { scale: 1.14, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.4);
+      tl.fromTo("#s1-bar", { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: "power4.inOut" }, 0.95);
+      tl.fromTo("#s1-sub", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 1.1);
+      tl.fromTo("#s1-beam", { y: -30, opacity: 0 }, { y: 940, opacity: 1, duration: 1.5, ease: "sine.inOut" }, 0.5);
+      tl.set("#s1-beam", { opacity: 0 }, 2.0);
+
+      /* ===== TRANSITION 1 -> 2 : blur crossfade ===== */
+      tl.fromTo("#s2", { opacity: 0, scale: 1.04, filter: "blur(16px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, T2);
+
+      /* ===== SCENE 2 — BEFORE state ===== */
+      tl.to("#s2-glow-p", { scale: 1.14, duration: 3.0, yoyo: true, repeat: 1, ease: "sine.inOut" }, T2);
+      tl.to("#s2-glow-b", { scale: 1.18, duration: 3.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, T2 + 0.4);
+      tl.fromTo("#s2-brand", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, T2 + 0.15);
+      tl.fromTo("#s2-state-before", { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, T2 + 0.2);
+      tl.fromTo("#s2-divider", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, T2 + 0.25);
+      tl.fromTo("#s2-page", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, T2 + 0.3);
+      tl.fromTo("#s2-drawer", { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, T2 + 0.42);
+      // three BEFORE observations enter, staggered
+      tl.fromTo(".mark-b", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: "back.out(1.8)" }, T2 + 0.7);
+      tl.fromTo("#s2-emphasis", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, T2 + 0.55);
+      tl.fromTo("#s2-status-before", { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, T2 + 0.8);
+      // ring pulses over the gauge (amber). opacity set once at entrance; pulses are scale-only.
+      tl.fromTo("#s2-ring", { scale: 0.78, opacity: 0 }, { scale: 1, opacity: 0.8, duration: 0.55, ease: "back.out(1.6)" }, T2 + 0.85);
+      tl.to("#s2-ring", { scale: 1.06, duration: 0.85, yoyo: true, repeat: 1, ease: "sine.inOut" }, T2 + 1.45);
+      // observations breathe while we hold on BEFORE
+      tl.to(".mark-b", { opacity: 0.6, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, T2 + 1.35);
+
+      /* ===== FIX MOMENT (~4.6) : scan sweep -> morph to AFTER ===== */
+      var TF = 4.6;
+      tl.fromTo("#s2-beam", { x: -180, opacity: 0 }, { x: 1600, opacity: 1, duration: 1.0, ease: "sine.inOut" }, TF);
+      tl.to("#s2-beam", { opacity: 0, duration: 0.3, overwrite: "auto" }, TF + 0.85);
+
+      // page hero: plain -> image (dim lifts as the good page reveals)
+      tl.to("#s2-page-before", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, TF + 0.5);
+      tl.to("#s2-page-dim", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, TF + 0.5);
+      tl.fromTo("#s2-page-after", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.inOut" }, TF + 0.5);
+      // drawer: 68 -> 88 panel
+      tl.to("#s2-drawer-before", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, TF + 0.5);
+      tl.fromTo("#s2-drawer-after", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.inOut" }, TF + 0.5);
+
+      // page observations: red -> green checks
+      tl.to(".mark-b", { opacity: 0, duration: 0.35, ease: "power2.in" }, TF + 0.55);
+      tl.fromTo(".mark-a", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: "back.out(1.8)" }, TF + 0.7);
+
+      // state chip: BEFORE -> AFTER
+      tl.to("#s2-state-before", { opacity: 0, y: 14, duration: 0.35, ease: "power2.in" }, TF + 0.55);
+      tl.fromTo("#s2-state-after", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)" }, TF + 0.7);
+
+      // score counter 68 -> 88, amber -> green
+      var so = { n: scoreFrom };
+      tl.to(so, { n: scoreTo, duration: 1.1, ease: "power2.out", onUpdate: function () { document.getElementById("s2-score").textContent = Math.round(so.n); } }, TF + 0.55);
+      tl.to("#s2-score", { color: "#22c55e", duration: 0.8, ease: "power1.inOut" }, TF + 0.7);
+      tl.fromTo("#s2-delta", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }, TF + 1.5);
+
+      // ring: amber -> green (color only) + reassuring scale pulse
+      tl.to("#s2-ring", { borderColor: "#22c55e", boxShadow: "0 0 50px rgba(34,197,94,0.6)", duration: 0.8, ease: "power1.inOut" }, TF + 0.55);
+      tl.to("#s2-ring", { scale: 1.08, duration: 0.9, yoyo: true, repeat: 1, ease: "sine.inOut" }, TF + 1.5);
+
+      // status pill: amber -> green
+      tl.to("#s2-status-before", { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" }, TF + 0.6);
+      tl.fromTo("#s2-status-after", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, TF + 0.85);
+
+      /* ===== LOOP TAIL : fade everything to navy to match frame 0 ===== */
+      tl.fromTo("#loopveil", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.in" }, 9.3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

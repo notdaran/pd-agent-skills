@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+  PageFly badge kit - catalog / reference render.
+  Render: node ../illustra/scripts/render.mjs badges.html badges.png --width 980 --height 1180
+  Families: Tint (dark bg) / Ghost (text only) / Solid (emphasis).
+  Colors: purple, gray, green, blue, yellow (+ neutral for solid).
+  All Poppins, sentence case, no tracking, soft 8px radius.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="brand-identity.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    #stage {
+      width: 980px;
+      font-family: var(--font-body);
+      background: radial-gradient(120% 120% at 20% 0%, #131a33 0%, #0a0f1f 60%, #070a16 100%);
+      padding: 56px 60px 60px;
+      color: #fff;
+    }
+
+    .head { margin-bottom: 6px; }
+    .head h1 {
+      font-weight: var(--fw-bold);
+      font-size: 30px;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+    .head p {
+      margin-top: 8px;
+      font-weight: var(--fw-regular);
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ---- the badge component (this block is what both skills paste) ---- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-body);
+      font-weight: var(--fw-medium);
+      font-size: 15px;
+      letter-spacing: 0;
+      line-height: 1;
+      padding: 8px 14px;
+      border-radius: var(--badge-radius);
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .badge.tint  { color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border-color: color-mix(in srgb, var(--c) 34%, transparent); }
+    .badge.ghost { color: var(--c); background: transparent; border-color: transparent; padding-left: 2px; padding-right: 2px; }
+    .badge.solid { color: var(--badge-text-dark); background: color-mix(in srgb, var(--c) 46%, white); border-color: transparent; }
+    .badge .dot  { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    .c-purple { --c: var(--badge-purple); }
+    .c-gray   { --c: var(--badge-gray); }
+    .c-green  { --c: var(--badge-green); }
+    .c-blue   { --c: var(--badge-blue); }
+    .c-yellow { --c: var(--badge-yellow); }
+    .c-neutral{ --c: var(--badge-neutral); }
+    /* ------------------------------------------------------------------- */
+
+    .matrix {
+      margin-top: 38px;
+      display: grid;
+      grid-template-columns: 92px 1fr 1fr 1fr;
+      align-items: center;
+      row-gap: 18px;
+      column-gap: 26px;
+    }
+    .colhead {
+      font-weight: var(--fw-medium);
+      font-size: 12px;
+      letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.4);
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .rowlabel {
+      font-weight: var(--fw-medium);
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+    .cell { display: flex; }
+
+    .lightstrip {
+      margin-top: 46px;
+      background: linear-gradient(135deg, #CED0FD 0%, #D9EBFD 100%);
+      border-radius: 16px;
+      padding: 26px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .lightstrip .tag {
+      font-weight: var(--fw-medium);
+      font-size: 13px;
+      color: #475569;
+      margin-right: 6px;
+    }
+    /* tint family re-reads --c against light: text stays the color, fill light */
+    .lightstrip .badge.tint  { background: color-mix(in srgb, var(--c) 14%, white); border-color: color-mix(in srgb, var(--c) 40%, transparent); }
+
+    .footer {
+      margin-top: 40px;
+      font-weight: var(--fw-regular);
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.45);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 18px;
+    }
+    .footer b { color: rgba(255,255,255,0.7); font-weight: var(--fw-medium); }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div class="head">
+      <h1>PageFly badge kit</h1>
+      <p>Poppins &middot; sentence case &middot; no tracking &middot; soft 8px radius</p>
+    </div>
+
+    <div class="matrix">
+      <div></div>
+      <div class="colhead">Tint &mdash; dark bg</div>
+      <div class="colhead">Ghost &mdash; text only</div>
+      <div class="colhead">Solid &mdash; emphasis</div>
+
+      <div class="rowlabel">Purple</div>
+      <div class="cell"><span class="badge tint c-purple"><span class="dot"></span>Badge label</span></div>
+      <div class="cell"><span class="badge ghost c-purple">Badge label</span></div>
+      <div class="cell"><span class="badge solid c-purple">Badge label</span></div>
+
+      <div class="rowlabel">Gray</div>
+      <div class="cell"><span class="badge tint c-gray"><span class="dot"></span>Badge label</span></div>
+      <div class="cell"><span class="badge ghost c-gray">Badge label</span></div>
+      <div class="cell"><span class="badge solid c-neutral">Badge label</span></div>
+
+      <div class="rowlabel">Green</div>
+      <div class="cell"><span class="badge tint c-green"><span class="dot"></span>Badge label</span></div>
+      <div class="cell"><span class="badge ghost c-green">Badge label</span></div>
+      <div class="cell"><span class="badge solid c-green">Badge label</span></div>
+
+      <div class="rowlabel">Blue</div>
+      <div class="cell"><span class="badge tint c-blue"><span class="dot"></span>Badge label</span></div>
+      <div class="cell"><span class="badge ghost c-blue">Badge label</span></div>
+      <div class="cell"><span class="badge solid c-blue">Badge label</span></div>
+
+      <div class="rowlabel">Yellow</div>
+      <div class="cell"><span class="badge tint c-yellow"><span class="dot"></span>Badge label</span></div>
+      <div class="cell"><span class="badge ghost c-yellow">Badge label</span></div>
+      <div class="cell"><span class="badge solid c-yellow">Badge label</span></div>
+    </div>
+
+    <div class="lightstrip">
+      <span class="tag">On a light card</span>
+      <span class="badge solid c-purple">New</span>
+      <span class="badge tint c-blue">Page view</span>
+      <span class="badge solid c-green">Healthy</span>
+      <span class="badge ghost c-gray">Draft</span>
+    </div>
+
+    <div class="footer">
+      <b>Pick by contrast:</b> choose the family + color that stands out cleanly from whatever is behind it &mdash; never same-hue-on-hue (no red chip on a red hero).<br />
+      <b>Stay consistent:</b> error + success chips in one piece use the same family + size, differing only by color.
+    </div>
+  </div>
+</body>
+</html>

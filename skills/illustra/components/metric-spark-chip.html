@@ -1,0 +1,44 @@
+<!-- name: metric-spark-chip | tier: A | purpose: small white stat chip - muted label + pill (up-arrow + value) + brand-accent area sparkline trending up; the "metric improving" decoration (conversion rate, score, sales)
+     params: label text; pill value; sparkline shape via the path d=...; width inline (default 230px);
+       colors via --brand-accent / --brand-accent-wash (no hardcoded hex).
+     usage: decorative satellite next to a main panel (Mode A). Keep it SMALL - it is decoration,
+       never a rival of the primary (R1). Floats on the lavender card -> soft shadow only; stacked
+       on a white panel -> add il-accent-stroke (R5). Respect R7 (sit close to / bridge the cluster)
+       and R9 (its edges must clear any divider/line in a screenshot beneath by >=20px).
+     impl: pure SVG sparkline on brand vars (SVG stop-color accepts var() in Chromium); the end dot
+       gets a white halo so it reads over the area fill. HyperFrames-friendly (line + dot animate
+       cheaply later). -->
+<div class="il-panel il-metric-spark" style="width:230px">
+  <div class="il-metric-spark__head">
+    <span class="il-metric-spark__label">Conversion rate</span>
+    <span class="il-metric-spark__pill">
+      <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M5 8.5V1.5M5 1.5L1.8 4.7M5 1.5L8.2 4.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      2.6x
+    </span>
+  </div>
+  <svg class="il-metric-spark__chart" viewBox="0 0 194 62" fill="none">
+    <defs>
+      <linearGradient id="ilSparkFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--brand-accent)" stop-opacity="0.16"/>
+        <stop offset="1" stop-color="var(--brand-accent)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="M2 52 C28 49, 46 44, 68 39 C94 33, 108 24, 134 17 C154 11.5, 170 9, 184 7 L184 62 L2 62 Z" fill="url(#ilSparkFill)"/>
+    <path d="M2 52 C28 49, 46 44, 68 39 C94 33, 108 24, 134 17 C154 11.5, 170 9, 184 7" stroke="var(--brand-accent)" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="184" cy="7" r="6.5" fill="var(--inset-bg)"/>
+    <circle cx="184" cy="7" r="4" fill="var(--brand-accent)"/>
+  </svg>
+</div>
+
+<style>
+  .il-metric-spark { padding: 16px 18px 10px; }
+  .il-metric-spark__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .il-metric-spark__label { font-size: 12px; font-weight: var(--fw-medium); color: var(--inset-text-soft); letter-spacing: 0.01em; }
+  .il-metric-spark__pill {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 9px; border-radius: var(--r-pill);
+    background: var(--brand-accent-wash); color: var(--brand-accent);
+    font-size: 12px; font-weight: var(--fw-medium);
+  }
+  .il-metric-spark__chart { display: block; width: 100%; height: auto; }
+</style>

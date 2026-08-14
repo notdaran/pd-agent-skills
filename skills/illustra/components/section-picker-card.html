@@ -1,0 +1,50 @@
+<!-- name: section-picker-card | tier: A | purpose: PF "drag a section" white floating card
+     params: .is-active (green glow) or .is-active--purple; thumbs via .il-picker__item
+     usage: the signature element a cursor drags onto the bento canvas; composes image-placeholder -->
+<div class="il-picker is-active" style="width:240px">
+  <button class="il-picker__nav" aria-label="prev">
+    <svg viewBox="0 0 24 24"><path d="M15 5 L9 12 L15 19" /></svg>
+  </button>
+  <div class="il-picker__thumbs">
+    <div class="il-picker__item">
+      <div class="il-img"><svg class="il-img__glyph" viewBox="0 0 48 40"><circle cx="14" cy="13" r="4.5" /><path d="M2 38 L18 16 L29 30 L35 22 L46 38 Z" /></svg></div>
+      <span class="il-picker__bar"></span>
+    </div>
+    <div class="il-picker__item">
+      <div class="il-img"><svg class="il-img__glyph" viewBox="0 0 48 40"><circle cx="14" cy="13" r="4.5" /><path d="M2 38 L18 16 L29 30 L35 22 L46 38 Z" /></svg></div>
+      <span class="il-picker__bar"></span>
+    </div>
+    <div class="il-picker__item">
+      <div class="il-img"><svg class="il-img__glyph" viewBox="0 0 48 40"><circle cx="14" cy="13" r="4.5" /><path d="M2 38 L18 16 L29 30 L35 22 L46 38 Z" /></svg></div>
+      <span class="il-picker__bar"></span>
+    </div>
+  </div>
+  <button class="il-picker__nav" aria-label="next">
+    <svg viewBox="0 0 24 24"><path d="M9 5 L15 12 L9 19" /></svg>
+  </button>
+  <div class="il-picker__dots"><i></i><i></i><i></i></div>
+</div>
+
+<style>
+  .il-picker {
+    position: relative; display: flex; align-items: center; gap: 8px;
+    padding: 18px 12px 26px; border-radius: var(--r-round);
+    background: var(--inset-bg); box-shadow: var(--inset-shadow);
+  }
+  .il-picker.is-active { box-shadow: 0 0 0 2px var(--accent-green), var(--glow-green), var(--inset-shadow); }
+  .il-picker.is-active--purple { box-shadow: 0 0 0 2px var(--brand-accent), var(--glow-purple), var(--inset-shadow); }
+  .il-picker__thumbs { display: flex; gap: 10px; flex: 1; }
+  .il-picker__item { display: flex; flex-direction: column; align-items: center; gap: 7px; flex: 1; }
+  .il-picker__item .il-img { width: 100%; height: 46px; background: var(--placeholder-bg); border-radius: var(--r-md); display: grid; place-items: center; }
+  .il-picker__item .il-img__glyph { width: 46%; fill: var(--placeholder-glyph); }
+  .il-picker__bar { width: 64%; height: 7px; border-radius: var(--r-pill); background: var(--skeleton); }
+  .il-picker__nav {
+    flex: 0 0 auto; width: 24px; height: 24px; border: none; padding: 0;
+    border-radius: 50%; background: var(--inset-bg); box-shadow: var(--inset-shadow);
+    display: grid; place-items: center; cursor: default;
+  }
+  .il-picker__nav svg { width: 14px; height: 14px; fill: none; stroke: var(--inset-text-soft); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .il-picker__dots { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 5px; align-items: center; }
+  .il-picker__dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--skeleton); }
+  .il-picker__dots i:first-child { width: 14px; border-radius: var(--r-pill); background: var(--inset-text-soft); }
+</style>

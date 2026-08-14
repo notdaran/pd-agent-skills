@@ -1,0 +1,14 @@
+<!-- name: image-placeholder | tier: A | purpose: atomic "image" token - gray rounded box w/ picture glyph
+     params: size via inline width/height; override --placeholder-bg / --placeholder-glyph
+     usage: drop wherever an image slot is implied; building block of section-picker-card & wireframe-page -->
+<div class="il-img" style="width:88px; height:66px">
+  <svg class="il-img__glyph" viewBox="0 0 48 40" aria-hidden="true">
+    <circle cx="14" cy="13" r="4.5" />
+    <path d="M2 38 L18 16 L29 30 L35 22 L46 38 Z" />
+  </svg>
+</div>
+
+<style>
+  .il-img { background: var(--placeholder-bg); border-radius: var(--r-md); display: grid; place-items: center; }
+  .il-img__glyph { width: 46%; height: auto; fill: var(--placeholder-glyph); }
+</style>

@@ -1,0 +1,16 @@
+{
+  "rubric": "same 6 dims as baseline-subjective.json; composite = mean / 5",
+  "scores": {
+    "vector-build-run1":   {"dims": [5.0, 4.5, 4.0, 4.0, 4.5, 3.5], "composite": 0.850, "notes": "R14 concept-vs-UI split (translucent page + popping picker); loose lower-right crop"},
+    "vector-build-run2":   {"dims": [4.5, 4.5, 4.5, 4.0, 4.0, 3.5], "composite": 0.833, "notes": "dark bento bleeds left+bottom with fade (R3b/R4); picker top-right slightly loose"},
+    "checkup-hybrid-run1": {"dims": [5.0, 4.5, 4.5, 4.0, 5.0, 4.5], "composite": 0.917, "notes": "clean cascade, connector line, no chip (correct)"},
+    "checkup-hybrid-run2": {"dims": [5.0, 4.0, 4.5, 4.0, 5.0, 4.5], "composite": 0.900, "notes": "balanced (no empty quadrant); satellites use R4 fade + R10b soft border correctly"},
+    "cro-dark-strip-run1": {"dims": [4.5, 4.5, 4.5, 4.5, 5.0, 4.5], "composite": 0.917, "notes": "A/B identity frost+blush chips + earned 'Variant B wins' bridging chip; funnel carries numbers"},
+    "cro-dark-strip-run2": {"dims": [4.5, 4.5, 4.5, 4.5, 4.5, 4.5], "composite": 0.900, "notes": "B-front winner cascade, clean 2-cluster + gap, no redundant stat chip"}
+  },
+  "summary": {
+    "vector-build":   {"subjMean": 0.842, "subjSpread": 0.017},
+    "checkup-hybrid": {"subjMean": 0.908, "subjSpread": 0.017},
+    "cro-dark-strip": {"subjMean": 0.908, "subjSpread": 0.017}
+  }
+}

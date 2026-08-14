@@ -1,0 +1,139 @@
+/* illustra brand preset - PageFly (default). Swap this whole file to rebrand. */
+:root {
+  /* == Layer A: brand identity (official PageFly / pagefly.io) == */
+  --brand-accent: #535AF7;        /* PF primary purple */
+  --brand-accent-soft: #A6ACFF;
+  --brand-accent-wash: rgba(83,90,247,0.10); /* light periwinkle tint - button/chip bg */
+  --brand-cyan: #67DCF9;
+  --font-heading: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-body: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --fw-extralight: 200;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* == Layer B: illustration palettes, split by MODE (see references/style-guide.md). ==
+     Mode A = light website-card (the light-inset group further below).
+     Mode B = dark-glass (this group). Shared by both: radii, shadows, --brand-accent*, fonts above. */
+  /* -- Mode B: dark-glass surfaces (App Store screenshots) -- */
+  --bg-page: #0b1020;
+  --surface: #0F172A;             /* card / slot bg */
+  --surface-2: #111c33;
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-bg-strong: rgba(255,255,255,0.09);
+  --glass-border: rgba(255,255,255,0.10);
+
+  /* semantic accents (working set) */
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #22d3ee;
+  --accent-green: #22c55e;
+  --accent-orange: #f97316;
+  --accent-red: #ef4444;
+  --accent-yellow: #eab308;
+  --accent-peach: #E98C57;
+  --accent-peach-soft: #FFC388;
+  --accent-peach-deep: #d97342;
+
+  /* text on dark (alpha scale) */
+  --text-100: rgba(255,255,255,1);
+  --text-80: rgba(255,255,255,0.85);
+  --text-60: rgba(255,255,255,0.6);
+  --text-40: rgba(255,255,255,0.35);
+
+  /* radii */
+  --r-sm: 6px; --r-md: 8px; --r-lg: 10px; --r-xl: 12px;
+  --r-xxl: 14px; --r-round: 24px; --r-xround: 28px; --r-pill: 999px;
+
+  /* shadows + glows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.2);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
+  --shadow-xl: 0 30px 80px rgba(0,0,0,0.45);
+  --drop-frame-dark: drop-shadow(0 22px 46px rgba(8,10,40,0.55)); /* `filter` for a FRAMELESS screenshot (own rounded corners + transparent margins / fade) placed directly on a dark bg - follows the alpha silhouette so a fade-to-transparent edge stays clean (no white box). Use instead of a white frame panel when the capture is self-framed. */
+  --glow-blue: 0 8px 24px rgba(59,130,246,0.5);
+  --glow-cyan: 0 0 8px var(--accent-cyan);
+  --glow-green: 0 0 12px rgba(34,197,94,0.5);
+  --glow-purple: 0 4px 12px rgba(139,92,246,0.4);
+  --glow-orange: 0 4px 14px rgba(249,115,22,0.4);
+  --glow-red: 0 0 12px rgba(239,68,68,0.5);
+  --glow-yellow: 0 0 12px rgba(234,179,8,0.5);
+
+  /* gradients */
+  --grad-accent: linear-gradient(135deg, #535AF7, #A6ACFF);
+  --grad-ai: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  --grad-peach: linear-gradient(135deg, #FFC388, #E98C57);
+  --grad-hero-light: linear-gradient(135deg, #CED0FD 0%, #D9EBFD 100%);
+
+  /* deep canvas (page-builder background gradient) */
+  --surface-deep: #1b1640;
+  --grad-canvas: linear-gradient(160deg, var(--surface) 0%, var(--surface-deep) 100%);
+
+  /* -- Mode B addition: marketing-dark page palette (SSE-151 CRO landing, Figma 289:2701).
+     Skeleton pages drawn on the dark marketing site use THESE, not the accent-* set. -- */
+  --mkdark-page: #0a0e2b;          /* skeleton page bg - deep navy */
+  --mkdark-page-plum: #200f3a;     /* alt page bg - dark plum */
+  --mkdark-nav-grad: linear-gradient(100deg, #2d2d99 0%, #15164d 100%); /* page nav bar */
+  --mkdark-line: #4c57c8;          /* periwinkle accent line / squiggle / glyphs */
+  --mkdark-bar: #222d80;           /* skeleton bar strong */
+  --mkdark-bar-dim: #192262;       /* skeleton bar dim / image block */
+  --mkdark-mint: #82f2be;          /* mint CTA block / positive accent */
+  --mkdark-purple: #751e95;        /* feature purple (figure / highlight) */
+  --mkdark-mint-ink: #0a3b2a;      /* dark ink for text/icons ON a mint button or chip */
+  --chip-frost-bg: #e0f0ff;        /* light chip on dark page (26.8% CR style) */
+  --chip-frost-border: #81bff6;
+  --chip-frost-text: #003a5a;
+  --chip-blush-bg: #f7d3de;        /* pink sibling of the frost chip (B-badge / 49.6% CR style, same Figma 289:2701 art) */
+  --chip-blush-border: #e898b2;
+  --chip-blush-text: #5c1130;
+  /* green "revenue glow" chip - money/growth accent that POPS on the dark hero (Figma green badge ref).
+     gradient lighter in the centre -> saturated #16b71e at the edges; mint #56f889 text; green halo. */
+  --chip-revenue-grad: radial-gradient(128% 105% at 49% 50%, rgba(45,160,78,0.20) 0%, #16b71e 100%);
+  --chip-revenue-border: #05853e;
+  --chip-revenue-text: #56f889;
+  --chip-revenue-glow: 0 0 18px 0 rgba(4,193,83,0.70), 0 0 42px 0 rgba(4,193,83,0.32);
+
+  /* -- Mode A: light website-card. White floating UI panels on a lavender/light card
+     (--grad-hero-light above is the Mode A card bg). PF marketing feature cards. -- */
+  --inset-bg: #ffffff;
+  --inset-bg-2: #f1f5f9;
+  --inset-border: rgba(15,23,42,0.08);
+  --inset-shadow: 0 14px 44px rgba(11,16,32,0.35);
+  --inset-shadow-soft: 0 18px 50px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.05); /* light-on-light web card (soft) */
+  --inset-text-strong: #1e293b;
+  --inset-text: #475569;
+  --inset-text-soft: #94a3b8;
+  --placeholder-bg: #e2e8f0;        /* image-placeholder gray box */
+  --placeholder-glyph: #94a3b8;     /* its mountain/sun glyph */
+  --skeleton: #e2e8f0;              /* gray skeleton bar */
+  --skeleton-accent: #c7d2fe;       /* periwinkle wireframe text bar */
+  --wire-block: #dbe6fb;            /* light-blue wireframe image block */
+
+  /* -- Mode A: concept-illustration sub-palette. A dummy/skeleton mock that should BLEND into the
+     lavender card uses a TRANSLUCENT white panel (--concept-panel ~40%) so it recedes and the
+     periwinkle bars carry the shape; a mock that simulates a REAL in-app UI instead stays solid
+     --inset-bg (100%) so it POPS forward and reads as actual product UI. This 40%-vs-100% split is
+     how concept-illus and UI-sim are told apart on one card. Exact working set (Figma, light bg). */
+  --concept-panel:      rgba(255,255,255,0.40); /* translucent device/page panel - blends into the card */
+  --concept-panel-soft: rgba(255,255,255,0.30);
+  --concept-panel-firm: rgba(255,255,255,0.62); /* inner content block - a touch more solid */
+  --concept-edge:       rgba(255,255,255,0.55); /* soft 1px edge that defines a translucent panel */
+  --concept-bar:        #CDD2FF;  /* skeleton text bar (light periwinkle) */
+  --concept-bar-2:      #C1C7FF;  /* skeleton text bar (periwinkle) */
+  --concept-bar-faint:  #E9EEFF;  /* faint bar / subtle inner fill */
+  --concept-bar-strong: #99A2FF;  /* heading bar + CTA pill (strong) */
+  --concept-bar-deep:   #8A94E8;  /* deepest accent bar */
+  --concept-img:        #BBCAFF;  /* wireframe image block */
+  --concept-mint:       #DCFCE7;  /* positive / reusable block (mint) */
+
+  /* orb glow (partner/stat hub) */
+  --glow-orb: 0 0 80px rgba(83,90,247,0.5), inset 0 0 60px rgba(255,255,255,0.12);
+
+  /* -- composition: stacked-panel stroke + base-layer bleed fade (see style-guide "Composition") -- */
+  --stroke-gradient: linear-gradient(150deg, #9D6CFF 0%, rgba(116,118,255,0) 100%); /* R5: purple ring fading to fully transparent toward the bottom (Figma-matched: 9D6CFF 100% -> 7476FF 0%); separates a white panel stacked on another white panel */
+  --mask-fade-bottom: linear-gradient(to bottom, #000 55%, transparent 100%);              /* R4: base panel fades out toward a bottom bleed edge (CSS mask alpha) */
+  --mask-fade-right:  linear-gradient(to right,  #000 60%, transparent 100%);              /* R4: base panel fades out toward a right bleed edge */
+  --panel-edge-line: rgba(15,23,42,0.50);                                                   /* R10: VISIBLE frame line so a screenshot edge reads against the lavender card - the 0.08 --inset-border is too faint and washes out; this reads even where the screenshot's own edge pixels are white (white matte alone is invisible there) */
+  --panel-matte-ring: 0 0 0 3px var(--inset-bg), 0 0 0 5px var(--panel-edge-line);          /* R10: 3px white matte (breathing room for gray/coloured screenshot edges) + 2px outer frame line (the line that actually separates it from the lavender). Layer BEFORE --inset-shadow-soft in box-shadow */
+  --panel-edge-soft: rgba(15,23,42,0.20);                                                   /* R10b: soft hairline for a screenshot used as a DIRECT `border` (no white matte gap) - sits right on the screenshot edge, so it must be far lighter than --panel-edge-line (0.50 reads as a heavy black line with no matte buffer). Just darker than the lavender card = separates without a hard frame. Use this whenever a fade-mask is on the panel (a box-shadow matte-ring gets clipped by the mask). */
+}

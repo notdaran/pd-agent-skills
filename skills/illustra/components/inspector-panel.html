@@ -1,0 +1,82 @@
+<!-- name: inspector-panel | tier: A | purpose: editor settings panel - the "customization" workhorse
+     sub-parts: header, thumbnail+dropdown row, segmented-toggle (Yes/No), slider, segmented-chips, radio-list
+     params: swap labels; reorder / remove rows; .is-on marks the active segment / radio
+     usage: the right-hand controls beside a selected element; dark-glass surface (sits on the canvas) -->
+<div class="il-ip" style="width:300px">
+  <div class="il-ip__head">Image source</div>
+
+  <div class="il-ip__row">
+    <div class="il-img" style="width:40px; height:40px">
+      <svg class="il-img__glyph" viewBox="0 0 48 40"><circle cx="14" cy="13" r="4.5" /><path d="M2 38 L18 16 L29 30 L35 22 L46 38 Z" /></svg>
+    </div>
+    <div class="il-ip__meta">
+      <span class="il-ip__label">PageFly product image</span>
+      <span class="il-ip__sub">.JPG</span>
+    </div>
+    <button class="il-ip__dropdown">Change
+      <svg viewBox="0 0 24 24"><path d="M6 9 L12 15 L18 9" /></svg>
+    </button>
+  </div>
+
+  <div class="il-ip__field">
+    <span class="il-ip__label">Enable full width</span>
+    <div class="il-ip__seg">
+      <span class="il-ip__seg-opt is-on">Yes</span>
+      <span class="il-ip__seg-opt">No</span>
+    </div>
+  </div>
+
+  <div class="il-ip__field il-ip__field--col">
+    <span class="il-ip__label">Image width</span>
+    <div class="il-ip__slider"><span class="il-ip__slider-fill"></span><span class="il-ip__knob"></span></div>
+  </div>
+
+  <div class="il-ip__field il-ip__field--col">
+    <span class="il-ip__label">Image ratio</span>
+    <div class="il-ip__seg il-ip__seg--3">
+      <span class="il-ip__seg-opt is-on">Original</span>
+      <span class="il-ip__seg-opt">Square</span>
+      <span class="il-ip__seg-opt">Custom</span>
+    </div>
+  </div>
+
+  <div class="il-ip__field il-ip__field--col">
+    <span class="il-ip__label">Meta field type</span>
+    <label class="il-ip__radio is-on"><span class="il-ip__dot"></span>Single line text</label>
+    <label class="il-ip__radio"><span class="il-ip__dot"></span>Rich text</label>
+  </div>
+</div>
+
+<style>
+  .il-ip {
+    display: flex; flex-direction: column; gap: 14px; padding: 18px;
+    border-radius: var(--r-round); background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border); box-shadow: var(--shadow-xl);
+    font-family: var(--font-body); color: var(--text-80);
+  }
+  .il-ip__head { font-weight: var(--fw-medium); font-size: 13px; color: var(--text-100); }
+  .il-ip__label { font-size: 13px; color: var(--text-80); }
+  .il-ip__sub { font-size: 11px; color: var(--text-40); }
+  .il-ip__row { display: flex; align-items: center; gap: 10px; }
+  .il-ip__row .il-img { flex: 0 0 auto; }
+  .il-ip__meta { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .il-ip__dropdown {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 4px;
+    font-family: var(--font-body); font-size: 12px; color: var(--text-80);
+    background: var(--surface); border: 1px solid var(--glass-border); padding: 5px 9px; border-radius: var(--r-md); cursor: default;
+  }
+  .il-ip__dropdown svg { width: 12px; height: 12px; fill: none; stroke: var(--text-60); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .il-ip__field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .il-ip__field--col { flex-direction: column; align-items: stretch; gap: 8px; }
+  .il-ip__seg { display: inline-flex; background: var(--surface); border-radius: var(--r-md); padding: 3px; gap: 3px; }
+  .il-ip__seg-opt { font-size: 12px; color: var(--text-60); padding: 5px 14px; border-radius: var(--r-sm); text-align: center; }
+  .il-ip__seg--3 .il-ip__seg-opt { flex: 1; padding: 5px 0; }
+  .il-ip__seg-opt.is-on { background: var(--brand-accent); color: var(--text-100); }
+  .il-ip__slider { position: relative; height: 6px; border-radius: var(--r-pill); background: var(--glass-bg); }
+  .il-ip__slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 58%; border-radius: var(--r-pill); background: var(--accent-blue); }
+  .il-ip__knob { position: absolute; left: 58%; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px; border-radius: 50%; background: var(--text-100); box-shadow: var(--glow-blue); }
+  .il-ip__radio { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--text-80); }
+  .il-ip__dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--text-40); flex: 0 0 auto; }
+  .il-ip__radio.is-on .il-ip__dot { border-color: var(--brand-accent); background: radial-gradient(circle, var(--brand-accent) 0 38%, transparent 42%); }
+</style>

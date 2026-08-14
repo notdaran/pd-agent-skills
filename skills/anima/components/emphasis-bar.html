@@ -1,0 +1,98 @@
+<!--
+  emphasis-bar - bottom stat bar: label + animated score + delta chip + status pill (amber -> green)
+  Source: examples/before-after #s2-emphasis
+  Purpose: the numeric payoff of the fix beat - score counts up, a "+N" delta pops, status pill goes green.
+  Vars: --surface (bar), --border, --text-muted (label), --sem-warning (BEFORE score/pill),
+        --sem-success (delta + AFTER pill), via color-mix for the tinted fills/borders.
+  Fonts: --em-score / --em-delta use literal "JetBrains Mono" (tabular-nums) - mono is for the
+         NUMERIC readout only. .pf-em-label is Poppins sentence case: it is a text label, and mono
+         ALL-CAPS tracked labels are the dated look _pf-brand/label-rules.md kills.
+  Note: the score count-up and the amber->green color change are GSAP tweens -> target color stays
+        LITERAL "#22c55e" (style-guide: GSAP cannot tween to a CSS var). SVG check stroke also literal.
+  Place: a scene-2 element; bar geometry (left/top/width) case-specific. Wire scoreFrom/scoreTo in the script.
+-->
+<style>
+  #pf-emphasis {
+    position: absolute;
+    left: 80px;
+    top: 752px;
+    width: 1440px;
+    height: 108px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 44px;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+  .pf-em-left { display: flex; align-items: center; gap: 28px; }
+  .pf-em-label { font-size: 22px; font-weight: 500; letter-spacing: 0; color: var(--text-muted); }
+  #pf-score {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 70px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--sem-warning);
+    font-variant-numeric: tabular-nums;
+  }
+  #pf-delta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--sem-success);
+    background: color-mix(in srgb, var(--sem-success) 14%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--sem-success) 50%, transparent);
+    border-radius: var(--r-pill);
+    padding: 8px 20px;
+    opacity: 0;
+  }
+  .pf-em-status { position: relative; height: 56px; min-width: 460px; }
+  .pf-em-pill {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 30px;
+    font-weight: 600;
+    padding: 11px 26px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+  }
+  .pf-em-pill.before { color: var(--sem-warning); background: color-mix(in srgb, var(--sem-warning) 12%, transparent); border: 2px solid color-mix(in srgb, var(--sem-warning) 45%, transparent); }
+  .pf-em-pill.after  { color: var(--sem-success); background: color-mix(in srgb, var(--sem-success) 14%, transparent); border: 2px solid color-mix(in srgb, var(--sem-success) 50%, transparent); opacity: 0; }
+</style>
+
+<div id="pf-emphasis">
+  <div class="pf-em-left">
+    <span class="pf-em-label">Health score</span>
+    <span id="pf-score">68</span>
+    <span id="pf-delta">+20</span>
+  </div>
+  <div class="pf-em-status">
+    <div id="pf-status-before" class="pf-em-pill before">Almost there &middot; reach 70</div>
+    <div id="pf-status-after" class="pf-em-pill after">
+      <svg width="26" height="26" viewBox="0 0 26 26"><path d="M5 13 L11 19 L21 6" fill="none" stroke="#22c55e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      <span id="pf-status-after-label">Conversion-ready</span>
+    </div>
+  </div>
+</div>
+
+<!-- Timeline recipe (example offsets: enter ~2.85, fix ~4.6; rebase to your scene) -->
+<!-- Put near the top of the <script>: var scoreFrom = 68, scoreTo = 88; -->
+<!--
+  // enter (BEFORE)
+  tl.fromTo("#pf-emphasis", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 2.85);
+  tl.fromTo("#pf-status-before", { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 3.1);
+  // fix moment: count up, recolor (LITERAL hex), delta pop, pill swap
+  var so = { n: scoreFrom };
+  tl.to(so, { n: scoreTo, duration: 1.1, ease: "power2.out", onUpdate: function () { document.getElementById("pf-score").textContent = Math.round(so.n); } }, 5.15);
+  tl.to("#pf-score", { color: "#22c55e", duration: 0.8, ease: "power1.inOut" }, 5.3);
+  tl.fromTo("#pf-delta", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }, 6.1);
+  tl.to("#pf-status-before", { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" }, 5.2);
+  tl.fromTo("#pf-status-after", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 5.45);
+-->

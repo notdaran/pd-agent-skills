@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!--
+  anima blank canvas - a standalone, on-brand HyperFrames stage to compose a case on.
+  Start here for a freeform new piece. Paste blocks from ../components/ (each with its
+  timeline recipe), apply ../references/style-guide.md (eases, glow, pacing, loop-seam),
+  then render with `npx hyperframes render`. Machinery rules: follow the hyperframes skill.
+  Standalone composition => NO <template> wrapper (that hides content and breaks render).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* tokens synced from references/brand.css - keep in sync when the preset changes */
+      :root {
+        /* Layer A - brand identity */
+        --brand-accent: #535AF7;
+        --brand-accent-soft: #A6ACFF;
+        --brand-cyan: #67DCF9;
+        /* fonts: the renderer auto-resolves LITERAL family names only, NOT var(--font-*).
+           Use the literal names in font-family rules below; keep these in sync on rebrand. */
+        --font-heading: "Poppins", sans-serif;
+        --font-body: "Poppins", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --fw-extralight: 200;
+        --fw-regular: 400;
+        --fw-medium: 500;
+        --fw-bold: 700;
+        /* Layer B - video surface palette */
+        --bg: #030712;
+        --surface: #11141E;
+        --border: #1E222B;
+        --text: rgba(255, 255, 255, 0.96);
+        --text-muted: #8A8FA3;
+        --sem-critical: #FF5C5C;
+        --sem-warning: #FFC453;
+        --sem-success: #22C55E;
+        --r-sm: 8px;
+        --r-md: 16px;
+        --r-pill: 9999px;
+        --glow-accent: rgba(83, 90, 247, 0.30);
+        --glow-blue: rgba(61, 107, 255, 0.20);
+      }
+
+      body {
+        margin: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Poppins", sans-serif;  /* literal so the renderer resolves it (see note above) */
+      }
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .mono { font-family: "JetBrains Mono", monospace; }  /* literal - renderer resolves it */
+
+      /* loop-seam veil - fades to navy near T-end so frame 10 == frame 0 (see style-guide.md) */
+      #loopveil {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        background: var(--bg);
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-width="1600"
+      data-height="900"
+      data-start="0"
+      data-duration="10"
+    >
+      <!-- ===== Compose your scene(s) here. Paste component blocks from ../components/. ===== -->
+      <div id="stage" class="scene"></div>
+
+      <!-- loop-seam veil (inert until you wire its tail tween below) -->
+      <div id="loopveil"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      /* ===== Paste each block's "Timeline recipe" here, in scene order. =====
+         - Entrance-only (gsap.from / fromTo); the transition handles exit. Exit tweens
+           only on the final scene. Vary >= 3 eases per scene. Glows start hidden so the
+           loop seam lands on pure navy.
+         - Loop tail (uncomment when you have content):
+           // tl.fromTo("#loopveil", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.in" }, 9.3);
+      */
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

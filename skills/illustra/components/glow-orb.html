@@ -1,0 +1,24 @@
+<!-- name: glow-orb | tier: A | purpose: gradient glowing sphere - partner / stat hub; optional centered content
+     params: size via inline; swap center content (stat number, or a logo mark); --glow-orb tint
+     usage: focal point of a "reach / partners / scale" illustration; pair with concentric-rings behind it -->
+<div class="il-orb" style="width:240px; height:240px">
+  <div class="il-orb__center">
+    <strong>100+</strong>
+    <span>total partner<br>collaboration</span>
+  </div>
+</div>
+
+<style>
+  .il-orb {
+    position: relative; border-radius: 50%;
+    background: radial-gradient(circle at 50% 36%, var(--brand-accent-soft) 0%, var(--brand-accent) 44%, var(--surface-deep) 100%);
+    box-shadow: var(--glow-orb); display: grid; place-items: center;
+  }
+  .il-orb__center { text-align: center; font-family: var(--font-heading); line-height: 1.25; }
+  .il-orb__center strong {
+    display: block; font-size: 52px; font-weight: var(--fw-bold);
+    background: linear-gradient(180deg, var(--text-100), var(--brand-accent-soft));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .il-orb__center span { font-size: 13px; color: var(--text-80); }
+</style>

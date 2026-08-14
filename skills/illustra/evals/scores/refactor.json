@@ -1,0 +1,390 @@
+{
+  "summary": {
+    "vector-build": {
+      "runs": 2,
+      "objMean": 0.708,
+      "objSpread": 0
+    },
+    "checkup-hybrid": {
+      "runs": 2,
+      "objMean": 0.925,
+      "objSpread": 0.15
+    },
+    "cro-dark-strip": {
+      "runs": 2,
+      "objMean": 1,
+      "objSpread": 0
+    }
+  },
+  "results": [
+    {
+      "brief": "vector-build",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 77378
+        },
+        "brandVarsOnly": {
+          "pass": false,
+          "rawColorCount": 1,
+          "sample": [
+            "rgba(15,23,42,0.28)"
+          ]
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-bento",
+            "il-insert",
+            "il-cursor",
+            "il-picker"
+          ],
+          "missing": [
+            "il-bento"
+          ]
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 0,
+          "minImgs": 0
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 9.6,
+          "nodeCount": 55,
+          "band": [
+            3,
+            30
+          ]
+        },
+        "tightCrop": {
+          "pass": false,
+          "stage": {
+            "w": 668,
+            "h": 462
+          },
+          "maxMarginFrac": 0.21,
+          "margins": {
+            "top": 0.087,
+            "bottom": 0.21,
+            "left": 0.054,
+            "right": 0.115
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.708
+    },
+    {
+      "brief": "vector-build",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 185843
+        },
+        "brandVarsOnly": {
+          "pass": false,
+          "rawColorCount": 6,
+          "sample": [
+            "rgba(255,255,255,0.55)",
+            "rgba(255,255,255,0.32)",
+            "rgba(255,255,255,0.22)",
+            "rgba(255,255,255,0.03)",
+            "rgba(34,197,94,0.55)",
+            "rgba(15,23,42,0.25)"
+          ]
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-bento",
+            "il-insert",
+            "il-cursor",
+            "il-picker"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 0,
+          "minImgs": 0
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 8.6,
+          "nodeCount": 52,
+          "band": [
+            3,
+            30
+          ]
+        },
+        "tightCrop": {
+          "pass": false,
+          "stage": {
+            "w": 720,
+            "h": 520
+          },
+          "maxMarginFrac": 0.185,
+          "margins": {
+            "top": 0.185,
+            "bottom": 0.176,
+            "left": 0,
+            "right": 0.035
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.708
+    },
+    {
+      "brief": "checkup-hybrid",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 194279
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-panel",
+            "pc-scorecard-88.png",
+            "pc-hero",
+            "pc-faq"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 2.7,
+          "nodeCount": 17,
+          "band": [
+            2,
+            15
+          ]
+        },
+        "tightCrop": {
+          "pass": false,
+          "stage": {
+            "w": 664,
+            "h": 600
+          },
+          "maxMarginFrac": 0.108,
+          "margins": {
+            "top": 0.108,
+            "bottom": 0.06,
+            "left": 0.053,
+            "right": 0.062
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 0.85
+    },
+    {
+      "brief": "checkup-hybrid",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 184334
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "il-panel",
+            "pc-scorecard-88.png",
+            "pc-hero",
+            "pc-faq"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 3.9,
+          "nodeCount": 17,
+          "band": [
+            2,
+            15
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 778,
+            "h": 580
+          },
+          "maxMarginFrac": 0.088,
+          "margins": {
+            "top": 0.088,
+            "bottom": 0.059,
+            "left": 0.049,
+            "right": 0.05
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 1
+    },
+    {
+      "brief": "cro-dark-strip",
+      "run": 1,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 798464
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "ab-",
+            "funnel",
+            "--mkdark"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 7.7,
+          "nodeCount": 28,
+          "band": [
+            3,
+            20
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 1120,
+            "h": 312
+          },
+          "maxMarginFrac": 0,
+          "margins": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 1
+    },
+    {
+      "brief": "cro-dark-strip",
+      "run": 2,
+      "checks": {
+        "htmlValid": {
+          "pass": true,
+          "errorCount": 0,
+          "sample": []
+        },
+        "rendered": {
+          "pass": true,
+          "pngBytes": 724813
+        },
+        "brandVarsOnly": {
+          "pass": true,
+          "rawColorCount": 0,
+          "sample": []
+        },
+        "components": {
+          "pass": true,
+          "expected": [
+            "ab-",
+            "funnel",
+            "--mkdark"
+          ],
+          "missing": []
+        },
+        "screenshots": {
+          "pass": true,
+          "imgCount": 3,
+          "minImgs": 2
+        },
+        "complexity": {
+          "pass": true,
+          "kb": 5.2,
+          "nodeCount": 26,
+          "band": [
+            3,
+            20
+          ]
+        },
+        "tightCrop": {
+          "pass": true,
+          "stage": {
+            "w": 1080,
+            "h": 300
+          },
+          "maxMarginFrac": 0,
+          "margins": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          },
+          "leftTemplateDefault": false
+        }
+      },
+      "objectiveScore": 1
+    }
+  ]
+}

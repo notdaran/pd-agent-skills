@@ -1,0 +1,67 @@
+[
+  {
+    "id": "vector-build",
+    "title": "Mode A light, vector-only, simple - drag-a-section editor concept",
+    "difficulty": "simple",
+    "runs": 2,
+    "expectComponents": ["il-bento", "il-insert", "il-cursor", "il-picker"],
+    "minImgs": 0,
+    "sizeBandKB": [3, 30],
+    "intake": {
+      "mode": "A (light website-card)",
+      "neighbor": "outputs/assets/_neighbor-launch-card.png",
+      "concept": "PageFly lets you build a page by dragging a pre-made section onto the canvas - the ONE thing to show: a section card being dragged to a drop slot on a page-being-built.",
+      "assetType": "All vector - abstract page/editor concept, no real app screen needed."
+    },
+    "prompt": "Build ONE illustration: the PageFly drag-to-build concept (drag a ready-made section onto the page canvas). Mode A (light website-card). PURE VECTOR - no real screenshots; this is an abstract editor concept. Pull these kit parts from components/ and adapt inline: bento-grid (the dark 'page being built' with one filled hero + empty slots), drag-insert (the green drop line + '+'), cursor (the grab hand), section-picker-card (the white card being dragged, composes image-placeholder). Compose a staggered, cohesive scene (R1 cascade / R7 cohesion / R9 edge clearance), crop the stage tight to the content (small, e.g. ~720x520, not the 1200x900 default), round generously. Output the authored html to evals/results/<PHASE>/vector-build-run<N>.html and render it with scripts/render.mjs to the matching .png at the SAME width/height as #stage."
+  },
+  {
+    "id": "checkup-hybrid",
+    "title": "Mode A light, hybrid real-screenshot cascade, complex - Page Checkup diagnose+fix",
+    "difficulty": "complex",
+    "runs": 2,
+    "expectComponents": ["il-panel", "pc-scorecard-88.png", "pc-hero", "pc-faq"],
+    "minImgs": 2,
+    "sizeBandKB": [2, 15],
+    "intake": {
+      "mode": "A (light website-card)",
+      "neighbor": "outputs/assets/_neighbor-diagnose-card.png",
+      "concept": "Page Checkup scans a page, scores its health, and prescribes concrete fixes - the ONE thing to show: a real health-score card next to the real flagged issues/fix rows it produced.",
+      "assetType": "Real Page Checkup app UI = REAL SCREENSHOT CROPS (never vector-redrawn). Connective tissue/annotations = vector."
+    },
+    "assetsDir": "outputs/assets/",
+    "availableAssets": {
+      "pc-scorecard-88.png": "the health-score card (score 88) - the PRIMARY",
+      "pc-hero.png": "a hero/section issue row (clean)",
+      "pc-hero-warning.png": "a hero/section issue row with a warning flag",
+      "pc-faq.png": "a FAQ/fix prescription row",
+      "pc-scorecard.png": "alt score card",
+      "pc-panel-top.png": "the Page Checkup panel header"
+    },
+    "prompt": "Build ONE illustration: PageFly Page Checkup diagnoses a page and prescribes fixes. Mode A (light website-card, lavender bg). Use REAL SCREENSHOT CROPS from outputs/assets/ (these are real app UI - NEVER vector-redraw them): make pc-scorecard-88.png the PRIMARY panel, and add 1-2 satellites from {pc-hero.png OR pc-hero-warning.png, pc-faq.png}. Embed each crop via <img> inside a floating-panel (components/floating-panel.html: il-panel) in a STAGGERED CASCADE - offset both axes, vary sizes, overlap only at a corner ~20-30%, exactly ONE primary (R1). Give each screenshot a defined edge against the lavender card (R10 matte-ring / soft edge). Keep cuts on whitespace gutters (R2), clear underlying content by >=20px (R8), no near-parallel slivers (R9). A stat/outcome chip is OPTIONAL - earn it (R11), default NONE if the score card already shows the number. Crop the stage tight (e.g. ~860x600), round generously. Output authored html to evals/results/<PHASE>/checkup-hybrid-run<N>.html and render with scripts/render.mjs to the matching .png at the #stage width/height."
+  },
+  {
+    "id": "cro-dark-strip",
+    "title": "Mode B dark marketing, wide-short strip + ambiguity - CRO A/B + funnel",
+    "difficulty": "complex",
+    "runs": 2,
+    "expectComponents": ["ab-", "funnel", "--mkdark"],
+    "minImgs": 2,
+    "sizeBandKB": [3, 20],
+    "intake": {
+      "mode": "B (dark-glass) on the DARK marketing site (SSE-151 CRO landing) - use the --mkdark-* palette + frost-chip badges, NOT the generic --accent-* set.",
+      "neighbor": "outputs/assets/_neighbor-cro-section-dark.png",
+      "concept": "PageFly's AI runs the CRO work: it A/B-tests page variants and surfaces the winning conversion funnel - the ONE thing to show: two A/B variant captures + the conversion funnel that proves the win.",
+      "assetType": "Real A/B storefront variants + funnel = REAL SCREENSHOT CROPS. Page chrome/connective tissue = vector on --mkdark-*."
+    },
+    "assetsDir": "outputs/assets/",
+    "availableAssets": {
+      "ab-a-grid-crop.png": "A/B variant A (grid layout) capture",
+      "ab-b-list-crop.png": "A/B variant B (list layout) capture",
+      "conversion-funnel.png": "the conversion funnel (full)",
+      "funnel-crop.png": "the conversion funnel (cropped)",
+      "heatmap-crop.png": "a click heatmap (optional satellite)"
+    },
+    "prompt": "Build ONE illustration for the DARK PageFly marketing site (SSE-151 'The AI That Does the CRO Work For You'). Mode B, but use the --mkdark-* palette (page/nav/bar/line/mint/purple) + frost-chip badges, NOT the generic --accent-* set. This is a WIDE-SHORT marketing strip (~1080x300, ~3.5:1). Use REAL SCREENSHOT CROPS from outputs/assets/ (never vector-redraw): ab-a-grid-crop.png + ab-b-list-crop.png (the two A/B variants) and conversion-funnel.png OR funnel-crop.png (the funnel). DO NOT lay them out as an evenly-spaced row with dead canvas above/below - run the screenshots FULL-HEIGHT of the strip and fade the bottom (--mask-fade-bottom; on a dark strip put the depth shadow on an OUTER wrapper via --drop-frame-dark since a mask clips box-shadow), and group into ~2 overlapping clusters with a clear gap between (R15). Add an outcome callout (a frost-chip CR stat, or a revenue-chip) ONLY IF it is earned and there is a clean spot - if the funnel already shows its numbers, omitting it is the right call (R11). Crop the stage tight, round generously. Output authored html to evals/results/<PHASE>/cro-dark-strip-run<N>.html and render with scripts/render.mjs to the matching .png at the #stage width/height."
+  }
+]

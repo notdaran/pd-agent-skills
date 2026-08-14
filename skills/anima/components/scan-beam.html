@@ -1,0 +1,33 @@
+<!--
+  scan-beam - a cyan beam that sweeps across a scene to mark the reveal / fix moment
+  Source: examples/before-after #s2-beam + examples/heatmap-reveal #hm-beam (built twice -> promoted)
+  Purpose: a vertical light beam sweeps left->right to "scan" the scene, cueing an in-place state
+           change (a before->after morph, or a clean->revealed crossfade). Cyan is reserved for this beam.
+  Vars: --brand-cyan (the beam glow). The gradient + box-shadow keep LITERAL cyan rgba - the gradient is a
+        neutral beam tint and box-shadow/GSAP can't take a CSS var. Keep both in sync with --brand-cyan on rebrand.
+  Place: a late child of the scene, above the cards (z-index 30). Set height to your canvas height; the beam
+         sweeps off both edges so it carries data-layout-allow-overflow.
+  Params: width = beam thickness; sweep end x = your canvas width; fire time = your reveal moment (TF).
+-->
+<style>
+  .pf-scan-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 900px;            /* match your canvas height */
+    background: linear-gradient(90deg, rgba(103,220,249,0) 0%, rgba(103,220,249,0.5) 50%, rgba(103,220,249,0) 100%);
+    box-shadow: 0 0 70px var(--brand-cyan);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 30;
+  }
+</style>
+
+<div id="pf-beam" class="pf-scan-beam" data-layout-allow-overflow></div>
+
+<!-- Timeline recipe (fire at your reveal moment TF; rebase the end x to your canvas width) -->
+<!--
+  tl.fromTo("#pf-beam", { x: -200, opacity: 0 }, { x: 1600, opacity: 1, duration: 1.0, ease: "sine.inOut" }, TF);
+  tl.to("#pf-beam", { opacity: 0, duration: 0.3, overwrite: "auto" }, TF + 0.85);
+-->

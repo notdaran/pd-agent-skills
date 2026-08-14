@@ -1,0 +1,93 @@
+<!--
+  footage-scene - an existing real recording as a full-bleed scene, blur-crossfaded in
+  Source: outputs/checkup-sharper #s2 / #s2-video
+  Purpose: the second beat of a footage piece - cut from an on-brand title card to a real
+           screen capture / product demo without leaving the PF frame.
+  Vars: none (the clip is the content). --bg backs the scene so the crossfade never jump-cuts.
+  Place: as a sibling scene AFTER the title-card scene, before #loopveil.
+  Params: src, data-start (= the title card's exit time), data-duration (= clip length),
+          data-media-start (trim into the source).
+
+  ROOT SETUP - a footage piece is NOT a 1600x900 loop. On the composition root set:
+      data-width="1920" data-height="1080"      <- native capture size; downscaling softens UI text
+      data-fps="<source fps>"                   <- MUST match the clip; HF defaults to 30, captures are usually 60
+      data-duration="<title card + clip>"       <- not gated to 10s
+  and wrap the title-card scene's kit blocks in a `.stage16` (see references/style-guide.md ->
+  Footage pieces) so kit geometry survives the bigger canvas untouched.
+
+  CLIP RULES (hyperframes): the <video> must be `muted playsinline`; the framework owns playback,
+  never call video.play(). Audio is ALWAYS a separate <audio> element on its own track index -
+  do not expect sound from the <video>. Verify the source first:
+      ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate,duration \
+              -of default=noprint_wrappers=1 <source>
+-->
+<style>
+  .pf-footage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  #pf-footage-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+    display: block;
+  }
+</style>
+
+<div id="pf-footage" class="pf-footage">
+  <video
+    id="pf-footage-video"
+    class="clip"
+    data-start="5.4"
+    data-duration="15.9"
+    data-track-index="0"
+    data-media-start="0"
+    src="assets/capture.mp4"
+    muted
+    playsinline
+  ></video>
+</div>
+
+<!-- Optional: the clip's own audio. Same start/duration, its OWN track index. Drop if silent.
+<audio
+  id="pf-footage-audio"
+  data-start="5.4"
+  data-duration="15.9"
+  data-track-index="2"
+  data-media-start="0"
+  src="assets/capture.mp4"
+  data-volume="1"
+></audio>
+-->
+
+<!-- Timeline recipe (offset = the title card's exit time; 5.4 matches the example above) -->
+<!--
+  // blur crossfade in from the previous scene - navy stays opaque underneath, no jump cut
+  tl.fromTo("#pf-footage",
+    { opacity: 0, scale: 1.04, filter: "blur(16px)" },
+    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 5.4);
+
+  // close on the veil for a clean tail (offset = root duration - 0.7). A footage piece is
+  // linear: frame 0 and the final frame are NOT required to match (SKILL.md hard rule 6).
+  // tl.fromTo("#pf-loopveil", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.in" }, DURATION - 0.7);
+-->
+
+<!--
+  Give the outgoing title card a clip window that outlasts the crossfade, so the framework
+  drops it once the footage owns the frame:
+      <div id="s1" class="scene clip" data-start="0" data-duration="6.1" data-track-index="1">
+  (6.1 = crossfade end 6.0 + a frame of slack for a cut at 5.4.)
+
+  During 5.4-6.0 the title-card text sits UNDER the incoming video by design. `hyperframes inspect`
+  reports that as an info-level `text_occluded`. Leave it and comment it - do NOT add
+  `data-layout-allow-occlusion`, which also silences the WCAG contrast check on that subtree
+  (see references/style-guide.md -> QA gotchas).
+-->

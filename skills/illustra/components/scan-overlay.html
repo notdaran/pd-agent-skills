@@ -1,0 +1,40 @@
+<!-- name: scan-overlay | tier: A | purpose: "scan in progress" motif - tinted veil over the already-scanned region + glowing beam line at the scan front. The Page Checkup / AI-scanning story.
+     params: --scan-y inline (beam position from the top, default 268px). Colors ride the
+       marketing-dark group: --mkdark-line (veil + beam base), --mkdark-mint (beam highlight),
+       --mkdark-purple (beam tail).
+     usage: drop INSIDE the scanned surface (skeleton page / tablet-frame screen) - the host must be
+       position:relative + overflow:hidden so the overlay clips with it. Scanned story = veil ABOVE
+       the beam (region already scanned), untouched content below. Anchor the scanning badge
+       (frost-chip) at the beam's y so the label reads as the scan front.
+       2nd draw of this motif: anima heatmap-reveal (animated beam) -> diagnose-fix card (static). -->
+<div class="il-scan-overlay" style="--scan-y: 268px;">
+  <div class="il-scan-overlay__veil"></div>
+  <div class="il-scan-overlay__beam"></div>
+</div>
+
+<style>
+  .il-scan-overlay { position: absolute; inset: 0; pointer-events: none; }
+  /* veil over the already-scanned region (top -> beam), brightening toward the beam */
+  .il-scan-overlay__veil {
+    position: absolute; left: 0; right: 0; top: 0; height: var(--scan-y, 268px);
+    background:
+      linear-gradient(to top,
+        color-mix(in srgb, var(--mkdark-line) 45%, transparent) 0,
+        color-mix(in srgb, var(--mkdark-line) 16%, transparent) 110px,
+        color-mix(in srgb, var(--mkdark-line) 16%, transparent) 100%);
+  }
+  /* glowing scan front */
+  .il-scan-overlay__beam {
+    position: absolute; left: 0; right: 0; top: calc(var(--scan-y, 268px) - 2px); height: 4px;
+    border-radius: var(--r-pill);
+    background: linear-gradient(to right,
+      transparent 0%,
+      var(--mkdark-line) 18%,
+      var(--mkdark-mint) 60%,
+      color-mix(in srgb, var(--mkdark-purple) 85%, transparent) 88%,
+      transparent 100%);
+    box-shadow:
+      0 0 14px color-mix(in srgb, var(--mkdark-line) 80%, transparent),
+      0 0 30px color-mix(in srgb, var(--mkdark-mint) 45%, transparent);
+  }
+</style>

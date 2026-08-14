@@ -1,0 +1,41 @@
+<!--
+  reveal-card - a single screenshot card whose image crossfades from a "clean" state to a
+                "revealed" state (e.g. a plain page -> a heatmap), usually under a scan-beam sweep.
+  Source: examples/heatmap-reveal #hm-card - a simpler sibling of before-after-card: ONE screenshot,
+          two states, no markers / dim / score story. Use when a feature beat just needs to show a
+          screenshot and reveal an overlay or state on it.
+  Vars: --r-md (radius), --border (frame). The backing #0b0e16 is a neutral (sits behind the screenshot),
+        not a brand token.
+  Place: a scene-2 element. Card geometry (left/top/width/height) is case-specific - adjust inline. BOTH
+         <img> must be the SAME exact pixel size so the crossfade aligns 1:1 (object-fit: cover).
+  Params: swap the two img src (clean + revealed crops); enter time ~T2, reveal time ~TF.
+-->
+<style>
+  .pf-reveal-card {
+    position: absolute;
+    left: 180px;
+    top: 120px;
+    width: 1240px;
+    height: 684px;              /* case-specific geometry */
+    overflow: hidden;
+    border-radius: var(--r-md);
+    border: 2px solid var(--border);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+    background: #0b0e16;         /* neutral backing behind the screenshot, not a brand token */
+  }
+  .pf-reveal-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+</style>
+
+<div id="pf-reveal-card" class="pf-reveal-card">
+  <img id="pf-reveal-clean" class="pf-reveal-shot" src="assets/page-clean.png" alt="clean state" />
+  <img id="pf-reveal-after" class="pf-reveal-shot" src="assets/page-heatmap.png" alt="revealed state" style="opacity:0;" />
+</div>
+
+<!-- Timeline recipe (enter ~T2, reveal ~TF; the crossfade is an in-place state morph, not a scene exit) -->
+<!--
+  // enter (clean state)
+  tl.fromTo("#pf-reveal-card", { y: 44, opacity: 0, scale: 1.03 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 2.6);
+  // reveal: clean -> revealed crossfade (pair with scan-beam fired at TF)
+  tl.to("#pf-reveal-clean", { opacity: 0, duration: 0.7, ease: "power2.inOut" }, 5.1);
+  tl.fromTo("#pf-reveal-after", { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power2.inOut" }, 5.1);
+-->

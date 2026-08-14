@@ -1,0 +1,26 @@
+<!--
+  loop-tail - full-bleed veil that fades to navy near the end so the loop seam is invisible
+  Source: examples/before-after #loopveil (+ the 9.3s fade)
+  Purpose: anima's signature seamless-loop seam - the final frame becomes pure navy == frame 0.
+  Vars: --bg (the navy it fades to).
+  Place: LAST child of #root (above every scene). Pair with glows that start opacity:0 (see glow-bg)
+         so both ends of the loop are pure navy. The canvas ships this veil; here it is as a kit part.
+  Param: fire the tail tween at ~(duration - 0.7s); 9.3 below assumes a 10s composition.
+-->
+<style>
+  #pf-loopveil {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<div id="pf-loopveil"></div>
+
+<!-- Timeline recipe (offset = duration - 0.7s; 9.3 for a 10s loop) -->
+<!--
+  tl.fromTo("#pf-loopveil", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.in" }, 9.3);
+-->

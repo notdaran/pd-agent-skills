@@ -1,0 +1,26 @@
+{
+  "rubric": {
+    "dims": [
+      "mode_palette_fidelity (Mode A/B + mkdark + restrained accents)",
+      "layering_hierarchy_R1 (staggered cascade, one primary, distinct sizes, corner overlap not fused)",
+      "edge_separation_R3_R10_R15 (clean bleed/in-frame, defined screenshot edges, full-height fade, no amputated sliver)",
+      "cohesion_clearance_R7_R8_R9 (no orphans, content-safe overlaps, no near-parallel slivers)",
+      "concept_content_gate0_R11_R12 (proves the ONE thing, real content where demo IS content, chip earned-not-stapled)",
+      "polish_tightcrop_neighbor (tight crop, generous rounding, reads as finished card not a row)"
+    ],
+    "scale": "1-5 each; composite = mean / 5"
+  },
+  "scores": {
+    "vector-build-run1":   {"dims": [4.5, 4.5, 4.5, 4.5, 5.0, 4.5], "composite": 0.917, "notes": "clean drag-to-build; one primary bento + satellite picker, cursor docked; no chip (correct)"},
+    "vector-build-run2":   {"dims": [5.0, 4.0, 3.5, 4.0, 4.5, 3.5], "composite": 0.817, "notes": "good R14 concept-vs-UI split, but loose crop (23.6% margin) + heavy green glow"},
+    "checkup-hybrid-run1": {"dims": [5.0, 5.0, 4.5, 4.5, 5.0, 4.5], "composite": 0.917, "notes": "textbook flanked cascade, real crops, defined edges, no chip (correct)"},
+    "checkup-hybrid-run2": {"dims": [5.0, 3.5, 4.0, 4.0, 4.5, 3.5], "composite": 0.817, "notes": "top-heavy, empty bottom-right quadrant (loose crop); FAQ strip occluded ok"},
+    "cro-dark-strip-run1": {"dims": [4.0, 4.5, 4.5, 4.5, 4.5, 4.5], "composite": 0.883, "notes": "2 clusters + gap, full-height fade, winner chip earned (adds which-won), funnel carries numbers"},
+    "cro-dark-strip-run2": {"dims": [4.5, 4.0, 4.5, 4.0, 4.5, 4.5], "composite": 0.867, "notes": "A/B tags + leak insight footer, rich; AI-winner chip a touch loose"}
+  },
+  "summary": {
+    "vector-build":   {"subjMean": 0.867, "subjSpread": 0.100},
+    "checkup-hybrid": {"subjMean": 0.867, "subjSpread": 0.100},
+    "cro-dark-strip": {"subjMean": 0.875, "subjSpread": 0.016}
+  }
+}

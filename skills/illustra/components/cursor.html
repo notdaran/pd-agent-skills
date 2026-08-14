@@ -1,0 +1,20 @@
+<!-- name: cursor | tier: A | purpose: UI cursor marks - arrow pointer + open-hand "grab"
+     params: .il-cursor--grab for the hand; both are solid (white fill + dark outline) so they read on any bg
+     usage: place near a drag-insert / on a draggable section-picker-card; position absolutely on the canvas -->
+<svg class="il-cursor" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+  <path d="M4 2 L4 18.5 L8.4 14.3 L11.2 20.6 L13.8 19.4 L11 13.2 L17 13.2 Z" />
+</svg>
+
+<svg class="il-cursor il-cursor--grab" viewBox="0 0 24 26" width="28" height="30" aria-hidden="true">
+  <path d="M5.5 15 L6.3 8 Q6.3 6.3 7.5 6.3 Q8.7 6.3 8.7 8 L8.7 10.3
+           Q8.7 9.6 9.4 9.5 L9.5 5 Q9.5 3.7 10.75 3.7 Q12 3.7 12 5 L12 10
+           Q12 9.5 12.7 9.4 L12.8 6 Q12.8 4.7 14 4.7 Q15.2 4.7 15.2 6 L15.2 10.8
+           Q15.2 10.2 15.9 10.1 L16 8 Q16 6.9 17.1 6.9 Q18.2 6.9 18.2 8.2 L18.2 14.5
+           Q18.2 22 11.5 22 Q7.5 22 5.6 19.2 L3.6 16.4 Q2.7 15.2 3.9 14.4 Q5 13.6 5.8 14.8 L6.5 15.8
+           Q5.9 15.4 5.5 15 Z" />
+</svg>
+
+<style>
+  .il-cursor { display: block; fill: var(--text-100); stroke: var(--inset-text-strong); stroke-width: 1; stroke-linejoin: round; }
+  .il-cursor--grab { stroke-width: 0.8; }
+</style>

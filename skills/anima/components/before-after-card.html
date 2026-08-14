@@ -1,0 +1,102 @@
+<!--
+  before-after-card - screenshot card that morphs BEFORE -> AFTER, with red issue / green fixed markers
+  Source: examples/before-after #s2-page (card + before/after <img> + dim + .page-mark)
+  Purpose: the "fix moment" hero - a dimmed low-state screenshot crossfades to the good one while
+           red observation chips swap to green check chips.
+  Vars: --r-md (radius), --border, --sem-critical (issue marker + dot), --sem-success (fixed marker border).
+  Neutrals (kept literal, not brand-hued): #fff card backing, rgba(0,0,0,*) shadow/dim, rgba(11,7,7,.66)
+           chip backdrop, #15803d solid-fill green (needs AA contrast under white text), #fff SVG stroke.
+  Place: a scene-2 element. Card geometry (left/top/width/height) is case-specific - adjust inline.
+  Params: swap img src (before/after crops), marker text; .pf-mark-b group = BEFORE issues, .pf-mark-a = AFTER fixes.
+-->
+<style>
+  .pf-card {
+    position: absolute;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    border: 2px solid var(--border);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+    background: #fff;            /* structural backing behind the screenshot, not a brand token */
+  }
+  #pf-bac { left: 80px; top: 198px; width: 980px; height: 520px; }   /* case-specific geometry */
+  .pf-shot { position: absolute; top: 0; left: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+  .pf-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.30);   /* neutral dim on the BEFORE state = low-score feel */
+    z-index: 5;
+    pointer-events: none;
+  }
+  .pf-mark {
+    position: absolute;
+    left: 40px;
+    top: 40px;
+    z-index: 12;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: var(--r-pill);
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+  }
+  .pf-mark.before {
+    color: var(--sem-critical);
+    background: rgba(11, 7, 7, 0.66);   /* neutral dark backdrop */
+    border: 2px solid color-mix(in srgb, var(--sem-critical) 60%, transparent);
+  }
+  .pf-mark.after {
+    color: #fff;
+    background: #15803d;                /* darker fill for AA contrast under white text */
+    border: 2px solid var(--sem-success);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+  }
+  .pf-mk-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--sem-critical);
+    box-shadow: 0 0 16px var(--sem-critical);
+    flex-shrink: 0;
+  }
+</style>
+
+<div id="pf-bac" class="pf-card">
+  <img id="pf-bac-before" class="pf-shot" src="assets/page-before-crop.png" style="object-position:18% 50%;" />
+  <img id="pf-bac-after"  class="pf-shot" src="assets/page-after-crop.png" style="object-position:50% 0%;opacity:0;" />
+  <div id="pf-bac-dim" class="pf-dim"></div>
+
+  <div class="pf-mark before pf-mark-b"><span class="pf-mk-dot"></span>Hero has no image</div>
+  <div class="pf-mark before pf-mark-b" style="top:auto;bottom:38px;"><span class="pf-mk-dot"></span>No CTA button</div>
+  <div class="pf-mark before pf-mark-b" style="left:auto;right:40px;"><span class="pf-mk-dot"></span>No product image</div>
+
+  <div class="pf-mark after pf-mark-a">
+    <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    Image hero added
+  </div>
+  <div class="pf-mark after pf-mark-a" style="top:auto;bottom:38px;">
+    <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    Clear CTAs added
+  </div>
+  <div class="pf-mark after pf-mark-a" style="left:auto;right:40px;">
+    <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11 L9 16 L18 5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    Countdown timer added
+  </div>
+</div>
+
+<!-- Timeline recipe (example offsets: T2~2.3 enter, TF~4.6 fix moment; rebase to your scene) -->
+<!--
+  // enter (BEFORE state)
+  tl.fromTo("#pf-bac", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 2.6);
+  tl.fromTo(".pf-mark-b", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: "back.out(1.8)" }, 3.0);
+  tl.to(".pf-mark-b", { opacity: 0.6, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.65);
+  // fix moment: crossfade screenshot, lift dim, swap red issues -> green checks
+  tl.to("#pf-bac-before", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 5.1);
+  tl.to("#pf-bac-dim",    { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 5.1);
+  tl.fromTo("#pf-bac-after", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.inOut" }, 5.1);
+  tl.to(".pf-mark-b", { opacity: 0, duration: 0.35, ease: "power2.in" }, 5.15);
+  tl.fromTo(".pf-mark-a", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: "back.out(1.8)" }, 5.3);
+-->

@@ -1,0 +1,27 @@
+<!-- name: revenue-chip | tier: A | purpose: green "revenue glow" value badge that POPS standalone on a dark hero/section - the money/growth metric callout ("+26.8% revenue", "+$682K"). Up-arrow + bold value + unit label. Sibling of frost-chip (light status pill) / blush-chip (B-variant), but this one is a FREE-STANDING headline metric, NOT an anchored status flag.
+     params: value (bold, e.g. "+26.8%") + label (unit, e.g. "revenue") - drop the label for a single-value money badge; optional leading up-arrow svg (remove for a number-only chip). Colors: --chip-revenue-grad (lighter centre -> saturated edge) / -border / -text (mint) / -glow; radius --r-lg.
+     usage: ONE headline outcome metric floating on a DARK illustration (revenue / sales / conversion uplift). It glows -> keep it the single brightest accent so it stays the focal stat (R1); give the halo ~40px clearance from the stage edge or it clips (R8). For a LIGHT Mode-A card, swap to frost-chip (--chip-frost-*) + a soft shadow instead - this green glow is a dark-bg device. -->
+<div class="il-revenue-chip">
+  <svg class="il-revenue-chip__icon" width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+    <path d="M1 12 L6.5 6.5 L10 9.8 L17 2.5" stroke="var(--chip-revenue-text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12.4 2.5 H17 V7" stroke="var(--chip-revenue-text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <span class="il-revenue-chip__num">+26.8%</span>
+  <span class="il-revenue-chip__lbl">revenue</span>
+</div>
+
+<style>
+  .il-revenue-chip {
+    position: absolute;
+    display: inline-flex; align-items: center; gap: 9px;
+    height: 48px; padding: 0 20px;
+    border-radius: var(--r-lg);
+    background: var(--chip-revenue-grad);
+    border: 1.5px solid var(--chip-revenue-border);
+    box-shadow: var(--chip-revenue-glow);
+    font-family: var(--font-body);
+  }
+  .il-revenue-chip__icon { display: block; }
+  .il-revenue-chip__num { font-size: 18px; font-weight: var(--fw-bold); color: var(--chip-revenue-text); letter-spacing: 0.01em; }
+  .il-revenue-chip__lbl { font-size: 14px; font-weight: var(--fw-medium); color: var(--chip-revenue-text); opacity: 0.82; }
+</style>

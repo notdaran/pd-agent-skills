@@ -1,0 +1,36 @@
+<!--
+  score-ring - gauge halo that pulses amber, then turns green on the fix
+  Source: examples/before-after #s2-ring
+  Purpose: a glowing ring overlaid on a score gauge / number to draw the eye and signal health change.
+  Vars: --sem-warning (BEFORE border + glow, via color-mix). Turns green at the fix moment.
+  Note: the amber -> green change is a GSAP color tween, so its target colors stay LITERAL hex
+        ("#22c55e", rgba(34,197,94,*)) in the recipe - GSAP cannot tween to a CSS var (style-guide rule).
+  Place: absolutely positioned OVER the gauge it frames (left/top/size are case-specific). Starts opacity:0.
+-->
+<style>
+  .pf-score-ring {
+    position: absolute;
+    left: 1178px;          /* case-specific: center over your gauge */
+    top: 296px;
+    width: 270px;
+    height: 270px;
+    border-radius: 50%;
+    border: 4px solid var(--sem-warning);
+    box-shadow: 0 0 50px color-mix(in srgb, var(--sem-warning) 55%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+  }
+</style>
+
+<div id="pf-score-ring" class="pf-score-ring"></div>
+
+<!-- Timeline recipe (example offsets: enter ~3.15, fix ~4.6; rebase to your scene) -->
+<!--
+  // enter + amber pulse (opacity set once at entrance; pulses are scale-only)
+  tl.fromTo("#pf-score-ring", { scale: 0.78, opacity: 0 }, { scale: 1, opacity: 0.8, duration: 0.55, ease: "back.out(1.6)" }, 3.15);
+  tl.to("#pf-score-ring", { scale: 1.06, duration: 0.85, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.75);
+  // fix moment: amber -> green (LITERAL hex - GSAP color tween) + reassuring pulse
+  tl.to("#pf-score-ring", { borderColor: "#22c55e", boxShadow: "0 0 50px rgba(34,197,94,0.6)", duration: 0.8, ease: "power1.inOut" }, 5.15);
+  tl.to("#pf-score-ring", { scale: 1.08, duration: 0.9, yoyo: true, repeat: 1, ease: "sine.inOut" }, 6.1);
+-->

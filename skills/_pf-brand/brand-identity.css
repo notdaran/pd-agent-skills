@@ -1,0 +1,37 @@
+/* ============================================================================
+   PageFly shared brand identity - SINGLE SOURCE OF TRUTH
+   Consumers:
+     - anima      (video)      -> syncs these tokens by hand into its inline :root block
+     - illustra   (static PNG) -> NOT YET MIGRATED. Still keeps its own fork at
+                                  illustra/references/brand.css. Edits here do not reach it;
+                                  mirror them by hand until illustra is migrated.
+   Edit identity / badge palette HERE. Do not fork per-skill.
+   Each skill keeps its own domain surface palette (Layer B) in its own brand.css.
+   ========================================================================== */
+:root {
+  /* ===== Brand identity ===== */
+  --brand-accent: #535AF7;
+  --brand-accent-soft: #A6ACFF;
+  --brand-cyan: #67DCF9;
+
+  --font-heading: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-body: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  /* mono is for code blocks ONLY - never for eyebrows / labels / badges */
+  --font-mono: "JetBrains Mono", monospace;
+
+  --fw-extralight: 200;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* ===== Badge palette (shared base hues) ===== */
+  --badge-purple: #8b5cf6;
+  --badge-gray:   #94a3b8;
+  --badge-green:  #22c55e;
+  --badge-blue:   #3b82f6;
+  --badge-yellow: #eab308;
+  --badge-neutral:#e2e8f0;
+
+  --badge-radius: 8px;          /* soft modern, not pill, not metallic */
+  --badge-text-dark: #0f172a;   /* dark text for solid family */
+}
