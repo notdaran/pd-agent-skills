@@ -17,6 +17,21 @@ English · [Tiếng Việt](./README-vi.md)
 
 ---
 
+## What it looks like
+
+![CRO Center and AEO drawer, real screenshots blended with vector UI mockups](./preview/aeo-card.webp)
+
+Everything with a white panel above is a **real screenshot crop**, cut on a
+whitespace gutter and embedded untouched. The dark "Add JSON-LD" and "Insert FAQ
+section" windows beside them are **hand-drawn vector** - they show a flow that
+has no screenshot yet. That mix is the whole point of the skill.
+
+![Page Checkup before/after hero with score panel](./preview/page-checkup-card.webp)
+
+The same rule applied to a before/after: two real storefront captures and a real
+score panel, with the glow, sparkles and state badges drawn in vector around
+them.
+
 ## What makes it more than a prompt
 
 Three things live in the skill and get applied every time:

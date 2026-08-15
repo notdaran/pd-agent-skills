@@ -13,6 +13,15 @@ English · [Tiếng Việt](./README-vi.md)
 
 ---
 
+## What it looks like
+
+![An on-brand title card cutting into a real screen recording](./preview/checkup-sharper.gif)
+
+A footage piece: the title card is composed from kit blocks on the brand preset,
+then blur-crossfades into a real screen capture without leaving the PF frame.
+The GIF is the first nine seconds at 12fps - the
+[full render](./preview/checkup-sharper.mp4) is smoother and shows the whole cut.
+
 ## The three layers it adds
 
 - **Brand preset** (`references/brand.css`) - identity tokens, badge palette,
@@ -88,6 +97,8 @@ brand is a manual edit, not a config switch.
 ## A note on the footage block
 
 `components/footage-scene.html` cuts from a title card to a real screen
-recording. The piece its rules were measured on is not shipped - its media
-weighs about 44MB. Everything needed to build one is in the block's own header
-comment and the "Footage pieces" section of the style guide.
+recording. The finished render of the piece its rules were measured on is in
+[`preview/`](./preview/checkup-sharper.mp4), but the runnable composition is
+not - its source clip alone is 27MB. Everything needed to build your own is in
+the block's own header comment and the "Footage pieces" section of the style
+guide.

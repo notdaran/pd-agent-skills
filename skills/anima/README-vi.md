@@ -13,6 +13,15 @@ dựng sẵn vốn đã chạy đúng nhịp.
 
 ---
 
+## Trông như thế nào
+
+![Thẻ tiêu đề đúng brand cắt sang bản quay màn hình thật](./preview/checkup-sharper.gif)
+
+Đây là một footage piece: thẻ tiêu đề dựng từ các khối trong kit trên brand
+preset, rồi crossfade mờ sang một đoạn quay màn hình thật mà không ra khỏi khung
+PF. Ảnh GIF là chín giây đầu ở 12fps - [bản render đầy đủ](./preview/checkup-sharper.mp4)
+mượt hơn và cho thấy trọn cú cắt.
+
 ## Ba lớp nó thêm vào
 
 - **Brand preset** (`references/brand.css`) - token nhận diện, bảng màu badge,
@@ -87,6 +96,7 @@ thao tác tay, không phải bật tắt bằng config.
 ## Ghi chú về khối footage
 
 `components/footage-scene.html` dùng để cắt từ thẻ tiêu đề sang một đoạn quay
-màn hình thật. Piece dùng để đo ra các luật đó không đi kèm repo, vì phần media
-nặng khoảng 44MB. Mọi thứ cần để dựng đều nằm trong phần chú thích đầu file khối
-đó và mục "Footage pieces" của style guide.
+màn hình thật. Bản render hoàn chỉnh của piece dùng để đo ra các luật đó nằm ở
+[`preview/`](./preview/checkup-sharper.mp4), nhưng composition chạy được thì
+không đi kèm - riêng đoạn clip nguồn đã 27MB. Mọi thứ cần để tự dựng đều nằm
+trong phần chú thích đầu file khối đó và mục "Footage pieces" của style guide.

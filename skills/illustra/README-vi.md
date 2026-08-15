@@ -18,6 +18,21 @@ Kết quả là một file PNG nền trong suốt độ phân giải retina, th�
 
 ---
 
+## Trông như thế nào
+
+![CRO Center và drawer AEO, ảnh chụp thật trộn với UI vector](./preview/aeo-card.webp)
+
+Mọi panel nền trắng ở trên là **ảnh chụp thật**, cắt trên khe trắng và nhúng
+nguyên không sửa. Hai cửa sổ tối "Add JSON-LD" và "Insert FAQ section" bên cạnh
+là **vector vẽ tay** - chúng mô tả một luồng chưa có ảnh chụp. Chính cái trộn đó
+là điểm cốt lõi của skill.
+
+![Hero trước/sau của Page Checkup kèm panel điểm](./preview/page-checkup-card.webp)
+
+Vẫn quy tắc đó áp cho một cặp trước/sau: hai ảnh chụp storefront thật và một
+panel điểm thật, phần glow, tia sáng và badge trạng thái thì vẽ vector quanh
+chúng.
+
 ## Khác gì so với việc chỉ viết prompt
 
 Ba thứ nằm sẵn trong skill và được áp mỗi lần chạy:
