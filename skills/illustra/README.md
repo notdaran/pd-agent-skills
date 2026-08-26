@@ -21,17 +21,10 @@ English · [Tiếng Việt](./README-vi.md)
 
 ![Five illustrations for one marketing section: structure checks, what a shopper sees, unfinished content, visitor behavior, industry benchmark](./preview/page-audit-section.webp)
 
-Five illustrations drawn in one run, for the five cards of a single marketing
-section. Each one is pure vector - a translucent page column carrying the
-subject, a solid white panel carrying the read-out, and status pills straddling
-the edge between them. The translucent-vs-solid split is deliberate: it tells
-"the illustration" apart from "the UI" at a glance.
-
-Note the two cards on the top row. They share a visual language but are
-**mirrored** - page right / panel left on the second one, down to the flipped
-nav and indented copy. Distinct concepts are not enough; two adjacent cards on
-the same skeleton read as one layout printed twice, so the skill now enforces
-that separately (R17).
+Five illustrations for the five cards of one marketing section, drawn in a
+single run - all vector, no screenshots. A translucent page column carries the
+subject, a solid white panel carries the read-out, and status pills straddle
+the edge between them.
 
 ![CRO Center and AEO drawer, real screenshots blended with vector UI mockups](./preview/aeo-card.webp)
 
@@ -64,9 +57,6 @@ The intake is deliberately conversational rather than a form: it asks where the
 art will live, captures a neighbour card as reference, then picks a light or
 dark-glass mode from that. A neighbour is treated as shared visual language,
 never as a composition to clone.
-
-Every rule in there was paid for by a rejected render, and the guide records the
-failure alongside the rule so it is not re-argued later.
 
 ## Not for
 
