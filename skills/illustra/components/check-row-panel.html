@@ -1,0 +1,56 @@
+<!-- name: check-row-panel | tier: A | purpose: the white "audit result" panel - title + count badge,
+       then N rows of [status glyph | label | right-hand value]. The Mode-A read-out workhorse: it is
+       what turns an illustration of a page into an illustration of the page BEING CHECKED.
+     params: title; header count (right, muted - drop the <span> if there is nothing to count);
+       rows (add/remove .il-crp__row, each = one glyph + .lbl + .val); width/height inline (default
+       330x236 for a ~720-wide stage, 268x196 for a ~580-wide one); row height via .il-crp__row
+       (36-44px; taller rows = fewer rows read calmer). Glyph: .il-crp__ic--ok (green tick) /
+       --warn (amber bang); add .is-warn on the .val to tint the value amber.
+     usage: the REAL-UI half of a Mode-A card - solid white + soft shadow so it POPS against a
+       translucent --concept-panel surface (the Mode-A concept-vs-UI split). Size it <=~85% of the
+       primary's width so it stays a satellite (R1); overlap the concept page at a corner and make
+       the crossing DECISIVE - a top edge landing ~10px above an image block's bottom edge is the R9
+       double-rail. Keep values CONCRETE ("2 missing", "312 reviews"), never vague (R11/R12).
+       Sitting on ANOTHER white panel? add the accent-stroke-ring part (R5). -->
+<div class="il-crp" style="width:330px">
+  <div class="il-crp__head">Structure <span>20+ checks</span></div>
+  <div class="il-crp__sep" style="margin-top:12px"></div>
+
+  <div class="il-crp__row">
+    <svg class="il-crp__ic" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" style="fill:var(--accent-green)"/><path d="M5.8 10.4l2.7 2.7 5.7-5.9" style="fill:none;stroke:var(--inset-bg);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round"/></svg>
+    <span class="lbl">Page opens with a hero</span><span class="val">found</span>
+  </div>
+  <div class="il-crp__sep"></div>
+
+  <div class="il-crp__row">
+    <svg class="il-crp__ic" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" style="fill:var(--accent-yellow)"/><rect x="9" y="4.8" width="2" height="6.6" rx="1" style="fill:var(--inset-bg)"/><circle cx="10" cy="14.3" r="1.15" style="fill:var(--inset-bg)"/></svg>
+    <span class="lbl">Alt text on images</span><span class="val is-warn">2 missing</span>
+  </div>
+</div>
+
+<style>
+  .il-crp {
+    position: absolute;
+    background: var(--inset-bg);
+    border: 1px solid var(--inset-border);
+    border-radius: var(--r-xround);          /* generous - card illus render small (Sizing) */
+    box-shadow: var(--inset-shadow-soft);    /* soft, never the strong dark --inset-shadow */
+    color: var(--inset-text-strong);
+    font-family: var(--font-body);
+    padding: 18px 20px;
+  }
+  .il-crp__head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-size: 14px; font-weight: var(--fw-bold); letter-spacing: -0.01em;
+  }
+  .il-crp__head span { font-size: 11.5px; font-weight: var(--fw-medium); color: var(--inset-text-soft); }
+  .il-crp__sep { height: 1px; background: var(--inset-border); }
+  .il-crp__row {
+    display: flex; align-items: center; gap: 10px; height: 40px;
+    font-size: 12.5px; font-weight: var(--fw-medium);
+  }
+  .il-crp__ic { width: 17px; height: 17px; flex: none; display: block; }
+  .il-crp__row .lbl { flex: 1; color: var(--inset-text-strong); }
+  .il-crp__row .val { font-size: 11.5px; font-weight: var(--fw-medium); color: var(--inset-text-soft); }
+  .il-crp__row .val.is-warn { color: color-mix(in srgb, var(--accent-yellow) 82%, var(--inset-text-strong)); }
+</style>

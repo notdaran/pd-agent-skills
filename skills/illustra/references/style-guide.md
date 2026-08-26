@@ -164,6 +164,11 @@ matching the live PF marketing feature cards.)
     look like they should touch - IS the defect; fix by pushing to a decisive overlap or opening a clear
     gap. The recurring trap: fixing the one boundary that got flagged while the same defect still sits
     on another pair (it surfaced first at card / panel, then again at panel / hero).
+  - **Walk EVERY visible element, not just panels.** The pairs include decorative strips, gutters,
+    rules, chips, glyph blocks - anything with a straight edge. A 10px gap between a decorative bar
+    and the stage edge is the SAME defect as a panel doing it (the failure: the scroll-depth gutter
+    parked 8px off the stage's left edge - member: "thanh nhiệt bên trái đang bị sát viền quá").
+    Auditing only the big panels is how this slips through a pass that otherwise ran.
   - **The stage edge is a rail too -> reach it or clear it.** Include "every panel edge vs each stage /
     strip edge" in the walk. A floating panel whose edge lands a thin sliver (~5-15px) SHORT of the
     stage edge pairs the panel edge with the strip edge as an almost-touching double-rail (member: the
@@ -172,6 +177,11 @@ matching the live PF marketing feature cards.)
     extend it past the stage so the bled side squares its corners (R3b) and, if it is a base layer,
     fades (R4). A panel that naturally settles a few px from an edge should be GROWN to bleed it, never
     left hovering a hairline away.
+  - **"Too close to the edge" is a NEGATIVE-SPACE complaint, not only a rail one -> grow the stage.**
+    A member reporting an element "sát viền quá" is asking for breathing room on that side, so the fix
+    is to WIDEN the stage and shift the cluster inward - never to nudge the element sideways into its
+    neighbour (that just trades an edge defect for an overlap defect). Growing the stage a few percent
+    is cheap; the illustration is placed at a set display width anyway.
 - **R10 - Screenshot/background separation (no washed-out edges).** A screenshot panel must read as
   lifted off the card with a **defined edge**, never blended into it. The danger case: a screenshot
   sitting on the lavender card whose edge melts into the bg so the whole thing looks washed out
@@ -288,6 +298,31 @@ matching the live PF marketing feature cards.)
   headline metric, the traffic-source list) keep peeking out at the edge. Partial occlusion by a
   foreground panel reads as intentional depth; a fragment-crop reads as an accident. The base fades at
   its bleed edge (R4); the overlay is a real cascade (R1 - offset both axes, its own corners + shadow).
+- **R17 - A SET of illustrations must differ in COMPOSITION, not only in content.** When one
+  invocation produces 2+ illustrations for cards that sit side by side, the composition SKELETON has
+  to differ - not just what is inside it. Two cards built on the same skeleton (same side holds the
+  primary, same side holds the satellite, tags in the same slots) read as **one layout printed
+  twice**, even when their concepts are genuinely distinct and every other rule passes (the failure:
+  Structure and What-a-shopper-sees both came out page-column-left + white-panel-right + two
+  straddling tags - member: "layout gần như y hệt, chỉ khác nội dung bên trong ... nó ko đa dạng và
+  interesting cho tổng thể bento layout"). Vary by at least ONE of:
+  - **mirror the axis** - primary left <-> primary right. Mirror the panel's INTERNAL alignment too
+    (flip the nav, indent or right-align the copy, let the image block full-bleed): a naive
+    horizontal flip either buries the copy under the overlay or reads as a mirrored screenshot.
+  - **invert the hierarchy** - concept surface primary <-> real-UI panel primary (R1 still holds, the
+    roles just swap).
+  - **change the cascade direction** - top-left-to-bottom-right vs bottom-left-to-top-right.
+  Adjacent cards are where this is mandatory; a card two rows away may reuse a skeleton. This is the
+  THIRD leg of the distinctness contract and neither of the other two catches it: **gate 0 keeps the
+  CONCEPT distinct, intake rule 3 pulls the VISUAL LANGUAGE together, R17 keeps the COMPOSITION
+  distinct.** A set can pass gate 0 and rule 3 perfectly and still be the same layout twice.
+- **R18 - A label crossing a line must be OPAQUE.** Any chip / micro-label sitting ON a divider, fold
+  rule, chart axis or connector needs a fully opaque background; a translucent wash (e.g.
+  `--brand-accent-wash` at ~10%) lets the rule run straight through the text and reads as a printing
+  error rather than a label (the failure: the dashed fold rule showing through "THE FOLD" - member:
+  "divider đang đè lên the fold"). Keep the intended colour at full opacity with
+  `color-mix(in srgb, var(--brand-accent) 11%, var(--inset-bg))` instead of lowering alpha. A
+  wash-backed chip is fine only where it sits on a flat surface with nothing running beneath it.
 
 ## The 3 intake rules (decide BEFORE composing)
 Run these at intake (SKILL workflow step 0). They are why v1/v2 went wrong: no mode gate ->
@@ -333,6 +368,11 @@ defaulted dark on a light card; no asset-type gate -> fabricated app UI in HTML.
    depth + bleed, type, saturation - match the neighbors' **visual language, NOT their
    concept/composition** (cloning the idea is the gate-0 trap). Do a render-vs-destination
    side-by-side BEFORE done.
+   - **For a SET (2+ illustrations in one run): lay them all on the destination grid at once and NAME
+     each one's skeleton out loud** ("concept page left, UI panel right, two straddling tags"). Two
+     adjacent cards that produce the SAME sentence fail R17 - fix before done. Building the preview
+     grid is NOT the check; stating the skeletons explicitly is. (This session had the grid rendered
+     and still shipped the repeat, because the comparison was never made out loud.)
 
 ## Hard rules
 1. **Brand vars only.** Never hardcode a color/radius/shadow - always `var(--...)`.

@@ -13,14 +13,17 @@ self-contained snippet in `components/<name>.html`: copy it into the canvas (`#s
 ## Screenshot-vs-vector (asset-type) classification
 Per style-guide intake rule 2, not everything is a vector part. Classify each part before drawing:
 - **Vector OK** (primitives / overlays / concept / decoration): image-placeholder, drag-insert,
-  cursor, selection-frame, screenshot-frame (the frame only), wireframe-page, bento-grid, glow-orb,
-  concentric-rings, badges/pills, connectors, sparkle.
+  cursor, selection-frame, screenshot-frame (the frame only), wireframe-page, concept-page-column,
+  bento-grid, glow-orb, concentric-rings, badges/pills, status-tag, connectors, sparkle.
 - **Screenshot-crop - do NOT vector-redraw** (distinctive Shopify/Polaris app screens):
   inspector-panel, code-editor. Build these from real screenshot crops composited in a floating
   panel; never draw the app UI in HTML.
 - **Review (member call):** section-picker-card, content-card - screenshot-crop or vector?
 Heuristic: "does this exist as a real, screenshot-able app screen?" Yes -> screenshot crop. No -> vector.
 Mis-built vector app-UI parts are marked below (not deleted yet) - do not reuse them as vector.
+**check-row-panel = a UI SIM, member-directed only.** It renders app-UI chrome in HTML, so it falls under
+the exception below, not under "vector OK": use it when the member has explicitly approved a vector sim
+(or the screen cannot be captured). Where a real capture exists, the read-out is a screenshot crop.
 **Bugged / uncapturable real UI (member-directed exception):** when a real app screen can't yield a clean capture
 (a bug shows it blank / with `--`, or it's pre-release), the member may direct a vector SIM of it - keep it solid
 white + real labels + soft shadow so it still reads as UI (style-guide intake rule 2 exception). Not a default.
@@ -170,6 +173,43 @@ Every token is documented inline in `brand.css`; pick by mode. The token GROUPS:
 - **Use when:** ONE headline outcome metric floating on a DARK illustration (revenue / sales / conversion uplift). Keep it the single brightest accent so it stays the focal stat (R1); give the halo ~40px clearance from the stage edge or it clips (R8). LIGHT Mode-A card -> use frost-chip + soft shadow instead (the green glow is a dark-bg device).
 - **File:** components/revenue-chip.html
 
+### check-row-panel
+- **Purpose:** the white "audit result" panel - title + count badge, then N rows of
+  [status glyph | label | right-hand value]. Turns "an illustration of a page" into "an illustration
+  of the page BEING CHECKED"; the Mode-A read-out workhorse.
+- **Params:** title; header count (drop the `<span>` if nothing to count); rows via `.il-crp__row`;
+  width/height inline (~330x236 on a 720 stage, ~268x196 on a 580 one); glyph `--ok` / `--warn`;
+  `.is-warn` tints the value amber.
+- **Use when:** the REAL-UI half of a Mode-A card - solid white + soft shadow so it POPS against a
+  translucent `concept-page-column`. Keep <=~85% of the primary's width (R1); cross the concept page
+  DECISIVELY, never landing ~10px off an image block's edge (R9). Values stay CONCRETE (R11/R12).
+- **File:** components/check-row-panel.html
+
+### status-tag
+- **Purpose:** small white status pill that STRADDLES a host panel's edge - glyph + one short line.
+  The light-card sibling of `frost-chip`; the Mode-A annotation workhorse (names WHAT was found and
+  pins it to WHERE).
+- **Params:** label (nowrap); leading svg glyph (tick / bang / eye / sparkle) or a `__swatch` colour
+  dot; position by `left`/`top` OR `right`/`top` (use `right` in a mirrored composition - R11/R17).
+- **Use when:** flagging a finding on a Mode-A illustration. Straddle the host edge ~30-40px (R11);
+  stagger multiple tags on both axes, never a straight column (R1); >=30px from panel edges above and
+  below (R9) and >=~25px off every stage edge so the shadow is not clipped (R3).
+- **File:** components/status-tag.html
+
+### concept-page-column
+- **Purpose:** the TRANSLUCENT storefront/page column that is the SUBJECT of a Mode-A audit or preview
+  card - nav, hero, heading + copy bars, product row (image / price / buy button), closing block,
+  running off the bottom edge. The surface everything else annotates.
+- **Params:** width/height inline (overshoot the stage by 50-80px so the bleed is deliberate - R3);
+  bars `.il-cpc__b` + `.d` / `.s` / `.k` / `.f`; image blocks `.il-cpc__im`; real copy via the
+  `.copy*` weights (R12). Mirrored variant: `.is-mirrored` + inline `padding-left` + `.il-cpc__bleed`
+  on the chrome (R17).
+- **Use when:** any Mode-A "this page is being checked / previewed" card. Stays translucent with **NO
+  shadow** so it recedes while the white UI panel pops (the Mode-A concept-vs-UI split); a shadow here
+  collapses that read. Keep must-read content >=20px clear of any overlay (R8). Dark page ->
+  `tablet-frame` instead.
+- **File:** components/concept-page-column.html
+
 ## Tier B backlog (build on demand - YAGNI until a card needs it)
 logo-grid, logo-pin, code-editor, swatch-row, dotted-world-map, testimonial-bubble, content-card,
 device-frame-mobile, analytics-chart, countdown-timer, font-specimen, stat-badge.
@@ -210,6 +250,13 @@ content-card = review.
 | concept-device-viewport | loads-fast (desktop + phone) | no | TRANSLUCENT skeleton "page across devices" panel (`--concept-panel`, no shadow -> blends; periwinkle `--concept-*` bars). Two drawn (desktop landscape + phone portrait) but as ONE peer concept block (R14). Reusable Mode-A "responsive page" device candidate - hold (member); the Mode-A light counterpart to the dark-only tablet-frame |
 | core-web-vitals-card | loads-fast | no | WHITE UI-sim: Mobile/Desktop toggle + half-arc perf gauge + score + "Loads in 0.6s". Member-directed vector sim of a BUGGED real screen (intake rule 2 exception); solid white + soft shadow so it pops as UI. Promotion PROPOSED (pending member) as a generic perf/score gauge card - note prior `score-gauge` was NOT promoted (real UI = screenshot); this differs as an explicit sim for an uncapturable screen |
 | revenue-chip | drag-drop-hero | promoted -> Tier A | member-approved; green money/growth glow badge for a STANDALONE headline metric on dark (sibling of frost-chip / blush-chip). Added `--chip-revenue-*` tokens (grad / border / text / glow). Distinct from frost-chip (anchored status pill) - this FREE-FLOATS as the focal stat; light-bg counterpart = frost-chip |
+| check-row-panel | page-audit set: structure, shopper-sees, unfinished (x3) | promoted -> Tier A | member-approved; white title + count + glyph/label/value rows. Born as the "what the check found" read-out; the UI half of the Mode-A concept-vs-UI split |
+| status-tag | page-audit set, all 4 page cards (x8) | promoted -> Tier A | member-approved; light-card sibling of frost-chip. Straddling annotation pill; supports `right:` anchoring for a mirrored composition (R17) |
+| concept-page-column | page-audit set, all 5 cards (x5) | promoted -> Tier A | member-approved; translucent bleeding page column, the SUBJECT surface of a Mode-A audit card. Carries the `.is-mirrored` + `.il-cpc__bleed` variant so a mirrored twin card keeps its copy clear of the overlay |
+| scroll-depth-gutter | page-audit: visitor-behavior | no | vertical red->cold gradient rail docked to a page's left edge = how far visitors scroll; pairs with a dashed drop-off rule at the cold transition. Reusable "engagement over page depth" candidate - hold (member) |
+| benchmark-distribution | page-audit: industry-benchmark | no | histogram of comparable stores + dashed median line + one bar highlighted as "this page"; bar index and line position must AGREE with the axis they claim. Hold |
+| funnel-bars | page-audit: visitor-behavior | no | label + count + proportional progress bar, 3 stages narrowing to the goal. Close cousin of check-row-panel's row (same panel chrome, bar instead of glyph) - if drawn again, consider a `check-row-panel` variant rather than a new part. Hold |
+| ghost-section | page-audit: unfinished-content | no | dashed outline block with a centred "Section N - untouched" label, top-aligned so the label survives a bottom bleed (R8). Hold |
 > Add a row each time a NEW bespoke part is drawn in an illustration; a 3rd appearance = promote to a kit file.
 
 **Phase 6 smoke test (simple & intuitive):** rebuilt end-to-end from `bento-grid` + `drag-insert` +

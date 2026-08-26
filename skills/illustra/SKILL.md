@@ -47,11 +47,17 @@ composing (step 4).
    pieces with Pillow **cutting on a whitespace gutter** (R2), save to `outputs/assets/`, embed each
    via `<img>` in a `floating-panel`. Screenshots pass through untouched - never AI-redraw or recolor.
 4. **Compose & draw.** Copy `templates/canvas.html`, set `#stage` W x H, pull component snippets and
-   adapt inline. Apply the **composition rules** (index below; full text + the load-bearing gotchas in
+   adapt inline. **Producing a SET?** Decide each illustration's SKELETON up front and make adjacent
+   ones differ (R17) - mirror the axis, invert the hierarchy, or flip the cascade. Deciding this after
+   the fact means rebuilding a card. Apply the **composition rules** (index below; full text + the load-bearing gotchas in
    style-guide "Composition" + "Sizing"). Run the R9 edge self-audit as you place.
 5. **Render & preview-on-card.** `node scripts/render.mjs <canvas.html> outputs/<name>.png --width W
    --height H` (from skill root). Drop the PNG on a copy of the destination card and run the
-   **match-neighbors review** (intake rule 3) + the **R9 edge self-audit** (every adjacent edge pair =
+   **match-neighbors review** (intake rule 3). **For a SET: build the destination preview grid FIRST**
+   (all N at their real display width, one page) and re-render it after every pass - then NAME each
+   illustration's skeleton aloud and check no two adjacent ones match (R17). **Render a rough pass
+   early instead of solving the geometry analytically** - R3/R9 quote specific margins, which tempts a
+   long arithmetic layout pass; a throwaway render answers in seconds what the arithmetic cannot. + the **R9 edge self-audit** (every adjacent edge pair =
    a clear gap OR a decisive overlap, never a near-parallel sliver - the member may not spot a sliver,
    so Illustra owns this). The DELIVERABLE is the transparent PNG(s), not the on-card composite, unless
    the member asks.
@@ -71,7 +77,7 @@ Apply during step 4. Each is a compressed directive; **full text + the failure e
 | R6 | Screenshot-only vs screenshot + vector overlay: offer both, render BOTH - don't silently pick. |
 | R7 | No orphan satellites: every element overlaps or sits within ~30-40px of the cluster. Moving an element OFF a subject = re-dock it to its source/anchor, never set it adrift. |
 | R8 | Content-safe cuts: MEASURE underlying text extents (PIL scan) before overlapping (>=20px clearance); the stage edge must not chop a control even under a fade mask. |
-| R9 | No near-parallel rails: a panel edge must not run within ~20px parallel of any line beneath - clear it (>=20-25px) or cross decisively. SELF-AUDIT every adjacent edge pair INCLUDING each panel-edge-vs-stage-edge; grow a sliver-short panel to bleed the edge, don't leave it hovering a hairline away. |
+| R9 | No near-parallel rails: an edge must not run within ~20px parallel of any line beneath - clear it (>=20-25px) or cross decisively. SELF-AUDIT every adjacent edge pair, for EVERY visible element (decorative strips / gutters / rules / chips, not just panels), including each edge-vs-stage-edge; grow a sliver-short panel to bleed the edge. "Too close to the edge" = a negative-space complaint -> GROW THE STAGE, never nudge the element into its neighbour. |
 | R10 | A screenshot needs a defined edge against the light card. No fade-mask -> `--panel-matte-ring` (white matte + slate line). Has a fade-mask -> a soft `border` `--panel-edge-soft`, NEVER the matte-ring (a mask clips box-shadow, erasing the ring). |
 | R11 | Stat/outcome chip: EARN it, default NONE (omit if the screenshots already show the number or there's no clean spot). When earned, STRADDLE the host corner (~30-40px overhang) with a CONCRETE number ("Built in 30s") - never edge-flush, never a vague hedge. |
 | R12 | A surface that demonstrates the feature (the prompt the merchant types, the generated copy) shows REAL representative text - not skeleton bars, no fabricated brand names. |
@@ -79,6 +85,8 @@ Apply during step 4. Each is a compressed directive; **full text + the failure e
 | R14 | A concept surface and a real-UI surface differ by a palette/treatment split (both modes). Mode A: dummy/skeleton = translucent `--concept-panel` (~40%, NO shadow); real-UI sim = solid white `--inset-bg` + soft shadow. Co-equal peers depicting ONE idea sit side-by-side as a tight block; the proof/UI element overlaps it in the distinct treatment. |
 | R15 | Wide-short strip: run the screenshots FULL-HEIGHT + fade the bottom (on a dark strip the shadow goes on an OUTER wrapper via `--drop-frame-dark`, since a mask clips box-shadow), grouped into ~2 overlapping clusters with a clear gap - never an evenly-spaced row over a dead band. |
 | R16 | A too-rich capture: STACK a panel on the fuller screenshot so the key parts peek out - never crop it down to a single-label fragment. |
+| R17 | A SET of illustrations must differ in COMPOSITION, not only content: adjacent cards may NOT share a skeleton (same side primary / same side satellite / same tag slots). Vary by mirroring the axis (mirror the panel's internal alignment too), inverting the hierarchy, or flipping the cascade direction. Gate 0 = concept distinct, intake rule 3 = visual language shared, R17 = composition distinct. |
+| R18 | A chip / micro-label sitting ON a line (divider, fold rule, axis, connector) needs an OPAQUE background - a wash lets the rule run through the text. Use `color-mix(... var(--brand-accent) 11%, var(--inset-bg))`, don't lower alpha. |
 
 **Sizing** (full in style-guide "Sizing"): author at logical px, render at 2x; crop the stage **tight**
 to the content (a few px margin; bento-card illus run small, e.g. ~732x540, not 1200x900); **round

@@ -20,6 +20,20 @@ Kết quả là một file PNG nền trong suốt độ phân giải retina, th�
 
 ## Trông như thế nào
 
+![Năm hình minh hoạ cho một section marketing: kiểm cấu trúc, thứ khách thật sự thấy, nội dung dang dở, hành vi khách, so sánh ngành](./preview/page-audit-section.webp)
+
+Năm hình vẽ trong cùng một lượt chạy, cho năm thẻ của một section marketing.
+Toàn bộ là vector: một cột trang mờ đóng vai chủ thể, một panel trắng đặc đóng
+vai kết quả đọc được, và các viên nhãn trạng thái cưỡi lên mép giữa hai thứ đó.
+Việc tách mờ với đặc là cố ý - nhìn phát ra ngay đâu là hình minh hoạ, đâu là
+giao diện.
+
+Để ý hai thẻ hàng trên. Chúng chung ngôn ngữ hình nhưng **lật gương** cho nhau -
+thẻ thứ hai trang nằm phải, panel nằm trái, lật cả thanh nav lẫn cách thụt chữ
+bên trong. Ý tưởng khác nhau thôi chưa đủ: hai thẻ kề nhau dùng chung một khung
+sẽ đọc ra là một bố cục in hai lần, nên skill giờ có luật riêng chặn việc đó
+(R17).
+
 ![CRO Center và drawer AEO, ảnh chụp thật trộn với UI vector](./preview/aeo-card.webp)
 
 Mọi panel nền trắng ở trên là **ảnh chụp thật**, cắt trên khe trắng và nhúng
@@ -37,11 +51,11 @@ chúng.
 
 Ba thứ nằm sẵn trong skill và được áp mỗi lần chạy:
 
-- **Bộ component** (`components/`) - 22 mảnh vector dùng lại được, mỗi mảnh là
+- **Bộ component** (`components/`) - 23 mảnh vector dùng lại được, mỗi mảnh là
   một đoạn HTML độc lập. Mảnh vẽ riêng nào xuất hiện lần thứ hai thì được đưa
   vào bộ chung.
-- **Style guide** (`references/style-guide.md`) - các cổng hỏi đầu vào và 16
-  quy tắc bố cục đánh số (R1-R16), trong đó có bước tự soát cạnh: mỗi cặp cạnh
+- **Style guide** (`references/style-guide.md`) - các cổng hỏi đầu vào và 18
+  quy tắc bố cục đánh số (R1-R18), trong đó có bước tự soát cạnh: mỗi cặp cạnh
   kề nhau phải hoặc cách hẳn ra hoặc chồng hẳn lên, không được để khe hở mỏng
   gần song song.
 - **Bộ eval** (`evals/`) - các lần chạy có chấm điểm, để khi sửa quy tắc thì so
@@ -51,6 +65,9 @@ Phần hỏi đầu vào cố tình để dạng trò chuyện chứ không ph�
 nằm ở đâu, chụp một thẻ hàng xóm làm tham chiếu, rồi từ đó chọn chế độ nền sáng
 hay nền kính tối. Thẻ hàng xóm chỉ dùng để thống nhất ngôn ngữ hình ảnh, không
 bao giờ dùng để chép lại bố cục.
+
+Mỗi quy tắc trong đó đều đổi bằng một bản render bị bác, và style guide ghi luôn
+lỗi gốc bên cạnh quy tắc để lần sau không phải cãi lại từ đầu.
 
 ## Không dùng cho
 

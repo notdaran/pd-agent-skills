@@ -1,0 +1,79 @@
+<!-- name: concept-page-column | tier: A | purpose: the TRANSLUCENT storefront/page column that is the
+       subject of a Mode-A audit or preview card - nav, hero block, heading + copy bars, a product row
+       (image / price / buy button), a closing block, running off the bottom edge. It is the surface
+       everything else annotates.
+     params: width/height inline (~300-450 wide; make the height OVERSHOOT the stage by 50-80px so the
+       bleed is deliberate, not a shallow clip - R3 containment). Bars: .il-cpc__b + .d / .s (heading,
+       CTA) / .k (deepest, price) / .f (faint, nav + chips); image blocks .il-cpc__im. Real copy
+       instead of bars -> the .copy / .copy-soft / .copy-mute weights (R12).
+       MIRRORED variant (R17): add class .is-mirrored, set an inline padding-left, and give the nav /
+       hero / closing block class .il-cpc__bleed with a matching negative margin-left so they still
+       run the page's full width while the copy indents clear of the overlay panel.
+     usage: this is CONCEPT art, so it stays TRANSLUCENT (--concept-panel, ~40%) with NO shadow - it
+       must RECEDE into the lavender card while the solid-white real-UI panel (check-row-panel) POPS
+       in front. That 40%-vs-100% + no-shadow-vs-soft-shadow split is the Mode-A "what is the
+       illustration / what is the UI" separator - a shadow here collapses it.
+       Bleeds the bottom, so square the bottom corners and drop the bottom border (R3b). Keep every
+       piece of content that must stay readable clear of the overlay panel by >=20px (R8) - a panel
+       cutting a CTA pill in half is the classic miss. Dark marketing page? use tablet-frame instead. -->
+<div class="il-cpc" style="left:22px; top:14px; width:400px; height:550px;">
+  <div class="il-cpc__nav">
+    <div class="il-cpc__dots"><i></i><i></i><i></i></div>
+    <div style="display:flex;gap:8px;">
+      <div class="il-cpc__b f" style="width:30px;height:6px;"></div>
+      <div class="il-cpc__b f" style="width:30px;height:6px;"></div>
+      <div class="il-cpc__b f" style="width:30px;height:6px;"></div>
+    </div>
+  </div>
+
+  <div class="il-cpc__im" style="margin-top:16px;height:106px;"></div>
+
+  <div class="il-cpc__b s" style="margin-top:26px;width:206px;height:15px;"></div>
+  <div class="il-cpc__b"   style="margin-top:11px;width:248px;"></div>
+  <div class="il-cpc__b"   style="margin-top:8px;width:172px;"></div>
+
+  <div class="il-cpc__rule" style="margin-top:22px;"></div>
+
+  <div style="display:flex;gap:16px;margin-top:16px;">
+    <div class="il-cpc__im" style="width:110px;height:110px;flex:none;"></div>
+    <div style="flex:1;">
+      <div class="il-cpc__b d" style="width:112px;height:9px;"></div>
+      <div class="il-cpc__b k" style="margin-top:18px;width:62px;height:14px;"></div>
+      <div class="il-cpc__cta" style="margin-top:26px;width:104px;height:26px;"></div>
+    </div>
+  </div>
+
+  <div class="il-cpc__rule" style="margin-top:20px;"></div>
+  <div class="il-cpc__im" style="margin-top:16px;height:130px;"></div>
+</div>
+
+<style>
+  .il-cpc {
+    position: absolute; overflow: hidden;
+    background: var(--concept-panel);            /* ~40% white - BLENDS into the card */
+    border: 1px solid var(--concept-edge);
+    border-radius: var(--r-xround) var(--r-xround) 0 0;
+    border-bottom: none;                         /* R3b - bled bottom edge, no radius + no border */
+    padding: 18px;
+    font-family: var(--font-body);
+    /* NO box-shadow, deliberately: a shadow makes concept art read as real UI (Mode-A split) */
+  }
+  .il-cpc__nav  { display: flex; align-items: center; justify-content: space-between; height: 16px; }
+  .il-cpc.is-mirrored .il-cpc__nav { flex-direction: row-reverse; }
+  .il-cpc__dots { display: flex; gap: 5px; }
+  .il-cpc__dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--concept-bar-deep); display: block; }
+
+  .il-cpc__b   { border-radius: var(--r-pill); background: var(--concept-bar); height: 8px; }
+  .il-cpc__b.d { background: var(--concept-bar-2); }
+  .il-cpc__b.s { background: var(--concept-bar-strong); }
+  .il-cpc__b.k { background: var(--concept-bar-deep); }
+  .il-cpc__b.f { background: var(--concept-bar-faint); }
+
+  .il-cpc__im   { border-radius: var(--r-xxl); background: var(--concept-img); }
+  .il-cpc__rule { height: 1px; background: var(--concept-edge); }
+  .il-cpc__cta  { border-radius: var(--r-pill); background: var(--concept-bar-strong); }
+
+  /* R17 mirrored layout: full-width chrome while the copy stays indented clear of the overlay.
+     Pair with an inline padding-left on .il-cpc and a matching negative margin here. */
+  .il-cpc__bleed { margin-left: -128px; width: 412px; }
+</style>

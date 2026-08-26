@@ -1,0 +1,36 @@
+<!-- name: status-tag | tier: A | purpose: the small white status pill that STRADDLES a host panel's
+       edge - glyph + one short line ("2 images have no alt text", "214 clicks here"). The Mode-A
+       light-card sibling of frost-chip (dark pages) and the annotation workhorse: it names WHAT was
+       found and pins it to WHERE it was found.
+     params: label (one short line, white-space:nowrap); glyph - swap the leading svg:
+       .is-ok (green tick) / .is-warn (amber bang) / any 20x20 svg (eye, sparkle, arrow), or a bare
+       <span class="il-tag__swatch"> colour dot. Position with left/top OR right/top (use `right:`
+       when the composition is mirrored - keeps it text-width-independent, R11).
+     usage: a STATUS FLAG anchored to its subject, never free-floating decoration. Straddle the host
+       edge by ~30-40px so the edge passes THROUGH the pill - edge-flush reads as mis-registration
+       (R11). Stagger multiple tags on BOTH axes; never stack them at the same left in a straight
+       column (R1). Keep >=30px clear of the panel edges above/below it (R9), and >=~25px off every
+       stage edge so the soft shadow is not clipped (R3 containment).
+       On a light Mode-A card only - on a dark marketing page use frost-chip instead. -->
+<div class="il-tag" style="left:296px; top:44px;">
+  <svg class="il-tag__ic" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" style="fill:var(--accent-green)"/><path d="M5.8 10.4l2.7 2.7 5.7-5.9" style="fill:none;stroke:var(--inset-bg);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round"/></svg>
+  Hero opens the page
+</div>
+
+<style>
+  .il-tag {
+    position: absolute; display: flex; align-items: center; gap: 8px;
+    background: var(--inset-bg);
+    border: 1px solid var(--inset-border);
+    border-radius: var(--r-pill);
+    box-shadow: var(--inset-shadow-soft);
+    padding: 8px 15px 8px 11px;
+    font-family: var(--font-body);
+    font-size: 12.5px; font-weight: var(--fw-medium);
+    color: var(--inset-text-strong);
+    white-space: nowrap;
+  }
+  .il-tag__ic { width: 15px; height: 15px; flex: none; display: block; }
+  /* colour-dot variant, when the state is a legend key rather than pass/fail */
+  .il-tag__swatch { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+</style>
