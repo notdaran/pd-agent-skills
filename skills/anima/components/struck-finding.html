@@ -1,0 +1,44 @@
+<!--
+  struck-finding - a drawn check beside a line-through finding title, on a panel.
+  Source: outputs/checkup-15s #br-check / .br-find. SECOND build - checkup-hero's
+          explainer-score-move carried the same check + strike, which is why this is a kit file
+          rather than another log row.
+  Purpose: says "this issue is now closed" without any product chrome. It is the whole content
+           of a bridge beat between two recordings: recall the finding the audience already saw,
+           mark it done, point at what happens next.
+  Vars: --navy-surface / --navy-border / --navy-muted (swap to --surface / --border /
+        --text-muted on the light preset). The check is an SVG `stroke` literal exception -
+        #34D399 on navy, #039855 on light.
+  NEVER an emoji tick (hard rule 4) - the path below is the iconography.
+  Place: centred, with the beat's headline BELOW it. Keep the beat short (~2.2s): the finding
+         text is being re-recognised, not read for the first time.
+-->
+<style>
+  .pf-struck-row {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--navy-surface); border: 1px solid var(--navy-border);
+    border-radius: var(--r-lg); box-shadow: var(--shadow-navy); padding: 20px 34px 21px;
+  }
+  .pf-struck-check { flex: none; display: flex; }
+  .pf-struck-text {
+    font-size: 26px; font-weight: var(--fw-medium); color: var(--navy-muted);
+    text-decoration: line-through; letter-spacing: -0.01em;
+  }
+</style>
+
+<div class="pf-struck-row">
+  <span id="pf-struck-check" class="pf-struck-check">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4.5 12.6l4.8 4.8L19.5 7.2" stroke="#34D399" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span class="pf-struck-text">No primary call to action in the first screen</span>
+</div>
+
+<!-- Timeline recipe (T = the scene's enter time) -->
+<!--
+  // The row arrives with its cluster (see loop-ground); only the check is animated separately,
+  // so the tick reads as the moment the issue closes rather than as part of the slide.
+  tl.fromTo("#pf-struck-check", { scale: 0, opacity: 0 },
+                                { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2.2)" }, T + 0.72);
+-->

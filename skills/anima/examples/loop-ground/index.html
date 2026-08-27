@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--
+  anima case - "AI Page Checkup" CRO explainer. 14.80s, 1624x854, 60fps.
+
+  r4 - ONE CONTINUOUS NAVY GROUND (member). The two claim scenes were on the light Layer B; they
+  are now navy with the intro's blur glows, and the glows travel between beats:
+    "ở 2 cảnh này t thấy đẹp nhất là để nó nền dark với blur glow như intro -> vừa dễ transition
+     và vừa giữ đc style ... 2 cục glow đổi vị trí và cụm element mới sẽ vọt vào từ 1 hướng phù
+     hợp ... tương tự với cảnh fixed, now scan again cũng nền xanh đen cho match branding"
+
+  WHY THIS IS SAFE, AND WHY footage-pieces 5 SAYS OTHERWISE. That section mandates the LIGHT
+  palette whenever the footage is a light app UI, because "a navy card cutting to a white editor
+  flashes on every transition". That reasoning holds only for a DISSOLVE, where the two grounds
+  are cross-mixed on screen. Here every navy<->footage join is a SLIDE with a hard edge: the
+  editor arrives as an opaque panel travelling over the ground, so the two brightnesses never
+  blend and there is no flash to avoid. Slide instead of dissolve and the light palette stops
+  being necessary - which buys one continuous branded ground for the whole piece.
+
+  TWO TRANSITION GRAMMARS, kept on separate axes so they never read alike:
+    * footage  - VERTICAL. Slides up from the bottom to cover, slides back down to uncover.
+    * clusters - lateral or off the footage's exit edge, and NEVER a fade. The ground persists
+                 underneath, so a cluster swap is pure travel (style-guide -> the handoff:
+                 "opacity is the absence of choreography, not a style choice").
+  Handoff edges: the card exits LEFT and the findings enter from LEFT (same edge, 0.40s apart -
+  the eye is already there); f1 exits DOWNWARD and the bridge enters from BELOW.
+
+  THE GROUND IS SHARED, WHICH THE KIT NORMALLY FORBIDS. Hard rule 2 says give each card scene the
+  ground itself, never a transparent div over a shared bed - because a crossfade then stacks two
+  scenes and reads muddy. No cluster here is ever crossfaded (they only translate), so the failure
+  that rule prevents cannot occur, and a shared ground is the only way the glows can travel
+  ACROSS a beat boundary instead of restarting at it. Do not "fix" this back.
+
+  GLOWS: three arrangements, and the last must equal the first or the loop breaks.
+    A (frame 0)  glowA top-left,  glowB bottom-right
+    B            swapped horizontally          - moved 1.55-2.55, ON SCREEN (this is the member's
+                                                 "2 cục glow đổi vị trí")
+    C            swapped and offset vertically - moved 7.30-8.10, HIDDEN behind f1
+    A            restored 11.10-12.10,         - HIDDEN behind f2, so the close lands exactly on
+                                                 frame 0's arrangement
+  Only the A->B move is visible; the other two are free because footage is covering the ground.
+
+  TIMELINE, frames @60fps:
+    ground       0f  +888f (14.80s)  track 0, no text, spans everything
+    sCardOpen    0f  +147f (2.45s)   track 1   at rest 0-1.55, exits left 1.55-2.32 (staggered)
+    sEx1       105f  +231f (3.85s)   track 2   enters from left 1.95-2.75 (staggered), holds to 4.95
+    f1         297f  +213f (3.55s)   track 4   up 4.95-5.55, down 7.90-8.50
+    sBridge    474f  +147f (2.45s)   track 3   enters from below 8.20-8.80, holds 8.80-10.00
+    f2         600f  +276f (4.60s)   track 5   up 10.00-10.60, down 13.40-14.15
+    sCardClose 801f   +87f (1.45s)   track 6   STATIC, revealed by f2 falling; at rest from 14.15
+  The fall starts at 13.40, not 13.60: at 13.60 the card's title and subhead were still under the
+  falling footage when `check` sampled contrast, reading 1:1 and 2.35:1. Clearing the text earlier
+  fixes the measurement AND the thing it was measuring.
+  Total 888f = 14.80s. 91 lands at 11.77 and holds 1.63s before f2 starts falling.
+
+  DOM ORDER IS LOAD-BEARING (bottom to top): ground, sCardOpen, sEx1, sBridge, sCardClose, f1, f2.
+  The footage must paint above the clusters it covers, and sCardClose must sit BELOW f2 so the
+  fall REVEALS it. r3 shipped a version where the close card was above the footage and popped in.
+
+  CUTS (verified border-free, 24 samples each, scripts/solve-crop.py verify):
+    f1 = src 6.30-9.40   crop=1390:730:116:252  + 0.45s clone-freeze = 3.55s
+    f2 = src 17.53-21.03 crop=1472:774:132:132  + 1.10s clone-freeze = 4.60s
+  Both freezes exist to buy slide time / hold time the source does not contain. f1 must NOT run
+  past 9.40 - the recorder zooms back out at ~9.5 and the personal browser tab strip returns.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        /* Layer A - brand identity (synced from _pf-brand, do not fork) */
+        --brand-accent: #535AF7;
+        --brand-accent-soft: #A6ACFF;
+        --fw-light: 300;
+        --fw-medium: 500;
+        --fw-semibold: 600;
+        --fw-bold: 700;
+
+        /* Layer B - NAVY surface. r4: the whole piece rides on this; the light palette is gone. */
+        --navy-bg: #050A18;
+        --navy-surface: #0E1730;
+        --navy-border: rgba(255, 255, 255, 0.11);
+        --navy-text: rgba(255, 255, 255, 0.96);
+        --navy-muted: #9AA0B4;
+        --glow-accent: rgba(83, 90, 247, 0.30);
+        --glow-blue: rgba(61, 107, 255, 0.20);
+
+        --sem-critical: #D92D20;
+        --sem-warning: #DC6803;
+
+        --r-sm: 8px;
+        --r-lg: 20px;
+        --r-pill: 9999px;
+        --shadow-navy: 0 24px 64px rgba(0, 0, 0, 0.46);
+      }
+
+      body {
+        margin: 0; width: 1624px; height: 854px; overflow: hidden;
+        background: var(--navy-bg); color: var(--navy-text); font-family: "Poppins", sans-serif;
+      }
+      .scene { position: absolute; top: 0; left: 0; width: 1624px; height: 854px; overflow: hidden; }
+      video.scene { object-fit: cover; display: block; }
+
+      /* the one ground everything rides on */
+      #ground { background: var(--navy-bg); }
+      .glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(150px); }
+
+      .stage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .head { font-size: 52px; font-weight: var(--fw-semibold); letter-spacing: -0.022em; line-height: 1.14; text-align: center; color: var(--navy-text); }
+      .sub  { font-size: 26px; font-weight: var(--fw-light); color: var(--navy-muted); margin-top: 14px; line-height: 1.4; text-align: center; }
+
+      /* ===== the loop card ===== */
+      .h-logo { width: 216px; height: 54px; background: url(assets/pf-logo.svg) no-repeat center / contain; }
+      .h-title { font-size: 88px; font-weight: var(--fw-bold); letter-spacing: -0.035em; line-height: 1.04; margin-top: 26px; }
+      .h-bar { width: 260px; height: 6px; background: var(--brand-accent); border-radius: var(--r-pill); margin-top: 28px; }
+      .h-sub { font-size: 30px; font-weight: var(--fw-light); color: var(--navy-muted); margin-top: 28px; }
+
+      /* ===== severity chips, re-measured for the dark ground =====
+         On the light preset the ink had to be DARKENED toward the text colour; on navy it has to
+         be LIGHTENED toward white over a deeper tint. Same idea, opposite direction - never carry
+         a chip recipe across a palette swap without re-running `hyperframes check`. */
+      .chip { font-size: 15px; font-weight: var(--fw-medium); border-radius: var(--r-sm); padding: 3px 10px 4px; white-space: nowrap; }
+      .chip-critical { color: color-mix(in srgb, var(--sem-critical) 40%, #FFFFFF); background: color-mix(in srgb, var(--sem-critical) 22%, var(--navy-surface)); }
+      .chip-warning  { color: color-mix(in srgb, var(--sem-warning) 40%, #FFFFFF);  background: color-mix(in srgb, var(--sem-warning) 22%, var(--navy-surface)); }
+      .chip-dim      { color: var(--navy-muted); background: rgba(255, 255, 255, 0.08); }
+
+      /* ===== health dial ===== */
+      .dial { position: relative; width: 200px; height: 122px; }
+      .dial svg { display: block; }
+      .dial-num {
+        position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+        font-size: 46px; font-weight: var(--fw-bold); letter-spacing: -0.03em; line-height: 1;
+        font-variant-numeric: tabular-nums; font-family: "JetBrains Mono", monospace;
+      }
+
+      /* ===== EX1 - what the scan found, and what it was graded on ===== */
+      .grade-card {
+        width: 900px; background: var(--navy-surface); border: 1px solid var(--navy-border);
+        border-radius: var(--r-lg); box-shadow: var(--shadow-navy); padding: 26px 32px 22px; box-sizing: border-box;
+      }
+      .gc-top { display: flex; align-items: center; gap: 34px; }
+      .gc-dial-label { font-size: 17px; font-weight: var(--fw-light); color: var(--navy-muted); text-align: center; margin-top: 2px; }
+      .gc-findings { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+      .gc-find { display: flex; align-items: center; gap: 10px; }
+      .gc-find-title { font-size: 20px; font-weight: var(--fw-medium); letter-spacing: -0.008em; }
+      .gc-foot { display: flex; align-items: flex-end; gap: 16px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--navy-border); }
+      /* the session-data motif: what "graded on your own sessions" LOOKS like. The label names the
+         bars beside it, so it is plain text, not a badge (label-rules rule 7). */
+      .bars { display: flex; align-items: flex-end; gap: 7px; height: 44px; }
+      .bar { width: 13px; border-radius: 3px 3px 0 0; background: var(--brand-accent-soft); transform-origin: bottom center; }
+      .gc-foot-label { font-size: 18px; font-weight: var(--fw-light); color: var(--navy-muted); padding-bottom: 3px; }
+
+      /* ===== BRIDGE - no editor chrome, just the closed finding ===== */
+      .br-row {
+        display: flex; align-items: center; gap: 16px;
+        background: var(--navy-surface); border: 1px solid var(--navy-border); border-radius: var(--r-lg);
+        box-shadow: var(--shadow-navy); padding: 20px 34px 21px;
+      }
+      .br-find { font-size: 26px; font-weight: var(--fw-medium); color: var(--navy-muted); text-decoration: line-through; letter-spacing: -0.01em; }
+      .check { flex: none; display: flex; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-width="1624" data-height="854"
+         data-start="0" data-duration="14.80" data-fps="60">
+
+      <!-- ============ THE GROUND - one navy bed + two travelling glows, whole piece ============ -->
+      <div id="ground" class="scene clip" data-start="0" data-duration="14.80" data-track-index="0">
+        <div id="g-a" class="glow" data-layout-ignore style="width:900px;height:900px;background:var(--glow-accent);top:-320px;left:-200px;"></div>
+        <div id="g-b" class="glow" data-layout-ignore style="width:840px;height:840px;background:var(--glow-blue);bottom:-300px;right:-180px;filter:blur(175px);"></div>
+      </div>
+
+      <!-- ============ the loop card, open twin - exits LEFT ============ -->
+      <div id="sCardOpen" class="scene clip" data-start="0" data-duration="2.45" data-track-index="1">
+        <!-- #card-in IS the stage. Do not wrap it in another .stage: an inner absolutely
+             positioned stage inside a shrink-to-fit flex item loses its width, and the lockup
+             renders as a narrow wrapped column mid-exit (seen at t=1.85 on the r4 render). -->
+        <div id="card-in" class="stage">
+          <div class="h-logo" role="img" aria-label="PageFly"></div>
+          <div class="h-title">AI Page Checkup</div>
+          <div class="h-bar"></div>
+          <div class="h-sub">Built into the PageFly editor</div>
+        </div>
+      </div>
+
+      <!-- ============ EX1 - enters from the LEFT, the edge the card just left by ============ -->
+      <div id="sEx1" class="scene clip" data-start="1.75" data-duration="3.85" data-track-index="2">
+        <div id="e1-in" class="stage">
+          <div class="grade-card">
+            <div class="gc-top">
+              <div>
+                <div class="dial">
+                  <svg width="200" height="122" viewBox="0 0 200 122" fill="none" aria-hidden="true">
+                    <path d="M20 108 A80 80 0 0 1 180 108" stroke="rgba(255,255,255,0.13)" stroke-width="15" stroke-linecap="round" fill="none"/>
+                    <path id="e1-arc" d="M20 108 A80 80 0 0 1 180 108" stroke="#34D399" stroke-width="15" stroke-linecap="round" fill="none"
+                          stroke-dasharray="252" stroke-dashoffset="252"/>
+                  </svg>
+                  <div id="e1-num" class="dial-num">0</div>
+                </div>
+                <div class="gc-dial-label">Health score</div>
+              </div>
+              <div class="gc-findings">
+                <div class="gc-find">
+                  <span class="chip chip-critical">Critical</span><span class="chip chip-dim">CRO</span>
+                  <span class="gc-find-title">No primary call to action in the first screen</span>
+                </div>
+                <div class="gc-find">
+                  <span class="chip chip-warning">Warning</span><span class="chip chip-dim">CRO</span>
+                  <span class="gc-find-title">Missing FAQ section</span>
+                </div>
+              </div>
+            </div>
+            <div class="gc-foot">
+              <div class="bars">
+                <span class="bar b-item" style="height:17px;"></span><span class="bar b-item" style="height:29px;"></span>
+                <span class="bar b-item" style="height:22px;"></span><span class="bar b-item" style="height:38px;"></span>
+                <span class="bar b-item" style="height:31px;"></span><span class="bar b-item" style="height:44px;"></span>
+                <span class="bar b-item" style="height:26px;"></span><span class="bar b-item" style="height:35px;"></span>
+              </div>
+              <div class="gc-foot-label">Ranked on your store&rsquo;s own sessions</div>
+            </div>
+          </div>
+          <div class="head" style="margin-top:44px;">Every issue, ranked by impact</div>
+          <div class="sub">Layout, copy, SEO and speed - in one pass</div>
+        </div>
+      </div>
+
+      <!-- ============ BRIDGE - enters from BELOW, off f1's downward exit ============ -->
+      <div id="sBridge" class="scene clip" data-start="7.90" data-duration="2.45" data-track-index="3">
+        <div id="br-in" class="stage">
+          <div class="br-row">
+            <span id="br-check" class="check">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4.5 12.6l4.8 4.8L19.5 7.2" stroke="#34D399" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="br-find">No primary call to action in the first screen</span>
+          </div>
+          <div class="head" style="margin-top:44px;">Fixed. Now scan again.</div>
+        </div>
+      </div>
+
+      <!-- ============ the loop card, close twin - STATIC, revealed as f2 falls ============ -->
+      <div id="sCardClose" class="scene clip" data-start="13.35" data-duration="1.45" data-track-index="6">
+        <div class="stage">
+          <div class="h-logo" role="img" aria-label="PageFly"></div>
+          <div class="h-title">AI Page Checkup</div>
+          <div class="h-bar"></div>
+          <div class="h-sub">Built into the PageFly editor</div>
+        </div>
+      </div>
+
+      <!-- footage paints ABOVE the clusters it covers -->
+      <video id="f1" class="scene clip" data-start="4.95" data-duration="3.55" data-track-index="4"
+             data-media-start="0" src="assets/f1.mp4" muted playsinline></video>
+      <video id="f2" class="scene clip" data-start="10.00" data-duration="4.60" data-track-index="5"
+             data-media-start="0" src="assets/f2.mp4" muted playsinline></video>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      /* ============================================================================
+         GLOWS - the only thing that crosses beat boundaries. A -> B on screen, then
+         B -> C and C -> A while footage hides the ground, so the close lands back on
+         frame 0's arrangement and the loop is exact.
+         ============================================================================ */
+      tl.to("#g-a", { x: 1290, duration: 1.00, ease: "sine.inOut" }, 1.55);   // A -> B, VISIBLE
+      tl.to("#g-b", { x: -1290, duration: 1.00, ease: "sine.inOut" }, 1.55);
+      tl.to("#g-a", { y: 430, duration: 0.80, ease: "sine.inOut" }, 7.30);    // B -> C, behind f1
+      tl.to("#g-b", { y: -430, duration: 0.80, ease: "sine.inOut" }, 7.30);
+      tl.to("#g-a", { x: 0, y: 0, duration: 1.00, ease: "sine.inOut" }, 11.10);  // C -> A, behind f2
+      tl.to("#g-b", { x: 0, y: 0, duration: 1.00, ease: "sine.inOut" }, 11.10);
+
+      /* ============================================================================
+         FOOTAGE - vertical only. Slides up to cover, slides down to uncover. A hard
+         edge, never a dissolve: that is what lets a navy claim scene sit next to a
+         white editor without the brightness flash footage-pieces 5 warns about.
+         ============================================================================ */
+      tl.fromTo("#f1", { y: 854 }, { y: 0,   duration: 0.60, ease: "power3.inOut" }, 4.95);
+      tl.to("#f1",                 { y: 854, duration: 0.60, ease: "power3.inOut" }, 7.90);
+      tl.fromTo("#f2", { y: 854 }, { y: 0,   duration: 0.60, ease: "power3.inOut" }, 10.00);
+      tl.to("#f2",                 { y: 854, duration: 0.75, ease: "power3.inOut" }, 13.40);
+
+      /* ============================================================================
+         CLUSTERS - travel only, never opacity. The ground persists underneath, so
+         there is nothing to fade between.
+         ============================================================================ */
+      /* OVERLAP / FOLLOW-THROUGH (member): a cluster must not travel as one rigid block.
+         Every cluster move staggers its own children by a few frames so the parts drag behind
+         the leader, which is what makes the arrival read as physical rather than as a slide
+         transition. Staggers are 0.04-0.07s (3-4 frames @60) - inside the style-guide's <=0.14s
+         ceiling for a group of like elements, and deliberately far below the 0.35-0.45s used
+         between two lines of ONE sentence, which these are not.
+         The parent (#card-in / #e1-in / #br-in) is NOT tweened any more; its children are, so
+         each cluster's stage stays put and only its contents move. */
+
+      /* the card leaves by the LEFT edge; the findings arrive at that same edge 0.40s later,
+         so the eye never has to re-find the subject (style-guide -> the handoff) */
+      tl.to("#card-in > *", { x: -1750, duration: 0.65, ease: "power2.in", stagger: 0.04 }, 1.55);
+      /* parked off-frame from frame 0 - without the set() they sit at x:0, dead centre, until
+         their own tween starts, so the headline would be visible while the card is still flying */
+      tl.set("#e1-in > *", { x: -1750 }, 0);
+      tl.to("#e1-in > *", { x: 0, duration: 0.66, ease: "power3.out", stagger: 0.07 }, 1.95);
+      /* f1 exits DOWNWARD, so the bridge launches from below - same rule, vertical axis */
+      tl.set("#br-in > *", { y: 560 }, 0);
+      tl.to("#br-in > *", { y: 0, duration: 0.60, ease: "power3.out", stagger: 0.07 }, 8.20);
+
+      /* ===== EX1 - the fly-in IS the entrance; only the live parts animate on top of it.
+         Count-up is a plain proxy object; no Math.random / Date.now. ===== */
+      var n1 = { v: 0 }, e1num = document.getElementById("e1-num");
+      tl.set(".b-item", { scaleY: 0, opacity: 0 }, 0);   // parked, or they pop when the tween starts
+      tl.fromTo(".b-item", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.40, stagger: 0.055, ease: "back.out(1.6)" }, 2.30);
+      tl.fromTo("#e1-arc", { strokeDashoffset: 252 }, { strokeDashoffset: 40, duration: 0.90, ease: "power2.out" }, 2.40);
+      tl.to(n1, { v: 84, duration: 0.90, ease: "power2.out",
+                  onUpdate: function () { e1num.textContent = Math.round(n1.v); } }, 2.40);
+
+      /* ===== BRIDGE - the drawn check pops once the row has landed ===== */
+      tl.fromTo("#br-check", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2.2)" }, 8.62);
+
+      /* f2 gets no tween but its slide. It holds dead still on 91 (member, r2). */
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

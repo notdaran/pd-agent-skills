@@ -1,7 +1,8 @@
 # anima
 
 Một **skill** cho Claude / agent, làm ra một đoạn motion ngắn đúng brand: video
-giới thiệu hoặc thông báo tính năng, một minh hoạ động, một hero động.
+giới thiệu hoặc thông báo tính năng, một minh hoạ động, một hero động, hoặc một
+video giải thích tính năng nhiều nhịp dựng cùng bản quay màn hình thật.
 
 Nó không tự dựng lại bộ máy làm video. Toàn bộ phần đó - hợp đồng timeline,
 chuyển cảnh, lint, render - giao cho
@@ -15,12 +16,31 @@ dựng sẵn vốn đã chạy đúng nhịp.
 
 ## Trông như thế nào
 
+![Video giải thích sản phẩm mười lăm giây lặp liền mạch: thẻ brand, bảng lỗi tìm được, footage editor thật, điểm nhảy từ 84 lên 91, rồi quay lại thẻ brand](./preview/loop-ground.gif)
+
+Mười lăm giây, năm nhịp, và nó **lặp** - khung hình cuối trùng khung hình đầu, đo
+được 48.6 dB PSNR, không cần tối màn để giấu chỗ nối. Cả video chạy trên một nền
+duy nhất: các nhịp hoạt hoạ là những cụm trong suốt trượt ngang qua nền đó, còn
+đoạn quay màn hình thật thì trượt đè lên trên bằng một mép cứng. Chính cái mép
+cứng đó cho phép đặt thẻ brand nền tối ngay cạnh giao diện app nền trắng mà không
+bị loá ở mỗi cú cắt. Không phần tử nào mờ đi để biến mất; tất cả đều rời khung
+bằng cách di chuyển.
+
+Composition chạy được: [`examples/loop-ground/`](./examples/loop-ground) -
+[bản render đầy đủ](./preview/loop-ground.mp4). Phần chú thích đầu file ghi lại
+năm cái bẫy, mỗi cái từng tốn nguyên một lần render, trong đó có hai cái vượt
+qua cả `lint`, `check` **và** `render` mà nhìn vẫn thấy hỏng.
+
+<details>
+<summary>Một piece cũ hơn - một thẻ tiêu đề cắt sang một đoạn quay</summary>
+
 ![Thẻ tiêu đề đúng brand cắt sang bản quay màn hình thật](./preview/checkup-sharper.gif)
 
-Đây là một footage piece: thẻ tiêu đề dựng từ các khối trong kit trên brand
-preset, rồi crossfade mờ sang một đoạn quay màn hình thật mà không ra khỏi khung
-PF. Ảnh GIF là chín giây đầu ở 12fps - [bản render đầy đủ](./preview/checkup-sharper.mp4)
-mượt hơn và cho thấy trọn cú cắt.
+Dạng hai cảnh đơn giản hơn: thẻ tiêu đề dựng từ các khối trong kit trên brand
+preset, rồi crossfade mờ sang một đoạn quay màn hình thật. GIF là chín giây đầu ở
+12fps; [bản render đầy đủ](./preview/checkup-sharper.mp4) mượt hơn.
+
+</details>
 
 ## Ba lớp nó thêm vào
 
@@ -30,12 +50,13 @@ mượt hơn và cho thấy trọn cú cắt.
   luyện chứ không phải sách hướng dẫn. Mỗi con số thời lượng trong đó đều là số
   đo từ một piece thật, kèm luôn con số đã bị loại: 0.14s bị chê là giật, chốt
   0.40s. Giữ khung dưới 2.5s thì mắt người xem rời đi trước khi cắt cảnh.
-- **Bộ khối** (`components/`) - mười khối chuyển động mang sẵn cái gu đó: logo
-  lockup, thẻ reveal, morph trước-sau, vòng điểm, tia quét, thanh nhấn, nền
-  glow, cảnh footage, và mối nối loop-tail giúp video lặp lại mà không thấy chỗ
-  cắt.
+- **Bộ khối** (`components/`) - mười hai khối chuyển động mang sẵn cái gu đó:
+  logo lockup, thẻ reveal, morph trước-sau, vòng điểm, đồng hồ điểm, dòng lỗi đã
+  gạch, tia quét, thanh nhấn, nền glow, cảnh footage, mối nối loop-tail, và
+  `loop-ground` - cái này không phải một khối mà là bộ khung của cả composition,
+  thứ giúp một video có footage lặp lại được.
 
-Có hai ví dụ hoàn chỉnh chạy được trong `examples/`.
+Có ba ví dụ hoàn chỉnh chạy được trong `examples/`.
 
 ## Không dùng cho
 
@@ -93,10 +114,22 @@ HyperFrames cần token nằm inline trong HTML của composition, nên preset �
 chép vào `:root` của từng composition chứ không link tới. Đổi brand ở đây là
 thao tác tay, không phải bật tắt bằng config.
 
-## Ghi chú về khối footage
+## Làm việc với footage thật
 
-`components/footage-scene.html` dùng để cắt từ thẻ tiêu đề sang một đoạn quay
-màn hình thật. Bản render hoàn chỉnh của piece dùng để đo ra các luật đó nằm ở
-[`preview/`](./preview/checkup-sharper.mp4), nhưng composition chạy được thì
-không đi kèm - riêng đoạn clip nguồn đã 27MB. Mọi thứ cần để tự dựng đều nằm
-trong phần chú thích đầu file khối đó và mục "Footage pieces" của style guide.
+Dựng các nhịp hoạt hoạ cùng một bản quay màn hình là một nghề riêng, và đây là
+chỗ mà làm bằng mắt gần như chắc chắn tốn nguyên những lần render. Toàn bộ nằm
+trong `references/footage-pieces.md`: cách cắt khung sao cho không lòi nền cửa sổ
+hay tab trình duyệt cá nhân, vì sao cảnh dẫn giữa hai đoạn quay phải ngắn và
+không được nhắc lại điều đoạn quay trước đã chứng minh, và làm sao để một video
+có footage lặp lại được.
+
+`scripts/solve-crop.py` lo phần tính khung - `solve` tính ra vùng cắt sạch viền
+trên toàn bộ độ dài của cú cắt (xét sắc độ chứ không xét độ sáng, vì các panel
+trắng của chính app không phải là nền cửa sổ), còn `verify` chứng minh cú cắt đã
+xong không lòi mép nào. Dùng cả hai; contact sheet không bắt được những thứ chúng
+bắt được.
+
+[`examples/loop-ground/`](./examples/loop-ground) chạy được và có kèm clip.
+`components/footage-scene.html` vẫn là khối hai cảnh đơn giản hơn; piece dùng để
+đo ra luật của nó nằm ở [`preview/`](./preview/checkup-sharper.mp4) nhưng không
+chạy được ở đây - riêng clip nguồn đã 27MB.

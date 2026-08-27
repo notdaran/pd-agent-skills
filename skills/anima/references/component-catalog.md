@@ -25,7 +25,9 @@ pastes into the case's one `tl` timeline and rebases to the scene's enter time.
 - **`pf-` class/id prefix** so blocks don't collide when several share a canvas.
 - **Self-contained**: each file carries its own `<style>` + a leading comment (purpose, source, vars,
   placement, params) + the timeline recipe. Geometry (left/top/size) is case-specific - adjust inline.
-- **Entrances only** in recipes (`from`/`fromTo`); exits live on the final beat (the loop tail), per style-guide.
+- **Entrances only** in recipes (`from`/`fromTo`); in a loop piece exits live on the final beat
+  (the loop tail). A block reused in a LINEAR piece may need a choreographed exit instead -
+  `references/style-guide.md` -> Transitions -> The handoff.
 - **Labels & badges from the shared kit** - never re-invent inline. Style per `_pf-brand/label-rules.md`;
   badge families / colors per `_pf-brand/badges.html` via `var(--badge-*)`. Poppins, sentence case, soft 8px;
   no mono-caps eyebrows, no metallic pills.
@@ -43,6 +45,15 @@ pastes into the case's one `tl` timeline and rebases to the scene's enter time.
 | [scan-beam](../components/scan-beam.html) | cyan beam sweep that marks the reveal / fix moment | `#s2-beam` / `#hm-beam` |
 | [footage-scene](../components/footage-scene.html) | an existing real recording as a full-bleed scene, blur-crossfaded in from a title card | `#s2` / `#s2-video` |
 | [loop-tail](../components/loop-tail.html) | full-bleed veil fading to navy so the loop seam is invisible | `#loopveil` |
+| [health-dial](../components/health-dial.html) | semicircle score gauge: track + drawing arc + deterministic count-up | `#e1-arc` / `#e1-num` |
+| [struck-finding](../components/struck-finding.html) | drawn check beside a line-through finding title, on a panel | `#br-check` / `.br-find` |
+| [loop-ground](../components/loop-ground.html) | **structure**, not one element: one continuous ground + travelling glows + transparent clusters + twin card, so a linear piece loops | whole composition |
+
+`loop-ground` is the odd one out: a composition **skeleton** rather than a block. It supersedes
+the sliding-"deck" variant tried earlier in the same case - use one or the other, never both. It
+also deliberately breaks SKILL.md hard rule 2 (shared ground under transparent clusters), which is
+safe **only** because nothing in it is ever crossfaded; check that before reusing it.
+`health-dial` is NOT `score-ring` - the ring is a halo you place over a gauge, this is the gauge.
 
 `footage-scene` belongs to a different shape - a **footage piece** (title card -> real recording), which is
 1920x1080 and linear rather than a 1600x900 loop. Read `../references/style-guide.md` -> Footage pieces first.
@@ -69,4 +80,12 @@ follows the style-guide). If all three hold -> propose it, get approval, and add
 | emphasis-bar | page-checkup intro | (seed) | count-up score + status pill |
 | loop-tail | page-checkup intro | (seed) | seamless-loop seam (anima signature) |
 | footage-scene | checkup-sharper | (1st) | first non-loop piece; carries the 1920x1080 + data-fps root setup |
+| explainer-mock-page | checkup-hero | (1st) | white page card + status chip + accent beam sweeping it; the 'we scan your page' beat |
+| explainer-score-move | checkup-hero | (1st) | struck-through finding + drawn check + deterministic count-up + delta pill; the 'score moves' beat |
+| explainer-chat | checkup-hero | (1st) | user bubble + FlyMate reply w/ drawn SVG check; the 'ask FlyMate' beat |
+| multi-cut-footage | checkup-hero | (1st) | N cuts as scenes, one track each, explainer card before each footage beat |
+| struck finding + drawn check | checkup-hero (in explainer-score-move) | **checkup-15s (2nd)** | PROMOTED -> `struck-finding.html` |
+| health-dial | checkup-15s | (1st) | promoted early: the kit had the halo (`score-ring`) but never the gauge |
+| loop-ground | checkup-15s | (1st) | promoted as a structure; it is what makes a footage piece loop at all |
+| editor-chrome mock | checkup-15s r1 | **REJECTED, do not rebuild** | a redraw of the app forced into a match cut with real footage. Member killed it: a near-miss reads as a defect, and the beat duplicated what the previous cut already proved. See footage-pieces 7. |
 > Add a row each time a NEW bespoke block is built in a teaser; a 2nd appearance = promote to a kit file.

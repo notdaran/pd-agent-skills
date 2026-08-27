@@ -1,0 +1,92 @@
+<!--
+  loop-ground - the STRUCTURE for a linear piece that still loops, on one continuous ground.
+  Source: outputs/checkup-15s (worked reference: examples/loop-ground/).
+  Bigger than the other blocks on purpose: this is a composition skeleton, not one element.
+  It supersedes the sliding-"deck" variant tried in the same case - do not use both.
+
+  What it buys
+   - a piece that ends on a dead frame becomes a seamless loop, WITHOUT the `loop-tail` veil;
+   - one branded ground for the whole runtime instead of strobing light / dark / light;
+   - glows that TRAVEL across beat boundaries rather than restarting at each one.
+
+  The model
+   - #pf-ground : one navy scene spanning the whole composition, owning both glows. No text in
+                 it, so it never trips an occlusion or contrast check while covered.
+   - clusters   : TRANSPARENT scenes on that ground. They only ever translate - never opacity.
+   - footage    : the only OPAQUE scenes. They slide vertically to cover and uncover.
+   - the card   : rendered TWICE as static twins, windowed to the open and the close.
+
+  Why the twins. A single card scene spanning the piece sits under the footage for most of the
+  runtime and `check` ERRORS on it (sustained occlusion). Two clip-windowed twins with identical
+  static markup keep the seam exact and the checker quiet.
+
+  Five traps, each of which cost a render on checkup-15s
+   1. BOTH twins go BEFORE the footage in the DOM. After it, the close twin paints on top of the
+      falling clip and the card POPS IN instead of being revealed.
+   2. NOTHING on the card may animate - not a breathing glow. Across two twins a tween would have
+      to be at an identical phase in both; static is the only provable version.
+   3. Glow arrangements must RETURN to the first one. Move them on screen once, and do the rest
+      behind footage where they are free.
+   4. Tween a cluster's CHILDREN, never the wrapper, and `set()` them off-frame at t=0 - see
+      style-guide -> Overlap / follow-through.
+   5. A translated cluster must BE the stage (`class="stage"` on it). Wrapping it in another
+      absolutely-positioned stage makes it a shrink-to-fit flex item; it loses its width and
+      renders as a narrow wrapped column ONLY while moving. Static frames look perfect.
+
+  Vars: --navy-bg, --glow-accent, --glow-blue. Swap brand.css to rebrand.
+  Prove the seam, do not eyeball it:
+    ffmpeg -i out.mp4 -vf "select=eq(n\,0)" -frames:v 1 -y f0.png
+    ffmpeg -sseof -0.02 -i out.mp4 -frames:v 1 -y fN.png
+    ffmpeg -i f0.png -i fN.png -lavfi psnr -f null -        # expect >40dB; checkup-15s = 48.6
+-->
+<style>
+  #pf-ground { background: var(--navy-bg); }
+  .pf-glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(150px); }
+</style>
+
+<!-- 1. the ground: first in the DOM, spans the whole composition -->
+<div id="pf-ground" class="scene clip" data-start="0" data-duration="14.80" data-track-index="0">
+  <div id="pf-g-a" class="pf-glow" data-layout-ignore style="width:900px;height:900px;background:var(--glow-accent);top:-320px;left:-200px;"></div>
+  <div id="pf-g-b" class="pf-glow" data-layout-ignore style="width:840px;height:840px;background:var(--glow-blue);bottom:-300px;right:-180px;filter:blur(175px);"></div>
+</div>
+
+<!-- 2. clusters + the open twin, all BEFORE any footage. Each translated element IS a .stage. -->
+<div id="pf-cardOpen" class="scene clip" data-start="0" data-duration="2.45" data-track-index="1">
+  <div id="pf-card-in" class="stage"><!-- lockup: see logo-lockup --></div>
+</div>
+<div id="pf-beat" class="scene clip" data-start="1.75" data-duration="3.85" data-track-index="2">
+  <div id="pf-beat-in" class="stage"><!-- the beat's own content --></div>
+</div>
+
+<!-- 3. the close twin: identical, static, still BEFORE the footage -->
+<div id="pf-cardClose" class="scene clip" data-start="13.35" data-duration="1.45" data-track-index="6">
+  <div class="stage"><!-- the SAME lockup markup, no wrapper to translate --></div>
+</div>
+
+<!-- 4. footage last, so it paints above everything it covers -->
+<!-- <video id="pf-f1" class="scene clip" data-start="4.95" data-duration="3.55" data-track-index="4"
+          data-media-start="0" src="assets/f1.mp4" muted playsinline></video> -->
+
+<!-- Timeline recipe -->
+<!--
+  // GLOWS - A on screen -> B, then B -> C and C -> A hidden behind footage, so the close lands
+  // exactly on frame 0's arrangement.
+  tl.to("#pf-g-a", { x:  1290, duration: 1.00, ease: "sine.inOut" }, 1.55);   // visible
+  tl.to("#pf-g-b", { x: -1290, duration: 1.00, ease: "sine.inOut" }, 1.55);
+  tl.to("#pf-g-a", { y:   430, duration: 0.80, ease: "sine.inOut" }, 7.30);   // behind f1
+  tl.to("#pf-g-b", { y:  -430, duration: 0.80, ease: "sine.inOut" }, 7.30);
+  tl.to("#pf-g-a", { x: 0, y: 0, duration: 1.00, ease: "sine.inOut" }, 11.10);  // behind f2 -> A
+  tl.to("#pf-g-b", { x: 0, y: 0, duration: 1.00, ease: "sine.inOut" }, 11.10);
+
+  // FOOTAGE - vertical only. A hard edge, never a dissolve: that is what lets a navy claim scene
+  // sit beside a white app UI with no brightness flash (footage-pieces 5).
+  tl.fromTo("#pf-f1", { y: 854 }, { y: 0,   duration: 0.60, ease: "power3.inOut" }, 4.95);
+  tl.to("#pf-f1",                 { y: 854, duration: 0.60, ease: "power3.inOut" }, 7.90);
+
+  // CLUSTERS - children, staggered; parent never moves. Same edge in as out, 0.40s apart.
+  tl.to("#pf-card-in > *", { x: -1750, duration: 0.65, ease: "power2.in",  stagger: 0.04 }, 1.55);
+  tl.set("#pf-beat-in > *", { x: -1750 }, 0);
+  tl.to("#pf-beat-in > *", { x: 0, duration: 0.66, ease: "power3.out", stagger: 0.07 }, 1.95);
+
+  // The close twin gets NO tween. The footage falling away is what reveals it.
+-->

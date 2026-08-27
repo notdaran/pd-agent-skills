@@ -1,0 +1,49 @@
+<!--
+  health-dial - semicircle score gauge: a static track, an arc that draws, and a count-up.
+  Source: outputs/checkup-15s #e1-arc / #e1-num (the "what the scan found" beat).
+  Purpose: a score ARRIVING. Lets a claim scene read as a panel mid-calculation instead of a
+           static card, which is what makes a cluster that flies in feel alive on landing.
+  NOT `score-ring`: that block is a halo you place OVER a gauge. This is the gauge.
+  Vars: no brand hue. Both strokes are SVG `stroke` - a documented literal exception
+        (style-guide) - and MUST be re-picked per palette:
+          navy ground  : track rgba(255,255,255,0.13)  arc #34D399
+          light preset : track #E1E6EF                 arc #039855
+        A dark green on navy reads as dead; a bright one on white reads as neon. Do not carry
+        one pair across a palette swap - the same trap as the severity chips.
+  Params: arc length 252 (= pi * r, r = 80). dashoffset = 252 * (1 - score/100), so 84 -> 40.
+          Change the tween target and the count-up ceiling TOGETHER or the number lies.
+  Place: lays out inline at 200x122; put the caption under it, not inside.
+-->
+<style>
+  .pf-dial { position: relative; width: 200px; height: 122px; }
+  .pf-dial svg { display: block; }
+  .pf-dial-num {
+    position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+    font-size: 46px; font-weight: var(--fw-bold); letter-spacing: -0.03em; line-height: 1;
+    font-variant-numeric: tabular-nums; font-family: "JetBrains Mono", monospace;
+  }
+  .pf-dial-label { font-size: 17px; font-weight: var(--fw-light); color: var(--navy-muted); text-align: center; margin-top: 2px; }
+</style>
+
+<div class="pf-dial">
+  <svg width="200" height="122" viewBox="0 0 200 122" fill="none" aria-hidden="true">
+    <path d="M20 108 A80 80 0 0 1 180 108" stroke="rgba(255,255,255,0.13)" stroke-width="15" stroke-linecap="round" fill="none"/>
+    <path id="pf-dial-arc" d="M20 108 A80 80 0 0 1 180 108" stroke="#34D399" stroke-width="15" stroke-linecap="round" fill="none"
+          stroke-dasharray="252" stroke-dashoffset="252"/>
+  </svg>
+  <div id="pf-dial-num" class="pf-dial-num">0</div>
+</div>
+<div class="pf-dial-label">Health score</div>
+
+<!-- Timeline recipe (offsets are relative to the scene's enter time T; example T + 0.45) -->
+<!--
+  // Deterministic: a plain proxy object, never Date.now() / Math.random() (hard rule 5).
+  var pfScore = { v: 0 }, pfNum = document.getElementById("pf-dial-num");
+  tl.fromTo("#pf-dial-arc", { strokeDashoffset: 252 },
+                            { strokeDashoffset: 40, duration: 0.90, ease: "power2.out" }, T + 0.45);
+  tl.to(pfScore, { v: 84, duration: 0.90, ease: "power2.out",
+                   onUpdate: function () { pfNum.textContent = Math.round(pfScore.v); } }, T + 0.45);
+
+  // If the scene ENTERS by travelling (loop-ground clusters), start this ~0.10s after the
+  // travel begins, not after it lands - the gauge should already be moving on arrival.
+-->

@@ -1,13 +1,14 @@
 ---
 name: anima
-description: Use when creating a short on-brand PageFly motion piece - an intro / teaser / announcement video ("New in PageFly: …"), a single animated illustration, or an animated hero. Orchestrates HyperFrames and layers on PF brand + motion gu + a kit of on-brand motion blocks, composed freely per case. Calls illustra when it needs a static PNG. Not for: static marketing images (use illustra / feature-demo); non-PF brands (swap the preset).
+description: Use when creating a short on-brand PageFly motion piece - an intro / teaser / announcement video ("New in PageFly: …"), a single animated illustration, an animated hero, or a multi-scene feature explainer / motion-graphics demo (a feature video for a landing page hero, a product explainer, an animated walkthrough) - whether its evidence is real screen recordings or pure vector animation. Orchestrates HyperFrames and layers on PF brand + motion gu + a kit of on-brand motion blocks, composed freely per case. Calls illustra when it needs a static PNG. Not for: static marketing images (use illustra / feature-demo); non-PF brands (swap the preset).
 ---
 
 # anima
 
 ## Overview
 One piece = a short on-brand motion artifact: an intro / teaser / announcement video, a single
-animated illustration, or an animated hero. **HyperFrames makes the motion; anima makes it
+animated illustration, an animated hero, a footage piece, or a multi-scene feature explainer -
+the last of which may be built from screen recordings, from pure vector animation, or from both. **HyperFrames makes the motion; anima makes it
 look like PageFly.** This is a **design system, not a template library**: the reusable thing is
 not one `index.html`, it is three composition-independent layers - brand tokens
 (`references/brand.css`, with shared identity in `_pf-brand/`), motion gu
@@ -29,12 +30,35 @@ No HyperFrames authoring rules are duplicated here (DRY - avoids drift on HF upg
 - Producing a short on-brand PageFly motion piece:
   - an **intro / teaser / announcement** ("New in PageFly: ..."),
   - a single **animated illustration** (one concept animating),
-  - an **animated hero** (a hero section in motion), or
-  - a **footage piece**: an on-brand title card cutting to an existing real recording
-    (screen capture, product demo).
+  - an **animated hero** (a hero section in motion),
+  - a **footage piece**: one on-brand title card cutting to one real recording, or
+  - a **feature explainer**: `intro -> [claim -> evidence] x N -> outro` - animated beats that
+    each *teach* one thing, each followed by something that *proves* it. **The evidence may be a
+    screen recording, an animated vector demo, or a mix** - a fully-vector explainer with no
+    recording anywhere is the same type and the same grammar, it just skips the capture work.
+    This is the shape for a feature video on a landing page. Two worked examples, and they
+    differ in more than length: `examples/loop-ground/` (14.8s, 5 beats, ONE continuous navy
+    ground, travelling clusters, loops) is the current reference - copy its joins and structure.
+    `outputs/checkup-hero` (13 scenes, 40.7s) is older, is local-only, alternates light and navy,
+    and closes with one uniform crossfade on all 12 joins; read it for the beat-pair idea, not
+    for its transitions.
 
-  The first three are 1600x900 seamless loops. A footage piece is **1920x1080 and linear** -
-  see `references/style-guide.md` -> Footage pieces before authoring one.
+  The first three are 1600x900 seamless loops. The last two are usually linear - **but a footage
+  piece or explainer can ALSO loop**, by returning to frame 0's state instead of closing on a
+  veil. That is a separate structure with its own component and worked example
+  (`components/loop-ground.html`, `examples/loop-ground/`, 14.8s, seam measured at 48.6 dB).
+  Prefer it for anything that will autoplay on a landing page; a linear cut ending on a dead
+  frame is a choice, not a default.
+
+  A feature explainer is NOT a longer footage piece: its unit of composition is the **beat pair**
+  (a claim plus the evidence for it), so its structure, transition grammar and QA all differ.
+  Treating one as the other is what produced a context-free clip reel on the first attempt.
+
+  **Motion grammar for any multi-scene piece** - the handoff, the match cut, crossfade tiers -
+  lives in `references/style-guide.md` -> Transitions, and is independent of whether there is any
+  footage. **Only if a real recording is involved**, also read `references/footage-pieces.md`
+  first (the canvas then comes from the capture, not the kit) and cut with
+  `scripts/solve-crop.py`. Doing capture work by eye costs several full re-renders.
 - The case has clear beats: an intro hold, an optional before/after morph, a single-feature hold.
   For an animated illustration / hero, the intro title-card (scene 1) is often dropped.
 
@@ -82,6 +106,14 @@ Notes:
    *layout*, *transitions* - then show a one-paragraph plan to OK. If they say "just try it",
    skip the brief and proceed. The **intro title-card (scene 1) is optional** - drop it for an
    animated illustration / hero unless the case wants the "New in PageFly" framing.
+
+   Two questions belong in EVERY intake, because getting them wrong invalidates the whole piece
+   rather than one line (both learned the hard way on `checkup-hero`):
+   - **Which claims are durable?** Never build a piece around pricing ("free", "$X/mo") - it is
+     the most likely thing to change. Lead on what the product does.
+   - **When a member cites a reference video, say WHY it works before copying its shape.** A
+     sparse-UI product can cut straight into raw footage; a dense one cannot, and the member is
+     buying the outcome, not the structure.
 2. **Understand the case** -> the message + which beats it needs (intro? before/after morph?
    single feature?). State it in one sentence: what is new and why it matters.
 3. **Start from a stage.** Freeform new case -> copy `templates/canvas.html` (blank on-brand
@@ -99,10 +131,16 @@ Notes:
    (`_pf-brand/label-rules.md` + `_pf-brand/badges.html`) - Poppins, sentence case, soft badges via
    `var(--badge-*)`; never mono-caps eyebrows or metallic pills. Defer structural and timeline
    rules to the hyperframes skill.
-6. **QA:** `npx hyperframes lint && npx hyperframes validate && npx hyperframes inspect`. Fix
+6. **Get framing + copy approved BEFORE the first render.** A render is ~2.5 minutes and every
+   framing or copy miss costs a whole one (`checkup-hero` burned five). Show the member (a) a
+   contact sheet of the first frame of every cut and (b) the copy list - headline + subhead per
+   scene. This is where essentially every rebuild originates.
+7. **QA:** `npx hyperframes lint && npx hyperframes validate && npx hyperframes inspect`. Fix
    overflow, contrast, and H.264 banding. Use `npx hyperframes inspect --at 4.6,5.3` to pin
    specific beats.
-7. **Render:** `npx hyperframes render`. Then **harvest** reusable parts - run the governance
+   For a footage piece also run `python3 scripts/solve-crop.py verify <cut>.mp4` on **every cut**
+   before composing - contact sheets missed a leaked browser tab strip and a partial border twice.
+8. **Render:** `npx hyperframes render`. Then **harvest** reusable parts - run the governance
    scan below.
 
 ## Hard rules
@@ -112,18 +150,39 @@ Mirror `references/style-guide.md`; defer the full video-machinery list to the h
    (glow tokens ship pre-baked), so swapping `brand.css` rebrands. Literal exceptions (per
    style-guide): fonts `"Poppins"` / `"JetBrains Mono"` (the
    renderer cannot resolve `var(--font-*)`); GSAP color tweens; SVG `stroke`; neutrals.
-2. **Navy opaque on every scene.** No jump cuts - scene-to-scene is a blur crossfade over the
-   opaque `--bg` (a hyperframes hard rule).
-3. **Entrances only**, except the final beat. Animate IN every element (`gsap.from` / `fromTo`);
-   exit tweens live solely on the loop tail.
+2. **No jump cuts - but "opaque scene" is a rule about CROSSFADES.** Scene-to-scene is a blur
+   crossfade over an opaque `--bg` (a hyperframes hard rule), and where you crossfade, each card
+   scene must own its ground: a transparent scene over a shared bed makes the crossfade stack two
+   scenes and read muddy. **If nothing crossfades, that requirement lifts.** A piece whose beats
+   TRAVEL (clusters translating over one continuous ground, footage sliding in with a hard edge)
+   may and should share a single ground - it is the only way glows can carry across a beat
+   boundary instead of restarting at it. Worked reference: `components/loop-ground.html`,
+   `examples/loop-ground/`. Check "does anything here crossfade?" before reusing it.
+   Ground choice: the kit ground is navy; the light Layer B exists for pieces that *dissolve*
+   into a light app UI (see `references/footage-pieces.md` -> 5, which is scoped to dissolves).
+3. **Exits are banned only when they would break the seam - which is not the same as "loop".**
+   In a **veil-closed loop** (teaser / illustration / hero) animate IN every element and keep exit
+   tweens on the loop tail, because the tail is what makes frame N == frame 0. In **every other
+   piece - linear, AND a loop that closes by returning to frame 0's STATE rather than by a veil -
+   exits are required**: the strongest join is a *handoff*, where the outgoing element travels off
+   toward the point the next one launches from, so the eye is never asked to re-find the subject
+   (`style-guide.md` -> Transitions -> The handoff). A cluster must never travel as one rigid
+   block; stagger its children (`style-guide.md` -> Overlap / follow-through).
+   What stays banned everywhere is the *decorative* fade-out that exists only to clear the screen.
 4. **No emoji.** Iconography is hand-drawn - CSS dots, a drawn SVG check path, a green pill -
    never an emoji glyph.
 5. **Deterministic.** No `Math.random()` / `Date.now()`; finite repeats only (never
    `repeat: -1`) - renders must be reproducible.
-6. **Seamless loop (loop pieces only).** For a teaser / animated illustration / hero: glows start
-   hidden and `#loopveil` fades to navy near T-end, so the final frame == frame 0. **A footage
-   piece is linear, not a loop** - it still closes on the veil for a clean tail, but frame 0 and
-   the final frame are not required to match.
+6. **A seamless loop has TWO recipes, and a footage piece can use the second one.**
+   (a) **Veil close** - teaser / illustration / hero: glows start hidden and `#loopveil` fades to
+   the ground colour near T-end, so the final frame == frame 0.
+   (b) **Return to frame 0's state** - no veil at all: open on a static card, take it away, bring
+   it back untouched, and land every travelling thing (glows especially) back on its opening
+   arrangement. This is what lets a **footage piece loop**, which the kit previously said was
+   impossible. `outputs/checkup-15s` does it at **48.6 dB PSNR** between first and last frame.
+   Prove it with `ffmpeg -lavfi psnr`, never by eye - see `footage-pieces.md` -> 10. Expect >40 dB;
+   anything lower means something really moved.
+   A piece that is genuinely one-shot may still just end, but say so deliberately.
 
 ## File map
 | Path | Role |
@@ -131,13 +190,16 @@ Mirror `references/style-guide.md`; defer the full video-machinery list to the h
 | `.claude/skills/_pf-brand/` | **Source of truth** for brand identity tokens + badge palette + label rules (`brand-identity.css`, `badges.html`, `label-rules.md`). It is a SIBLING skill dir, not a subdir of anima - every bare `_pf-brand/` in this skill resolves to this path. Layer A + badges are synced from here into `references/brand.css`. Consumed by anima today; illustra still keeps its own fork at `illustra/references/brand.css` and does NOT read this file. |
 | `references/brand.css` | Brand preset: Layer A identity + badge palette (synced from `_pf-brand/`) + Layer B video surface palette. **Swap to rebrand.** |
 | `references/style-guide.md` | Motion gu: pacing, eases, glow, loop-seam, transitions, labels / badges, do/don't. **Training ledger** - append every refine. |
+| `references/footage-pieces.md` | **Read before any piece using a real recording.** Intake questions, explainer-beat structure, the no-partial-border framing rule, capture de-chroming, light palette, pre-render approval. |
+| `scripts/solve-crop.py` | `solve` a border-free crop for a cut; `verify` a cut has no window backdrop / browser tab strip on any edge. |
 | `references/component-catalog.md` | Kit index + promotion governance + built-parts log. |
 | `components/*.html` | Self-contained motion blocks (`pf-` prefixed): leading comment + scoped `<style>` + markup + a `<!-- Timeline recipe -->`. Paste into the case timeline. |
 | `templates/canvas.html` | Blank on-brand 1600x900 HF stage; brand.css inlined, loop veil ready. Start here for a freeform case. |
 | `examples/before-after/` | Page Checkup intro = worked example, parametrized via `data-composition-variables`. Start here for a before/after. |
+| `examples/loop-ground/` | **The current reference for anything with footage in it.** A 14.8s explainer that LOOPS (48.6 dB seam, no veil): one continuous ground, travelling glows, clusters that stagger, footage that slides. Its `index.html` header records five traps that each cost a render - two of which pass `lint`, `check` and `render` while being visibly broken. |
 
 Rendering is `npx hyperframes render` directly - no bespoke render script (unlike illustra's
-`render.mjs` for Playwright PNGs).
+`render.mjs` for Playwright PNGs). `scripts/solve-crop.py` is a measuring tool, not a renderer.
 
 ## Governance - the training model ("don't redo it each time")
 Every refine compounds into the shared layers, never into a throwaway file:
@@ -145,6 +207,7 @@ Every refine compounds into the shared layers, never into a throwaway file:
 - change a label / badge taste -> `_pf-brand/label-rules.md` + `_pf-brand/badges.html`
 - lock a new ease / pacing / technique ("modern PF") -> `references/style-guide.md`
 - a block hand-built a second time -> **promote it into `components/`** via suggest + approve.
+- a footage / capture lesson -> `references/footage-pieces.md`
 
 After each piece, scan what you hand-built against 3 criteria:
 1. **Reusable** - a generic motion concept, not specific to this case's content. ("Would I

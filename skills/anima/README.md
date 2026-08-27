@@ -1,7 +1,8 @@
 # anima
 
 A Claude / agent **skill** that makes a short on-brand motion piece: an intro or
-announcement video, a single animated illustration, an animated hero.
+announcement video, a single animated illustration, an animated hero, or a
+multi-beat feature explainer cut against real screen recordings.
 
 It does not reinvent video machinery. All of that - timeline contract, scene
 transitions, lint, render - is delegated to
@@ -15,12 +16,31 @@ English · [Tiếng Việt](./README-vi.md)
 
 ## What it looks like
 
+![A fifteen-second product explainer that loops seamlessly: brand card, findings panel, real editor footage, a score moving 84 to 91, back to the card](./preview/loop-ground.gif)
+
+Fifteen seconds, five beats, and it **loops** - the last frame is the first
+frame, measured at 48.6 dB PSNR, with no fade-to-black hiding the seam. One
+continuous ground carries the whole piece: the animated beats are transparent
+clusters that travel across it, and the real screen recordings slide in over the
+top with a hard edge, which is what lets a dark brand card sit next to a white
+app UI without the usual brightness flash on every cut. Nothing fades to get off
+screen; every part leaves by travelling somewhere.
+
+The composition is runnable: [`examples/loop-ground/`](./examples/loop-ground) -
+[full render](./preview/loop-ground.mp4). Its header comment records the five
+traps that each cost a render, including two that pass `lint`, `check` **and**
+`render` while being visibly broken.
+
+<details>
+<summary>An earlier piece - one title card cutting into one recording</summary>
+
 ![An on-brand title card cutting into a real screen recording](./preview/checkup-sharper.gif)
 
-A footage piece: the title card is composed from kit blocks on the brand preset,
-then blur-crossfades into a real screen capture without leaving the PF frame.
-The GIF is the first nine seconds at 12fps - the
-[full render](./preview/checkup-sharper.mp4) is smoother and shows the whole cut.
+The simpler two-scene shape: a title card composed from kit blocks on the brand
+preset, blur-crossfading into a real screen capture. Nine seconds at 12fps; the
+[full render](./preview/checkup-sharper.mp4) is smoother.
+
+</details>
 
 ## The three layers it adds
 
@@ -30,12 +50,13 @@ The GIF is the first nine seconds at 12fps - the
   manual. Every timing in it is a measurement from a real piece, with the
   rejected value recorded next to the shipped one: 0.14s read as a jolt, 0.40s
   shipped. A hold under 2.5s drew the eye away before the cut.
-- **Block kit** (`components/`) - ten motion blocks that carry the taste with
-  them: logo lockup, reveal card, before/after morph, score ring, scan beam,
-  emphasis bar, glow background, footage scene, and the loop-tail seam that
-  makes a piece loop without a visible cut.
+- **Block kit** (`components/`) - twelve motion blocks that carry the taste with
+  them: logo lockup, reveal card, before/after morph, score ring, health dial,
+  struck finding, scan beam, emphasis bar, glow background, footage scene, the
+  loop-tail seam, and `loop-ground` - which is not a block but a whole
+  composition skeleton, the one that makes a piece with footage in it loop.
 
-Two worked examples ship in `examples/`, both runnable.
+Three worked examples ship in `examples/`, all runnable.
 
 ## Not for
 
@@ -94,11 +115,22 @@ HyperFrames renderer needs tokens inlined in the composition HTML, so the
 preset is copied into each composition's `:root` rather than linked. Swapping a
 brand is a manual edit, not a config switch.
 
-## A note on the footage block
+## Working with real footage
 
-`components/footage-scene.html` cuts from a title card to a real screen
-recording. The finished render of the piece its rules were measured on is in
-[`preview/`](./preview/checkup-sharper.mp4), but the runnable composition is
-not - its source clip alone is 27MB. Everything needed to build your own is in
-the block's own header comment and the "Footage pieces" section of the style
-guide.
+Cutting animated beats against a screen recording has its own craft, and it is
+the one place where doing it by eye reliably costs you whole renders. It lives
+in `references/footage-pieces.md`: how to frame a cut so it never leaks the
+window backdrop or your own browser tabs, why the claim scene between two cuts
+must be short and must not restate what the last cut proved, and how a piece
+with footage in it can loop at all.
+
+`scripts/solve-crop.py` does the framing arithmetic - `solve` computes a
+border-free crop across a cut's whole duration (testing chroma, not brightness,
+because an app's own white panels are not the window backdrop), and `verify`
+proves a finished cut has no leak on any edge. Use both; a contact sheet will
+not catch what they catch.
+
+[`examples/loop-ground/`](./examples/loop-ground) is runnable and ships its
+clips. `components/footage-scene.html` remains the simpler two-scene block; the
+piece its rules were measured on is in [`preview/`](./preview/checkup-sharper.mp4)
+but is not runnable here - its source clip alone is 27MB.
