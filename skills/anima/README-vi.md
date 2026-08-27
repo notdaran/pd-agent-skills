@@ -16,31 +16,23 @@ dựng sẵn vốn đã chạy đúng nhịp.
 
 ## Trông như thế nào
 
-![Video giải thích sản phẩm mười lăm giây lặp liền mạch: thẻ brand, bảng lỗi tìm được, footage editor thật, điểm nhảy từ 84 lên 91, rồi quay lại thẻ brand](./preview/loop-ground.gif)
+Hai dạng, cùng một bộ kit.
 
-Mười lăm giây, năm nhịp, và nó **lặp** - khung hình cuối trùng khung hình đầu, đo
-được 48.6 dB PSNR, không cần tối màn để giấu chỗ nối. Cả video chạy trên một nền
-duy nhất: các nhịp hoạt hoạ là những cụm trong suốt trượt ngang qua nền đó, còn
-đoạn quay màn hình thật thì trượt đè lên trên bằng một mép cứng. Chính cái mép
-cứng đó cho phép đặt thẻ brand nền tối ngay cạnh giao diện app nền trắng mà không
-bị loá ở mỗi cú cắt. Không phần tử nào mờ đi để biến mất; tất cả đều rời khung
-bằng cách di chuyển.
+### Video giải thích tính năng, lặp liền mạch
 
-Composition chạy được: [`examples/loop-ground/`](./examples/loop-ground) -
-[bản render đầy đủ](./preview/loop-ground.mp4). Phần chú thích đầu file ghi lại
-năm cái bẫy, mỗi cái từng tốn nguyên một lần render, trong đó có hai cái vượt
-qua cả `lint`, `check` **và** `render` mà nhìn vẫn thấy hỏng.
+![Video giải thích sản phẩm lặp liền mạch: thẻ brand, bảng lỗi tìm được, footage editor thật, điểm nhảy từ 84 lên 91](./preview/loop-ground.gif)
 
-<details>
-<summary>Một piece cũ hơn - một thẻ tiêu đề cắt sang một đoạn quay</summary>
+Mười lăm giây, năm nhịp, và nó lặp - khung hình cuối *chính là* khung hình đầu,
+không cần tối màn để giấu chỗ nối. Chạy được:
+[`examples/loop-ground/`](./examples/loop-ground) ·
+[bản render đầy đủ](./preview/loop-ground.mp4).
+
+### Footage piece
 
 ![Thẻ tiêu đề đúng brand cắt sang bản quay màn hình thật](./preview/checkup-sharper.gif)
 
-Dạng hai cảnh đơn giản hơn: thẻ tiêu đề dựng từ các khối trong kit trên brand
-preset, rồi crossfade mờ sang một đoạn quay màn hình thật. GIF là chín giây đầu ở
-12fps; [bản render đầy đủ](./preview/checkup-sharper.mp4) mượt hơn.
-
-</details>
+Một thẻ tiêu đề cắt sang một đoạn quay màn hình.
+[Bản render đầy đủ](./preview/checkup-sharper.mp4).
 
 ## Ba lớp nó thêm vào
 

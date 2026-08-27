@@ -16,31 +16,23 @@ English · [Tiếng Việt](./README-vi.md)
 
 ## What it looks like
 
-![A fifteen-second product explainer that loops seamlessly: brand card, findings panel, real editor footage, a score moving 84 to 91, back to the card](./preview/loop-ground.gif)
+Two shapes, same kit.
 
-Fifteen seconds, five beats, and it **loops** - the last frame is the first
-frame, measured at 48.6 dB PSNR, with no fade-to-black hiding the seam. One
-continuous ground carries the whole piece: the animated beats are transparent
-clusters that travel across it, and the real screen recordings slide in over the
-top with a hard edge, which is what lets a dark brand card sit next to a white
-app UI without the usual brightness flash on every cut. Nothing fades to get off
-screen; every part leaves by travelling somewhere.
+### A looping feature explainer
 
-The composition is runnable: [`examples/loop-ground/`](./examples/loop-ground) -
-[full render](./preview/loop-ground.mp4). Its header comment records the five
-traps that each cost a render, including two that pass `lint`, `check` **and**
-`render` while being visibly broken.
+![A product explainer that loops: brand card, findings panel, real editor footage, a score moving 84 to 91](./preview/loop-ground.gif)
 
-<details>
-<summary>An earlier piece - one title card cutting into one recording</summary>
+Fifteen seconds, five beats, and it loops - the last frame *is* the first frame,
+with no fade-to-black hiding the seam. Runnable:
+[`examples/loop-ground/`](./examples/loop-ground) ·
+[full render](./preview/loop-ground.mp4).
+
+### A footage piece
 
 ![An on-brand title card cutting into a real screen recording](./preview/checkup-sharper.gif)
 
-The simpler two-scene shape: a title card composed from kit blocks on the brand
-preset, blur-crossfading into a real screen capture. Nine seconds at 12fps; the
-[full render](./preview/checkup-sharper.mp4) is smoother.
-
-</details>
+One title card cutting into one screen recording.
+[Full render](./preview/checkup-sharper.mp4).
 
 ## The three layers it adds
 
