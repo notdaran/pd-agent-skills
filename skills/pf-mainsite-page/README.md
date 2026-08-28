@@ -26,18 +26,16 @@ allows it for. Nothing on the page was hand-written as markup except that table.
 
 **1. The page ships as one big custom-HTML block.** It inherits nothing from the
 site, so it is off-brand. Nobody can edit a word without opening code. No part of
-it is reusable. Two pages on the store this was written against are literally a
-layout wrapper around two HTML blocks and nothing else, while the homepage next
-door is built from hundreds of native elements.
+it is reusable, and the next page starts from zero again.
 
 **2. The page is factually wrong about the product.** Marketing copy claims a
 capability that does not exist, or restates a stale code comment as current law,
 or quotes a feature flag's seeded value as its live rollout. On an app
 marketplace that is a policy exposure, not a typo.
 
-**3. The page ships and nothing links to it.** Pages built this way drew almost
-no traffic in their first clean week, with zero conversion clicks, purely because
-no internal link existed. The links were a five-minute job nobody scheduled.
+**3. The page ships and nothing links to it.** However good the page is, no
+internal link means no traffic. Adding the links takes minutes, gets filed as
+follow-up work, and then never happens.
 
 ## Rule 0
 
@@ -58,8 +56,8 @@ Highlights:
   that inherits nothing - a hand-written HTML block - not for a page you are
   assembling from existing sections.
 - **Identify a layout by geometry, not by counting elements.** Counting tells you
-  what a section *contains*. It read an icon-column section as a bento and a bento
-  as a comparison table, in a single session.
+  what a section *contains*, not what it looks like. Two sections with the same
+  element mix can be completely different layouts.
 - **Verify every product claim against code**, and know that a code comment is a
   snapshot, not a rule - check when it was written and what shipped after.
 - **Write to the length of the string you are replacing.** The layout was designed

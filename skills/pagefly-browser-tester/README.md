@@ -5,7 +5,7 @@ embedded app - an app that renders inside Shopify admin, behind two or three
 nested iframes, sometimes inside a max-modal overlay on top of them.
 
 It is a written map, not a framework. One markdown file: the tool decision and
-why, the frame topology, the traps that cost hours, and a session-continuity
+why, the frame topology, the traps that cost hours to rediscover, and a session-continuity
 template for runs long enough to exhaust a context window.
 
 English · [Tiếng Việt](./README-vi.md)
@@ -16,12 +16,7 @@ English · [Tiếng Việt](./README-vi.md)
 
 **Use chrome-devtools MCP. Do not use Playwright** for this surface.
 
-That rule used to carry a wrong reason - "Playwright cannot reach the app iframe
-because it is cross-origin". It can, via `frameLocator`. Keeping a wrong reason
-is expensive: it invites the next person to retry Playwright the moment they hit
-the contradiction, and lose the same hour again.
-
-The measured reasons:
+Both tools can reach every frame. The difference is measured elsewhere:
 
 - **Speed.** Playwright MCP through the browser-extension relay took **2 to 6
   minutes per DOM read**. The same operations in chrome-devtools take seconds.

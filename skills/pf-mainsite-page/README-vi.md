@@ -27,18 +27,16 @@ bằng markup.
 
 **1. Trang ship dưới dạng một khối custom HTML to đùng.** Nó không thừa hưởng gì
 từ site nên lạc thương hiệu. Không ai sửa được một chữ nếu không mở code. Không
-phần nào tái dùng được. Hai trang trên store mà skill này viết cho đúng nghĩa đen
-chỉ là một lớp bọc layout ôm hai khối HTML, trong khi trang chủ ngay bên cạnh
-dựng từ hàng trăm element gốc.
+phần nào tái dùng được, và trang kế tiếp lại bắt đầu từ số không.
 
 **2. Trang nói sai về sản phẩm.** Copy marketing khẳng định một năng lực không tồn
 tại, hoặc chép lại một comment code đã cũ như thể là luật hiện hành, hoặc lấy giá
 trị seed của feature flag làm giá trị đang chạy thật. Trên một chợ ứng dụng thì đó
 là rủi ro chính sách, không phải lỗi chính tả.
 
-**3. Trang ship xong mà không có gì trỏ tới.** Những trang dựng kiểu đó gần như
-không có lượt truy cập trong tuần sạch đầu tiên, không một click chuyển đổi, chỉ
-vì không có link nội bộ nào. Việc gắn link tốn năm phút mà không ai xếp lịch.
+**3. Trang ship xong mà không có gì trỏ tới.** Trang hay đến mấy mà không có link
+nội bộ thì cũng không ai vào. Gắn link chỉ tốn vài phút, nhưng nó luôn bị xếp vào
+diện việc làm sau, rồi không bao giờ được làm.
 
 ## Quy tắc 0
 
@@ -59,8 +57,8 @@ Vài điểm chính:
   hợp không thừa hưởng gì từ site: khối HTML viết tay. Không phải để dựng một
   trang lắp từ section có sẵn.
 - **Nhận dạng layout bằng hình học, đừng đếm element.** Đếm chỉ cho biết section
-  *chứa* gì. Cách đếm đã đọc nhầm một section cột icon thành bento, và một bento
-  thành bảng so sánh, trong cùng một phiên làm việc.
+  *chứa* gì, không cho biết nó trông ra sao. Hai section có cùng thành phần
+  element vẫn có thể là hai layout hoàn toàn khác nhau.
 - **Kiểm mọi khẳng định về sản phẩm ngược lại code**, và nhớ rằng comment trong
   code là ảnh chụp chứ không phải luật: xem nó viết khi nào và sau đó đã ship gì.
 - **Viết đúng độ dài của chuỗi mà bạn đang thay.** Layout được thiết kế quanh

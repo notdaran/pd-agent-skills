@@ -6,7 +6,8 @@ hai đến ba lớp iframe lồng nhau, đôi khi còn nằm trong một overlay
 lên trên tất cả.
 
 Đây là một tấm bản đồ viết sẵn, không phải một framework. Chỉ một file markdown:
-chọn công cụ nào và tại sao, sơ đồ các lớp frame, những cái bẫy đã ngốn hàng giờ,
+chọn công cụ nào và tại sao, sơ đồ các lớp frame, những cái bẫy tốn hàng giờ nếu
+phải tự mò ra,
 và một mẫu ghi tiến độ cho những lượt chạy đủ dài để đốt hết context.
 
 [English](./README.md) · Tiếng Việt
@@ -17,12 +18,8 @@ và một mẫu ghi tiến độ cho những lượt chạy đủ dài để đ�
 
 **Dùng chrome-devtools MCP. Đừng dùng Playwright** cho bề mặt này.
 
-Quy tắc này từng đi kèm một lý do sai: "Playwright không với tới được app iframe
-vì nó khác origin". Thực ra với tới được, qua `frameLocator`. Để một lý do sai
-nằm đó rất đắt: người tiếp theo đọc thấy mâu thuẫn sẽ thử lại Playwright và mất
-đúng một giờ như lần trước.
-
-Lý do thật, có đo:
+Cả hai công cụ đều với tới được mọi lớp frame. Khác biệt nằm ở chỗ khác, và đo
+được:
 
 - **Tốc độ.** Playwright MCP qua relay tiện ích trình duyệt mất **2 đến 6 phút
   cho mỗi lần đọc DOM**. Cùng thao tác đó chrome-devtools chỉ mất vài giây.
