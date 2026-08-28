@@ -8,8 +8,6 @@ It is a method plus one worked example. No build step, no dependencies: a
 pipeline, five reference files, and a real section library printed in full so you
 can see the shape of a good one.
 
-English · [Tiếng Việt](./README-vi.md)
-
 ---
 
 ## A page built this way

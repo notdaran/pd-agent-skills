@@ -13,8 +13,6 @@ It blends two kinds of material on one canvas:
 
 Output is a transparent retina PNG you drop onto the destination card.
 
-English · [Tiếng Việt](./README-vi.md)
-
 ---
 
 ## What it looks like
@@ -105,3 +103,11 @@ file to render in a different brand; the drawing logic has no brand knowledge of
 its own. PageFly is the preset that ships as the default.
 
 See [`_pf-brand`](../_pf-brand) for the shared identity layer.
+
+## Data
+
+Nothing environment-specific lives in this skill - no paths, no credentials, no
+project identifiers. The exception is deliberate: the images in `preview/` and
+the PageFly values in `references/brand.css` are real product material, kept as
+worked examples. The screenshots and the logo belong to their owner. Remove
+them if you are not authorised to use them.

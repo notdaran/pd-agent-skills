@@ -10,8 +10,6 @@ reference files the agent loads one at a time, plus the query shapes to drive
 Mixpanel when it is connected. Everything works on numbers pasted into the chat
 if it is not.
 
-English · [Tiếng Việt](./README-vi.md)
-
 ---
 
 ## The six stages

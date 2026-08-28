@@ -8,8 +8,6 @@ It is a written map, not a framework. One markdown file: the tool decision and
 why, the frame topology, the traps that cost hours to rediscover, and a session-continuity
 template for runs long enough to exhaust a context window.
 
-English · [Tiếng Việt](./README-vi.md)
-
 ---
 
 ## The one decision that matters

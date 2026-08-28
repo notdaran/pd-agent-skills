@@ -10,8 +10,6 @@ transitions, lint, render - is delegated to
 is the part HyperFrames cannot know: a brand preset, a motion taste, and a kit
 of blocks that already move the right way.
 
-English · [Tiếng Việt](./README-vi.md)
-
 ---
 
 ## What it looks like
@@ -123,6 +121,12 @@ proves a finished cut has no leak on any edge. Use both; a contact sheet will
 not catch what they catch.
 
 [`examples/loop-ground/`](./examples/loop-ground) is runnable and ships its
-clips. `components/footage-scene.html` remains the simpler two-scene block; the
-piece its rules were measured on is in [`preview/`](./preview/checkup-sharper.mp4)
-but is not runnable here - its source clip alone is 27MB.
+clips. `components/footage-scene.html` is the simpler block for a piece that is
+one title card cutting into one recording.
+
+## Data
+
+Nothing environment-specific lives in this skill - no paths, no credentials, no
+project identifiers. The exception is deliberate: `examples/` and `preview/`
+ship real PageFly screen recordings and the PageFly logo as worked examples.
+Those belong to their owner. Remove them if you are not authorised to use them.

@@ -1,19 +1,22 @@
 # pd-agent-skills
 
-Agent skills I use for product-development work.
+Agent skills I use for product-development work: deciding what to build, making
+the assets and the marketing page that announce it, and testing the app it all
+lives in.
 
 A skill is a folder of instructions - plus a renderer, where one is needed -
 that a coding agent loads on demand. They are written for Claude Code, but the
 instructions are plain Markdown, so any agent that can read a folder can use
 them.
 
-What they have in common: each one encodes a piece of taste that would otherwise
-have to be re-explained every time. Not "make me an image", but the sixteen
-composition rules, the measured timing, the rule about never letting a model
-redraw a real screenshot, the gate that refuses an A/B test your traffic was
-never going to power.
-
-English · [Tiếng Việt](./README-vi.md)
+What they have in common: each one carries a piece of taste, or a fact that cost
+something to learn, which would otherwise have to be re-explained every time.
+Not "make me an image", but the eighteen composition rules and the rule that a
+model never redraws a real screenshot. Not "check these numbers", but the gate
+that refuses an A/B test your traffic was never going to power. Not "build the
+page", but the section library it should be assembled from rather than
+hand-written. Not "test the app", but the measured reason one browser tool
+cannot drive this surface and another can.
 
 ## Skills
 
@@ -68,10 +71,10 @@ not PageFly-only tools. To use your own brand, swap the preset inside the skill:
 `presets/` for `feature-demo`, `references/brand.css` for `illustra` and
 `anima`.
 
-That story is further along in `feature-demo`, which already ships a `neutral`
-preset selected by an environment variable, than in the other two, which
-currently ship only the PageFly values. [`_pf-brand`](./skills/_pf-brand)
-documents where the duplication currently sits.
+`feature-demo` selects its preset from an environment variable and ships a
+`neutral` one alongside `pagefly`. `illustra` and `anima` are rebranded by
+editing `references/brand.css`. [`_pf-brand`](./skills/_pf-brand) holds the
+identity tokens the two of them share.
 
 ## Licence and assets
 

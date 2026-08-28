@@ -63,7 +63,7 @@ composing (step 4).
    the member asks.
 6. **Harvest.** Run the kit-governance scan; propose any reusable bespoke part.
 
-## Composition rule index (R1-R16)
+## Composition rule index (R1-R18)
 Apply during step 4. Each is a compressed directive; **full text + the failure each prevents is in
 `references/style-guide.md` "Composition"** - consult it for the rule you're applying.
 
@@ -105,7 +105,7 @@ Full text in `references/style-guide.md` "Hard rules":
 | Path | Role |
 |---|---|
 | `references/brand.css` | Brand preset: Layer A identity (shared) + Mode A light + Mode B dark-glass. **Swap to rebrand.** Every token documented inline. |
-| `references/style-guide.md` | Mode A/B visual language, the 3 intake rules, the full composition rules R1-R16, hard rules, sizing. |
+| `references/style-guide.md` | Mode A/B visual language, the 3 intake rules, the full composition rules R1-R18, hard rules, sizing. |
 | `references/component-catalog.md` | The kit index: Tier-A parts, asset-type classification, Tier-B backlog, drawn-parts log. |
 | `components/*.html` | Self-contained vector "lego" snippets (`il-` prefixed). Copy into the canvas. |
 | `templates/canvas.html` | Starting point: transparent `#stage`, brand.css + Poppins wired. |

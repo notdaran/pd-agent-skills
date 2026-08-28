@@ -12,29 +12,29 @@ as a sibling folder so both can reference it by the same relative path.
 
 Edit identity and badge colours **here**, not in a per-skill copy.
 
-## Known rough edges
+## Changing a colour
 
-Being honest about the current state rather than describing an intended one:
+These tokens are not read at runtime by the skills that use them, so one edit
+here does not reach everywhere:
 
-- **anima syncs by hand, illustra forks.** anima copies these tokens into its
-  own `references/brand.css` and again into each composition's `:root`, because
-  the HyperFrames renderer needs them inlined. illustra does not read this file
-  at all yet - it keeps its own copy of the same values. So the same accent
-  colour currently lives in several places, and nothing enforces that they
-  match.
-- **`badges.html` renders via illustra.** Regenerating the badge catalogue uses
-  `../illustra/scripts/render.mjs`, so the two folders are not independent.
+- **anima inlines them twice.** It copies them into its own
+  `references/brand.css`, and again into each composition's `:root`, because the
+  HyperFrames renderer needs the tokens inlined in the HTML it renders.
+- **illustra keeps its own copy** of the same values in its
+  `references/brand.css`.
+- **`badges.html` renders through illustra**, via
+  `../illustra/scripts/render.mjs`.
 
-Both are on the list to fix. Until then, if you change a colour here, grep for
-its hex value before assuming the change reached everything.
+So after changing a colour here, grep for its hex value across `skills/` and
+update every hit.
 
 ## Using a different brand
 
-The visual skills are brand-neutral by design - PageFly is the default preset,
-not a hard dependency. Swap `references/brand.css` inside the skill you are
-using. A neutral preset is not written yet; [`feature-demo`](../feature-demo)
-already has one (`presets/neutral.ts`) and is the pattern the others will
-follow.
+The visual skills are brand-neutral engines with PageFly as the default preset,
+not PageFly-only tools. Swap `references/brand.css` inside the skill you are
+using. [`feature-demo`](../feature-demo) works differently: it selects a preset
+from `presets/` by environment variable, and ships a brand-agnostic `neutral`
+one.
 
 The PageFly logo in the skill example folders belongs to its owner. Remove it if
 you are not authorised to use it.
