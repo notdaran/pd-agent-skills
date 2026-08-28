@@ -12,6 +12,17 @@ gì: một quy trình, năm file tham chiếu, và một thư viện section th�
 
 ---
 
+## Một trang dựng theo cách này
+
+**[pagefly.io/pages/heatmap](https://pagefly.io/pages/heatmap)**
+
+188 element gốc trải trên 7 section, một hero có video giới thiệu, và đúng một
+khối custom HTML - khối đó chứa bảng so sánh, tức là trường hợp duy nhất skill
+này cho phép dùng nó. Ngoài bảng đó ra, không phần nào của trang được viết tay
+bằng markup.
+
+---
+
 ## Ba kiểu hỏng mà nó sinh ra để chặn
 
 **1. Trang ship dưới dạng một khối custom HTML to đùng.** Nó không thừa hưởng gì

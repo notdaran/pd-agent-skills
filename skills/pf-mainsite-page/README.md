@@ -12,6 +12,16 @@ English · [Tiếng Việt](./README-vi.md)
 
 ---
 
+## A page built this way
+
+**[pagefly.io/pages/heatmap](https://pagefly.io/pages/heatmap)**
+
+188 native elements across 7 sections, an explainer-video hero, and exactly one
+custom-HTML block - which holds the comparison table, the single case this skill
+allows it for. Nothing on the page was hand-written as markup except that table.
+
+---
+
 ## The three failures it exists to prevent
 
 **1. The page ships as one big custom-HTML block.** It inherits nothing from the
