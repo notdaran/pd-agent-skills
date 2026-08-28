@@ -3,3 +3,4 @@ outputs/
 *.log
 .DS_Store
 .figma-session.json
+config.local.md

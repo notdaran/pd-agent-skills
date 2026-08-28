@@ -23,15 +23,19 @@ English · [Tiếng Việt](./README-vi.md)
 | [`illustra`](./skills/illustra) | The illustration inside one marketing card: framed screenshots blended with hand-drawn vector UI, exported as a transparent PNG | [readme](./skills/illustra/README.md) |
 | [`anima`](./skills/anima) | A short on-brand motion piece: teaser, announcement video, animated hero | [readme](./skills/anima/README.md) |
 | [`product-analyst`](./skills/product-analyst) | A decision: which product problem to work on, sized in absolute users, and whether proving it is worth the cost | [readme](./skills/product-analyst/README.md) |
+| [`pf-mainsite-page`](./skills/pf-mainsite-page) | A marketing landing page assembled inside a visual page builder from the section library the site already has, instead of a blob of custom HTML | [readme](./skills/pf-mainsite-page/README.md) |
+| [`pagefly-browser-tester`](./skills/pagefly-browser-tester) | An end-to-end browser test that survives Shopify admin's nested iframes, overlay modals and expiring snapshot uids | [readme](./skills/pagefly-browser-tester/README.md) |
 
 [`_pf-brand`](./skills/_pf-brand) is not a skill - it is the shared brand
 identity the visual skills read from.
 
 The first three are visual and overlap at the edges, so the short version of who
 does what: a screenshot in a frame is `feature-demo`; art drawn around a
-screenshot is `illustra`; anything that moves is `anima`. `product-analyst` is
-the odd one out - no renderer, no dependencies, just the method for deciding
-what to build in the first place.
+screenshot is `illustra`; anything that moves is `anima`.
+
+The other three carry no renderer and no dependencies - they are written maps.
+`product-analyst` decides what to build, `pf-mainsite-page` builds the marketing
+page that announces it, `pagefly-browser-tester` tests the app it lives in.
 
 ## Install
 
@@ -47,7 +51,9 @@ updates the installed skills in place. Existing entries are never overwritten -
 anything already there is reported and skipped.
 
 The rendering skills each need one setup step before first use. Its own readme
-says so, and `install.sh` prints the reminder. `product-analyst` needs none:
+says so, and `install.sh` prints the reminder. `product-analyst` and
+`pf-mainsite-page` need none; `pagefly-browser-tester` needs a `config.local.md`
+copied from its example, which its readme describes.
 
 ```bash
 cd skills/feature-demo && npm install && npx playwright install chromium

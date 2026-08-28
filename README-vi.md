@@ -22,15 +22,19 @@ lượng truy cập của bạn vốn dĩ không đủ sức chạy.
 | [`illustra`](./skills/illustra) | Phần minh hoạ bên trong một thẻ marketing: ảnh chụp đóng khung trộn với UI vector vẽ tay, xuất ra PNG nền trong suốt | [readme](./skills/illustra/README-vi.md) |
 | [`anima`](./skills/anima) | Một đoạn motion ngắn đúng brand: teaser, video thông báo, hero động | [readme](./skills/anima/README-vi.md) |
 | [`product-analyst`](./skills/product-analyst) | Một quyết định: nên sửa vấn đề nào, đo bằng số người tuyệt đối, và có đáng bỏ công chứng minh không | [readme](./skills/product-analyst/README-vi.md) |
+| [`pf-mainsite-page`](./skills/pf-mainsite-page) | Một trang marketing lắp trong trình dựng trang trực quan từ thư viện section site đã có, thay vì một khối custom HTML | [readme](./skills/pf-mainsite-page/README-vi.md) |
+| [`pagefly-browser-tester`](./skills/pagefly-browser-tester) | Một lượt kiểm thử end-to-end sống sót qua iframe lồng nhau của Shopify admin, overlay modal và uid snapshot hết hạn | [readme](./skills/pagefly-browser-tester/README-vi.md) |
 
 [`_pf-brand`](./skills/_pf-brand) không phải skill - đó là phần nhận diện dùng
 chung mà các skill hình ảnh đọc vào.
 
 Ba cái đầu đều là skill hình ảnh và có chỗ giáp ranh nhau, nên nói ngắn gọn cho
 dễ nhớ: ảnh chụp đặt vào khung là `feature-demo`; vẽ thêm xung quanh ảnh chụp là
-`illustra`; cái gì chuyển động là `anima`. `product-analyst` khác hẳn phần còn
-lại - không render, không phụ thuộc gì, chỉ là phương pháp để quyết định ngay từ
-đầu nên làm cái gì.
+`illustra`; cái gì chuyển động là `anima`.
+
+Ba cái còn lại không render gì, không phụ thuộc gì - chúng là những tấm bản đồ
+viết sẵn. `product-analyst` quyết định nên làm gì, `pf-mainsite-page` dựng trang
+marketing công bố thứ đó, `pagefly-browser-tester` kiểm thử chính app chứa nó.
 
 ## Cài đặt
 
@@ -46,7 +50,9 @@ slash vào `~/.claude/commands/`. Vì là symlink nên `git pull` ở đây là 
 thì báo ra rồi bỏ qua.
 
 Các skill hình ảnh cần một bước chuẩn bị trước lần dùng đầu, readme của từng cái
-có ghi và `install.sh` cũng nhắc lại. `product-analyst` thì không cần gì:
+có ghi và `install.sh` cũng nhắc lại. `product-analyst` và `pf-mainsite-page`
+không cần gì; `pagefly-browser-tester` cần chép `config.local.md` từ file mẫu,
+readme của nó có hướng dẫn:
 
 ```bash
 cd skills/feature-demo && npm install && npx playwright install chromium
