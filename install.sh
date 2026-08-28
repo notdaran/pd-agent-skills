@@ -50,7 +50,7 @@ if [ "$skipped" -gt 0 ]; then
   echo
 fi
 echo "Skills are symlinked, so 'git pull' in this repo updates them in place."
-echo "Each skill needs one setup step before first use:"
+echo "The rendering skills each need one setup step before first use:"
 echo "  feature-demo  cd skills/feature-demo && npm install && npx playwright install chromium"
 echo "  illustra      cd skills/illustra && npm install && npx playwright install chromium-headless-shell"
 echo "  anima         npx hyperframes doctor           (needs Node >= 22 and FFmpeg)"

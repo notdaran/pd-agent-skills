@@ -9,7 +9,8 @@ thuần nên agent nào đọc được thư mục thì dùng được.
 Điểm chung của chúng: mỗi skill gói lại một phần "gu" mà nếu không có thì lần
 nào cũng phải giải thích lại từ đầu. Không phải kiểu "vẽ cho tôi một cái ảnh",
 mà là mười sáu quy tắc bố cục, con số thời lượng đã đo thật, quy tắc không bao
-giờ để model vẽ lại một ảnh chụp thật.
+giờ để model vẽ lại một ảnh chụp thật, cái cổng chặn một thí nghiệm A/B mà
+lượng truy cập của bạn vốn dĩ không đủ sức chạy.
 
 [English](./README.md) · Tiếng Việt
 
@@ -20,13 +21,16 @@ giờ để model vẽ lại một ảnh chụp thật.
 | [`feature-demo`](./skills/feature-demo) | Ảnh chụp giao diện thật đặt trong khung brand: hero App Store, ảnh social, header blog | [readme](./skills/feature-demo/README-vi.md) |
 | [`illustra`](./skills/illustra) | Phần minh hoạ bên trong một thẻ marketing: ảnh chụp đóng khung trộn với UI vector vẽ tay, xuất ra PNG nền trong suốt | [readme](./skills/illustra/README-vi.md) |
 | [`anima`](./skills/anima) | Một đoạn motion ngắn đúng brand: teaser, video thông báo, hero động | [readme](./skills/anima/README-vi.md) |
+| [`product-analyst`](./skills/product-analyst) | Một quyết định: nên sửa vấn đề nào, đo bằng số người tuyệt đối, và có đáng bỏ công chứng minh không | [readme](./skills/product-analyst/README-vi.md) |
 
 [`_pf-brand`](./skills/_pf-brand) không phải skill - đó là phần nhận diện dùng
 chung mà các skill hình ảnh đọc vào.
 
-Ba cái có chỗ giáp ranh nhau, nên nói ngắn gọn cho dễ nhớ: ảnh chụp đặt vào
-khung là `feature-demo`; vẽ thêm xung quanh ảnh chụp là `illustra`; cái gì
-chuyển động là `anima`.
+Ba cái đầu đều là skill hình ảnh và có chỗ giáp ranh nhau, nên nói ngắn gọn cho
+dễ nhớ: ảnh chụp đặt vào khung là `feature-demo`; vẽ thêm xung quanh ảnh chụp là
+`illustra`; cái gì chuyển động là `anima`. `product-analyst` khác hẳn phần còn
+lại - không render, không phụ thuộc gì, chỉ là phương pháp để quyết định ngay từ
+đầu nên làm cái gì.
 
 ## Cài đặt
 
@@ -41,8 +45,8 @@ slash vào `~/.claude/commands/`. Vì là symlink nên `git pull` ở đây là 
 đã cài tự cập nhật theo. Không bao giờ ghi đè cái đang có - thứ gì đã tồn tại
 thì báo ra rồi bỏ qua.
 
-Mỗi skill cần một bước chuẩn bị trước lần dùng đầu, readme của từng cái có ghi
-và `install.sh` cũng nhắc lại:
+Các skill hình ảnh cần một bước chuẩn bị trước lần dùng đầu, readme của từng cái
+có ghi và `install.sh` cũng nhắc lại. `product-analyst` thì không cần gì:
 
 ```bash
 cd skills/feature-demo && npm install && npx playwright install chromium
