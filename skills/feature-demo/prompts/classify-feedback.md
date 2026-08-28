@@ -15,6 +15,10 @@ Classify user feedback on a feature-demo render into a single intent.
 }
 ```
 
+> The Vietnamese phrases in the tables below are deliberate. They are example
+> user utterances this prompt has to recognise, not untranslated prose - users
+> reply in either language. Do not "translate" them away.
+
 ## Intents
 
 | `intent` | When | `details` |

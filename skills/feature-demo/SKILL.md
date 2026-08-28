@@ -5,36 +5,36 @@ description: Use when turning a real UI screenshot into a brand-framed feature-d
 
 # Feature Demo Skill
 
-Entry point: `/feature-demo` slash command → `commands/feature-demo.md` (copy vào `~/.claude/commands/` khi cài).
+Entry point: the `/feature-demo` slash command → `commands/feature-demo.md` (copied into `~/.claude/commands/` at install time).
 
-Cài đặt + chạy: xem `README.md`.
+Install and run: see `README.md`.
 
 ## Brand presets
 
-Brand đọc qua `brand.ts` (selector). Mặc định preset `neutral` (brand-agnostic, không logo). Đổi preset bằng env `FEATURE_DEMO_BRAND`:
+Brand is read through `brand.ts` (the selector). The default preset is `neutral` (brand-agnostic, no logo). Switch presets with the `FEATURE_DEMO_BRAND` env var:
 
 ```
 FEATURE_DEMO_BRAND=pagefly npx tsx scripts/run-render.tsx png ...
 ```
 
-Tự thêm brand: tạo `presets/<name>.ts` export `BrandTokens`, đăng ký trong `brand.ts`, bỏ logo PNG vào `assets/logos/`, chạy với `FEATURE_DEMO_BRAND=<name>`.
+To add your own: create `presets/<name>.ts` exporting `BrandTokens`, register it in `brand.ts`, drop the logo PNGs into `assets/logos/`, then run with `FEATURE_DEMO_BRAND=<name>`.
 
 ## Files
 
 - `types.ts` - DevInput / AssetSpec / BrandTokens schemas (Zod)
-- `brand.ts` - Brand preset selector (đọc env `FEATURE_DEMO_BRAND`)
-- `presets/` - Brand token presets (`neutral` mặc định, `pagefly`)
+- `brand.ts` - Brand preset selector (reads the `FEATURE_DEMO_BRAND` env var)
+- `presets/` - Brand token presets (`neutral` is the default, plus `pagefly`)
 - `templates/` - Template recipes (4 templates: hero-split, hero-stack, feature-callout, product-card)
 - `renderers/` - Figma + Playwright + Paper stub
-- `prompts/` - System prompts cho pick-template / write-copy / classify-feedback
+- `prompts/` - System prompts for pick-template / write-copy / classify-feedback
 - `scripts/agent-entry.tsx` - Orchestrator helpers (pure Node, Zod-validated)
 - `scripts/run-render.tsx` - CLI render tool (PNG/Figma plan)
-- `assets/fonts/` - Poppins woff2 local (SIL OFL, redistributable)
+- `assets/fonts/` - Poppins woff2, local (SIL OFL, redistributable)
 - `outputs/` - Render artifacts (gitignored)
 
 ## Intent-first architecture
 
-Two render entry points trong `renderers/figma-renderer.tsx`:
+Two render entry points in `renderers/figma-renderer.tsx`:
 
 - `buildFigmaRenderPlan(spec)` - template-routed. Caller picks `templateId` + `variation`, registry resolves intent.
 - `buildFigmaRenderPlanFromIntent({ intent, size, fileName, frameName? })` - intent-first. Caller supplies `LayoutIntent` directly. Use for slot files and hand-authored recipes.
@@ -49,96 +49,97 @@ Region schema (`templates/shared/layout-intent.ts`) reserves `z?: number` + `anc
 
 ## Prompts
 
-Cả 3 prompt files dưới đây dùng khi main agent gọi sub-LLM trong `/feature-demo` loop:
+All three prompt files below are used when the main agent calls a sub-LLM inside the `/feature-demo` loop:
 
-- `prompts/pick-template.md` - Pick template + variation từ feature spec.
-- `prompts/write-copy.md` - Sinh heading + bullets từ feature spec (Zod-bounded).
-- `prompts/classify-feedback.md` - Phân loại user feedback thành 1 trong 8 intent (`DONE`, `CHANGE_TEMPLATE`, `CHANGE_VARIATION`, `CHANGE_COPY`, `CHANGE_MODE`, `CHANGE_SIZE`, `REJECT_BRAND`, `UNCLEAR`).
+- `prompts/pick-template.md` - Pick the template + variation from the feature spec.
+- `prompts/write-copy.md` - Generate the heading + bullets from the feature spec (Zod-bounded).
+- `prompts/classify-feedback.md` - Classify user feedback into one of 8 intents (`DONE`, `CHANGE_TEMPLATE`, `CHANGE_VARIATION`, `CHANGE_COPY`, `CHANGE_MODE`, `CHANGE_SIZE`, `REJECT_BRAND`, `UNCLEAR`).
 
 ## Orchestrator entry
 
-`scripts/agent-entry.tsx` expose pure-Node helpers cho slash command:
+`scripts/agent-entry.tsx` exposes pure-Node helpers for the slash command:
 
-- `readFeatureSpec(path, repoRoot)` - đọc spec, validate path trong repo.
-- `resolveScreenshots(paths, repoRoot)` - check exist, max 3.
+- `readFeatureSpec(path, repoRoot)` - read the spec, validate the path is inside the repo.
+- `resolveScreenshots(paths, repoRoot)` - check they exist, max 3.
 - `parseSize(str)` - parse "WIDTHxHEIGHT" → `Size`.
-- `buildAssetSpec(inputs)` - build + Zod-validate `AssetSpec`.
-- `renderByMode(spec, outDir)` - dispatch PNG/Figma/Paper renderer.
-- `PROMPT_PATHS` - hằng số trỏ tới 3 file prompt trên.
-- `DEFAULT_OUTPUT_DIR` - mặc định `.claude/skills/feature-demo/outputs/`.
+- `buildAssetSpec(inputs)` - build and Zod-validate an `AssetSpec`.
+- `renderByMode(spec, outDir)` - dispatch to the PNG/Figma/Paper renderer.
+- `PROMPT_PATHS` - constants pointing at the three prompt files above.
+- `DEFAULT_OUTPUT_DIR` - defaults to `.claude/skills/feature-demo/outputs/`.
 
-File **không** gọi LLM hoặc MCP. Mọi LLM call + MCP orchestration do main agent thực hiện trong slash command context.
+This file does **not** call an LLM or MCP. Every LLM call and all MCP orchestration happens in the main agent, in the slash command context.
 
 ## Hard rules
 
-1. Screenshot UI thật phải là `<img>` pass-through: output nhúng nguyên pixel gốc. Agent ĐƯỢC tự xem ảnh để quyết định bố cục/khung hình, nhưng KHÔNG bao giờ đưa ảnh qua model để tái tạo/vẽ lại.
-   - **1 screenshot ngang (single landscape)**: mặc định hiện ĐẦY ĐỦ, có khoảng đệm (padding) với mép canvas - KHÔNG để sát viền. Bo góc cả 4 góc. (Engine tự center + pad khi chỉ có 1 screenshot trong `hero-split`.)
-   - **Cần zoom to chi tiết -> cho ảnh tràn mép**: nếu ảnh ngang cần phóng to tràn 1 mép để đọc rõ chi tiết, thì các góc CHẠM mép đó KHÔNG bo góc (cắt vuông) cho tự nhiên; góc còn lại vẫn bo. Cẩn thận không cắt mất content quan trọng. Đây là hành vi sẵn có của device-duo (phần tràn mép = cắt vuông off-canvas).
-   - Device-duo (desktop+mobile): ảnh ngang ĐƯỢC phóng to tràn mép canvas (chỉ định vị, không vẽ lại - pixel vẫn gốc); ảnh dọc PHẢI hiện đầy đủ, không cắt phần quan trọng. Default cặp landscape+portrait = `hero-stack --variation=top` (trên-dưới); `hero-split` là phương án phụ khi user muốn trái-phải.
-   - **Canvas vuông 1:1 (vd 1080x1080)**: LUÔN dùng `hero-stack --variation=top` (template duy nhất khung ảnh tự ôm theo tỉ lệ ảnh -> không crop portrait hay landscape). Copy phải NGẮN: heading ≤28 ký tự + ĐÚNG 1 bullet, font nhỏ vừa đủ để chừa ~70% canvas cho ảnh. KHÔNG dùng `hero-split` / `product-card` (crop ở bề ngang vuông) hay `hero-stack --variation=bottom` (ảnh dọc cao đẩy copy ra ngoài canvas). Engine tự ép `hero-stack/top` + cắt bullets còn 1 khi canvas vuông (an toàn nếu agent lỡ chọn sai).
-2. Brand tokens immutable từ phía agent code. Chỉ human edit `brand.ts`.
-3. Schema-validated I/O ở mọi step.
-4. Agent hỏi output mode trước khi render. Không default.
-5. Sau render: chờ user feedback, không auto-retry.
-6. Mặc định render đúng 1 option. Agent tự chốt layout tốt nhất, KHÔNG fan-out nhiều phương án cho user chọn. Chỉ render nhiều khi user nói rõ muốn so sánh.
-7. **Fit-check trước khi render (user thường là dev, không hình dung được layout)**: so input thực tế (độ dài copy + orientation/số lượng screenshot vừa xem) với dimension đích. Nếu lệch rõ ràng, KHÔNG render ra kết quả chật chội rồi thôi - tư vấn user 1 fix cụ thể trước. Các case điển hình:
-   - Vuông 1:1 nhưng copy dài (heading >28 ký tự hoặc >1 bullet) -> tư vấn rút gọn copy.
-   - Vuông 1:1 nhưng screenshot là ảnh dọc cao -> ảnh sẽ chiếm hết chiều cao, copy bị ép; tư vấn dùng ảnh ngang/contained hoặc đổi sang canvas dọc.
-   - Hero 16:9 nhưng chỉ có 1 ảnh dọc cao -> canvas ngang sẽ trống nhiều; tư vấn thêm ảnh desktop hoặc đổi canvas vuông/dọc.
-   - Heading quá dài ở mọi size -> tư vấn cắt (Zod chặn >60 ký tự).
-   Nêu 2-3 dòng advisory + fix cụ thể, rồi để user chọn (sửa input hay cứ render với fallback an toàn). Không tự ý render khi mismatch rõ mà chưa báo user.
+1. A real UI screenshot must be an `<img>` pass-through: the output embeds the original pixels. The agent MAY view the image itself to decide layout and framing, but must NEVER feed the image through a model to recreate or redraw it.
+   - **One landscape screenshot (single landscape)**: by default show it IN FULL, with padding against the canvas edge - never flush to the border. All four corners rounded. (The engine centers and pads automatically when `hero-split` has only one screenshot.)
+   - **Needs to zoom into detail -> let the image bleed off an edge**: if a landscape image must be enlarged past one edge for the detail to be readable, the corners TOUCHING that edge are NOT rounded (squared off) so the cut reads naturally; the other corners stay rounded. Take care not to cut away important content. This is the existing device-duo behaviour (the bleeding part is squared off-canvas).
+   - Device duo (desktop + mobile): the landscape image MAY be enlarged past the canvas edge (positioned only, never redrawn - the pixels stay original); the portrait image MUST be shown in full, with no important content cropped. The default for a landscape + portrait pair is `hero-stack --variation=top` (top and bottom); `hero-split` is the fallback when the user wants left and right.
+   - **Square 1:1 canvas (e.g. 1080x1080)**: ALWAYS use `hero-stack --variation=top`, the only template whose image frame sizes to the image's own aspect ratio, so neither a portrait nor a landscape gets cropped. Copy must be SHORT: heading ≤28 characters + EXACTLY 1 bullet, at a font size small enough to leave ~70% of the canvas for the image. Do NOT use `hero-split` / `product-card` (they crop at square width) or `hero-stack --variation=bottom` (a tall portrait pushes the copy off-canvas). The engine forces `hero-stack/top` and trims the bullets to one at square canvases, as a safety net if the agent picks wrong.
+2. Brand tokens are immutable from agent code. Only a human edits `brand.ts`.
+3. Schema-validated I/O at every step.
+4. The agent asks for the output mode before rendering. Never default it.
+5. After rendering: wait for user feedback, never auto-retry.
+6. Render exactly ONE option by default. The agent commits to the best layout and does NOT fan out several options for the user to choose from. Render more than once only when the user explicitly asks to compare.
+7. **Fit-check before rendering (the user is often a dev who cannot picture the layout)**: compare the real inputs (copy length + the orientation and count of the screenshots just viewed) against the target dimensions. On a clear mismatch, do NOT render a cramped result and stop there - advise the user with one specific fix first. The typical cases:
+   - Square 1:1 but long copy (heading >28 characters or >1 bullet) -> advise shortening the copy.
+   - Square 1:1 but the screenshot is a tall portrait -> the image eats the full height and crams the copy; advise a landscape/contained shot, or switching to a portrait canvas.
+   - 16:9 hero but only one tall portrait shot -> the wide canvas is left mostly empty; advise adding a desktop shot, or switching to a square/portrait canvas.
+   - Heading too long at any size -> advise trimming (Zod rejects anything over 60 characters).
+   State 2-3 advisory lines plus the specific fix, then let the user choose (fix the input, or render with the safe fallback). Never render through an obvious mismatch without telling the user first.
 
 ## Output modes
 
 | Mode | Use case | Status |
 |---|---|---|
-| `figma` | Fine-tune trong Figma | Ready |
-| `png` | Dev cần ảnh nhanh | Ready |
-| `paper` | Future | Stub - throw "not configured" |
+| `figma` | Fine-tune in Figma | Ready |
+| `png` | A dev needs an image quickly | Ready |
+| `paper` | Future | Stub - throws "not configured" |
 
 ## Workflow
 
-1. User cung cấp feature spec + screenshot path.
-2. Agent hỏi output mode (figma / png).
-3. Agent **tự xem screenshot** (Read tool) để biết orientation + feature nằm đâu trong khung.
-4. Agent chốt 1 template + variation + viết copy theo brand (dựa trên những gì vừa thấy ở bước 3).
-5. Render đúng 1 option -> output path.
-6. (png) Agent tự mở output kiểm tra feature có hiện rõ / không bị crop; chỉnh tối đa 1 lần nếu cần, rồi mới show user.
-7. Show 1 kết quả duy nhất + 1 dòng lý do chọn layout. Chờ user feedback. User drive iteration.
+1. The user supplies a feature spec + a screenshot path.
+2. The agent asks for the output mode (figma / png).
+3. The agent **views the screenshot itself** (Read tool) to learn its orientation and where the feature sits in the frame.
+4. The agent commits to one template + variation and writes the copy on-brand, based on what it saw in step 3.
+5. Render exactly one option -> an output path.
+6. (png) The agent opens the output itself and checks the feature is clearly visible and not cropped; it adjusts at most once if needed, and only then shows the user.
+7. Show one single result plus one line on why that layout was chosen. Wait for feedback. The user drives the iteration.
 
 ## Figma orchestration
 
-Figma renderer là pure function: `buildFigmaRenderPlan(spec)` trả về `{ fileName, screenshotsToUpload, pluginCode, intent, canvas }` (pluginCode đã được minified để giảm token cost khi truyền vào `use_figma`). MCP calls phải chạy trong main agent context (subagent không có MCP).
+The Figma renderer is a pure function: `buildFigmaRenderPlan(spec)` returns `{ fileName, screenshotsToUpload, pluginCode, intent, canvas }` (`pluginCode` is minified to cut the token cost of passing it into `use_figma`). MCP calls must run in the main agent context; a subagent has no MCP.
 
-### Session cache (giảm token cost)
+### Session cache (cuts token cost)
 
-Agent đọc `.claude/skills/feature-demo/outputs/.figma-session.json` qua `readFigmaSession()` từ `agent-entry.tsx`:
+The agent reads `.claude/skills/feature-demo/outputs/.figma-session.json` through `readFigmaSession()` from `agent-entry.tsx`:
 
-- `fileKey` + `fileUrl` - file Figma đã dùng lần trước
-- `planKey` - team plan (không đổi giữa các render)
+- `fileKey` + `fileUrl` - the Figma file used last time
+- `planKey` - the team plan (does not change between renders)
 
-Hỏi user: dùng lại file cũ hay tạo mới? Nếu user cung cấp URL Figma trong natural language ("gen vào file ABC https://figma.com/file/XYZ"), parse qua `parseFigmaFileKey()` rồi save vào session.
+Ask the user: reuse the previous file, or create a new one? If the user supplies a Figma URL in natural language ("generate into file ABC https://figma.com/file/XYZ"), parse it with `parseFigmaFileKey()` and save it to the session.
 
-Sau mỗi orchestration thành công: gọi `writeFigmaSession({ fileKey, fileUrl, planKey })`.
+After each successful orchestration: call `writeFigmaSession({ fileKey, fileUrl, planKey })`.
 
 ### MCP sequence
 
-1. `mcp__figma__whoami` → lấy `planKey`. **SKIP** nếu session đã có `planKey`.
-2. `mcp__figma__create_new_file({ fileName, planKey, editorType: 'design' })` → `{ file_key, file_url }`. **SKIP** nếu user dùng file có sẵn (session.fileKey hoặc URL từ user).
-3. `mcp__figma__upload_assets({ fileKey, count: N })` → trả về N `submitUrl`. Với mỗi path trong `screenshotsToUpload`, POST file lên submitUrl tương ứng (multipart `file` field preferred); response chứa `imageHash`.
-4. Build `IMAGE_HASHES = { [absPath]: hash, ... }`, prepend dạng `const IMAGE_HASHES = {...};` vào `pluginCode`. Optionally cleanup placeholder nodes mà `upload_assets` auto-create (node ids `1:2`, `2:2`, `3:2`...) bằng `figma.getNodeByIdAsync(id).remove()`.
-5. `mcp__figma__use_figma({ fileKey, code: prepended, description })` → execute plugin. Limit 50K char.
-6. **DO NOT call verify steps by default**: `mcp__figma__get_metadata` và `mcp__figma__get_screenshot` trả về response rất nặng (5-20K tokens). Chỉ gọi khi user explicitly yêu cầu verify hoặc render fail. User xem kết quả trực tiếp trong Figma file.
-7. Return `file_url` cho user + gọi `writeFigmaSession()`.
+1. `mcp__figma__whoami` → get `planKey`. **SKIP** if the session already has a `planKey`.
+2. `mcp__figma__create_new_file({ fileName, planKey, editorType: 'design' })` → `{ file_key, file_url }`. **SKIP** if the user is using an existing file (`session.fileKey`, or a URL from the user).
+3. `mcp__figma__upload_assets({ fileKey, count: N })` → returns N `submitUrl`s. For each path in `screenshotsToUpload`, POST the file to its matching submitUrl (multipart `file` field preferred); the response contains an `imageHash`.
+4. Build `IMAGE_HASHES = { [absPath]: hash, ... }` and prepend it to `pluginCode` as `const IMAGE_HASHES = {...};`. Optionally clean up the placeholder nodes `upload_assets` auto-creates (node ids `1:2`, `2:2`, `3:2`...) with `figma.getNodeByIdAsync(id).remove()`.
+5. `mcp__figma__use_figma({ fileKey, code: prepended, description })` → executes the plugin. 50K character limit.
+6. **DO NOT call the verify steps by default**: `mcp__figma__get_metadata` and `mcp__figma__get_screenshot` return very heavy responses (5-20K tokens). Call them only when the user explicitly asks to verify, or when the render fails. The user sees the result directly in the Figma file.
+7. Return the `file_url` to the user and call `writeFigmaSession()`.
 
 ### Natural language input
 
-User không cần nhớ flag. Agent parse natural language để extract:
+The user does not have to remember flags. The agent parses natural language to extract
+(the Vietnamese keywords below are deliberate - users type in either language):
 
 - Output mode: "png" / "ảnh" / "figma" / "vào figma"
-- Figma file URL: bất kỳ link `figma.com/file/...` hoặc `figma.com/design/...` trong message
+- Figma file URL: any `figma.com/file/...` or `figma.com/design/...` link in the message
 - Template: "hero stack", "hero split", "feature callout", "product card"
 - Variation: "top/bottom/left/right/upper/lower"
-- Heading + bullets: nếu user cung cấp text rõ ràng
+- Heading + bullets: if the user supplies clear text
 
-Khi user cung cấp ĐỦ template + variation + heading + bullets, **SKIP** `pick-template` + `write-copy` LLM calls. Build AssetSpec trực tiếp.
+When the user supplies template + variation + heading + bullets in full, **SKIP** the `pick-template` and `write-copy` LLM calls and build the AssetSpec directly.

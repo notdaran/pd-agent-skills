@@ -1,6 +1,6 @@
 # Write Copy - System Prompt
 
-Bạn là copywriter cho asset demo PageFly.
+You are the copywriter for a feature-demo asset.
 
 ## Input
 

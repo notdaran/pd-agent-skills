@@ -1,5 +1,5 @@
 ---
-description: Generate feature-demo asset (PNG hoặc Figma) với brand preset, dùng screenshot thật.
+description: Generate a feature-demo asset (PNG or Figma) from a real screenshot, using the active brand preset.
 argument-hint: <feature-spec-path> <screenshot-path> [--size WIDTHxHEIGHT]
 ---
 
@@ -28,13 +28,13 @@ Examples:
 2. **Validate** screenshot path exists. If multiple comma-separated paths, max 3.
 2b. **View the screenshot(s)** with the `Read` tool (they are image files). Assess: orientation (desktop/landscape vs mobile/portrait), how many real surfaces there are, and WHERE the feature being demoed lives in the frame (top bar, center, a side panel). This visual read drives template + variation choice in step 6 and tells you what must stay visible after framing. Viewing the image to decide composition is allowed - the rendered output still embeds the original pixels unchanged (see Hard constraints).
 3. **Parse user message for shortcuts** (skip subsequent steps if found):
-   - Output mode keyword (png / ảnh / figma)
+   - Output mode keyword (png / ảnh / figma) - users type in either language
    - Figma file URL (figma.com/file/... or figma.com/design/...) -> parse via `parseFigmaFileKey()`
    - Template name + variation
    - Explicit heading + bullets
 4. **Ask user output mode** via `AskUserQuestion` ONLY if not parsed from step 3 - choices: `figma`, `png`, `paper`.
-   - If user chose `paper` -> explain "Paper MCP chưa cấu hình", offer to fall back to `figma` or `png`.
-   - If user chose `figma`: check `readFigmaSession()` for cached `fileKey`. If exists, ask "Dùng file cũ <fileUrl> hay tạo file mới?". If user provided URL in message, use that directly (skip ask).
+   - If user chose `paper` -> explain that the Paper MCP is not configured, and offer to fall back to `figma` or `png`.
+   - If user chose `figma`: check `readFigmaSession()` for cached `fileKey`. If it exists, ask whether to reuse <fileUrl> or create a new file. If user provided URL in message, use that directly (skip ask).
 5. **Handle size**: infer the size from where the asset will be used (its destination), so the user does not type dimensions. Map intent -> preset keyword passed to `--size`: in-app What's New modal -> `modal` (1200x675), App Store hero -> `app-store` (1600x900), social tile -> `social` (1080x1080). If no destination is given and cannot infer from spec, do NOT ask - default to 16:9 `app-store` (1600x900), render, and tell the user which size was used so they can correct it (reversible). Only ask if the message is genuinely ambiguous between two specific destinations. For a one-off size, pass explicit `--size=WIDTHxHEIGHT`.
 6. **Pick ONE template + variation**: SKIP if user provided template + variation in step 3. Otherwise use `.claude/skills/feature-demo/prompts/pick-template.md` system prompt, informed by what you actually saw in step 2b (orientation, surface count, where the feature sits). Commit to a single best layout - do NOT generate several options for the user to choose from.
    - **Square 1:1 canvas (e.g. 1080x1080)**: always pick `hero-stack --variation=top`. It is the only template whose image frame sizes to the screenshot's own aspect ratio, so portrait AND landscape stay fully visible. `hero-split` and `product-card` crop at square width; `hero-stack --variation=bottom` pushes copy off-canvas with a tall portrait. Do not use them for square.
@@ -62,7 +62,7 @@ Examples:
     - `CHANGE_COPY` -> re-fill heading/bullets per user delta, re-render.
     - `CHANGE_MODE` -> switch renderer with same AssetSpec, re-render.
     - `CHANGE_SIZE` -> re-build spec.size, re-render.
-    - `REJECT_BRAND` -> REJECT politely. Reply: "Brand tokens locked. Sửa `.claude/skills/feature-demo/brand.ts` nếu cần update brand."
+    - `REJECT_BRAND` -> REJECT politely. Reply: "Brand tokens are locked. Edit `.claude/skills/feature-demo/brand.ts` to change the brand."
     - `UNCLEAR` -> ask user to clarify.
 
 ## Hard constraints
