@@ -18,7 +18,7 @@ Two shapes, same kit.
 
 ### A looping feature explainer
 
-![A product explainer that loops: brand card, findings panel, real editor footage, a score moving 84 to 91](./preview/loop-ground.gif)
+![A product explainer that loops: brand card, findings panel, real editor footage, a score moving 84 to 91](./preview/loop-ground.webp)
 
 Fifteen seconds, five beats, and it loops - the last frame *is* the first frame,
 with no fade-to-black hiding the seam. Runnable:
@@ -27,7 +27,7 @@ with no fade-to-black hiding the seam. Runnable:
 
 ### A footage piece
 
-![An on-brand title card cutting into a real screen recording](./preview/checkup-sharper.gif)
+![An on-brand title card cutting into a real screen recording](./preview/checkup-sharper.webp)
 
 One title card cutting into one screen recording.
 [Full render](./preview/checkup-sharper.mp4).
