@@ -20,7 +20,7 @@ allows it for. Nothing on the page was hand-written as markup except that table.
 
 ---
 
-## The three failures it exists to prevent
+## The four failures it exists to prevent
 
 **1. The page ships as one big custom-HTML block.** It inherits nothing from the
 site, so it is off-brand. Nobody can edit a word without opening code. No part of
@@ -34,6 +34,12 @@ marketplace that is a policy exposure, not a typo.
 **3. The page ships and nothing links to it.** However good the page is, no
 internal link means no traffic. Adding the links takes minutes, gets filed as
 follow-up work, and then never happens.
+
+**4. A block on the page has no job.** The page explains what the feature is and
+how it works, never why anyone needs it - and the gap gets filled by restating
+the mechanics as a table. A duplicate block is hard to spot precisely because a
+table reads as new information. There is a step whose only purpose is catching
+this before anything is built.
 
 ## Rule 0
 
@@ -74,13 +80,19 @@ Yours will not be these eight. It is there for the shape: which columns earn
 their place, what stays true, what has to be re-read every build. Every layout in
 it was measured off public pages.
 
-## The one case that still needs custom HTML
+## The two cases that still need custom HTML
 
-A real data table. Everything else - and the file says so at length - is better
-as a native element, because custom HTML leaks CSS in both directions, ignores
-the design system, and cannot be edited by anyone who does not write code. The
-rules for when you do reach for it are strict and worth reading even if you never
-do.
+A real data table, and an animated section background. Everything else - and the
+file says so at length - is better as a native element, because custom HTML leaks
+CSS in both directions, ignores the design system, and cannot be edited by anyone
+who does not write code. The rules for when you do reach for it are strict and
+worth reading even if you never do.
+
+The second case is also the only sanctioned `<script>`. It has its own reference
+file carrying four conditions it stays approved under, the layering rules that
+keep text readable over a moving layer, and a paste-ready fragment. That file is
+written from a single implementation and has not yet been run on a real page - it
+says so at the top, and the first use is a test.
 
 ## Requirements
 

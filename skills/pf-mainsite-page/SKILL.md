@@ -43,7 +43,7 @@ human step sits.
 | # | Stage | Who |
 |---|---|---|
 | 1 | **Content passes your content layer** — copy, tone, ICP, SEO/AEO, claim policy | content |
-| 2 | **Write the block list from the content**, one line per block naming the question it answers | you |
+| 2 | **Write the block list from the content**, one line per block naming the question it answers - and check it against Step 2.5 before going further | you |
 | 3 | **Choose how each block is made**: existing section → native element → `Custom.HTML`, in that order | you |
 | 4 | **Map the block list onto `references/section-library.md`.** Measure or harvest only what it cannot cover (Steps 1–2 below) | you |
 | 5 | **Lock the page spec**: block list + copy + per-element mapping (Step 3.5 below) | you |
@@ -61,6 +61,8 @@ Four things decide whether this is fast or slow:
   created by a browser agent — see `references/automating-the-editor.md`.
 - **Step 5 is the whole game.** Layout plus copy is not enough; without the per-element mapping
   the agent re-derives it mid-build. Anti-pattern #19.
+- **Step 2 is cheap to get wrong and expensive to notice.** A block with no job survives all the way
+  to review looking like content, because it is usually a table. Step 2.5 is the test.
 - **Step 7 sits in the middle, not at the end.** Leaving the drags until last means two handovers,
   because the agent still has to fill the content of whatever was dragged in. Anti-pattern #18.
 - **Step 3.6 decides how much of the build is mechanical.** Duplicating a shipped page skips the
@@ -132,6 +134,61 @@ It creates a new record and does **not** modify the page you took it from.
 **Name it immediately.** Sections on this store are largely unnamed, so the editor outline
 shows the same default label for all of them. An unnamed harvest adds to that problem.
 
+## Step 2.5 — Every block must have a job, and one of them is "why"
+
+The block list is where a page is won or lost. Three failures, all found on one build, all invisible
+to the person who wrote them.
+
+### A feature page needs three layers, and the missing one is always "why"
+
+1. **Why a merchant needs this** — the situation they recognise.
+2. **What it is / what it changes** — the capability.
+3. **How it runs, and its limits** — the mechanics and the disclosures.
+
+Layers 2 and 3 write themselves from the claim table, so they get written. Layer 1 has no source
+document, so it gets skipped - and then something has to fill the block, and layer 3 gets repeated
+to fill it. Both pages of one build shipped a review round with no layer 1 at all.
+
+Layer 1 is concrete situations, not adjectives. The four that survived review named a thing that
+breaks: an offer that does not apply in that market, proof nobody there recognises, a campaign out
+of season, a translation that does not fix the photo. No statistics, nothing needing a citation.
+
+### A duplicate block hides as a table
+
+A table reads as new information even when every row of it appears elsewhere on the page. Two
+blocks on one build were tables that restated the block above them and the FAQ below them.
+
+**Test each table row: where else on this page is this fact stated?** If more than half are stated
+elsewhere, the block has no job. Delete it and give the slot to layer 1.
+
+Deleting it is also cheaper to build - both of those blocks were `Custom.HTML`, and rewriting them
+as native tile blocks removed two hand-written fragments from the build.
+
+### Required disclosure goes in the FAQ, not on the front of a block
+
+A support matrix whose visible content was four rows of "Not released" is factually right and reads
+as a feature that barely ships. The same facts as one line in a spec strip plus one FAQ answer are
+equally honest and do not make the block's whole job be "here is what we cannot do".
+
+This is not licence to hide anything - Step 3's rules on disclosure still bind, and Step 3.45
+already forbids cutting a `beta` or `minTier` line for length. It is a rule about **placement**:
+disclosure belongs where a buyer goes looking for it.
+
+### Sell your product, not the platform
+
+A heading that states the problem in the platform's own language and never names what you do is a
+heading working for the platform. `One page cannot sell the same way in every Shopify Market` became
+`PageFly gives each Shopify Market its own version of the same page`.
+
+The lead is the place for what the merchant **avoids**: `No duplicate page to keep in sync, no
+redirect app, no second site`. Those three are how they solve it today without you.
+
+### Watch for the parallel-phrase tic
+
+`The offer does not travel / The proof does not travel / The season does not travel` is writing for
+rhythm. Three cards, one idea, and the reader stops reading by the third. Vary the construction;
+keep the parallel meaning.
+
 ## Step 3 — Verify every claim against code, not against docs
 
 The page will make factual claims about a PageFly feature. Every number, capability
@@ -173,6 +230,22 @@ Evidence: a doc said a market version locks the page layout, and that was nearly
 as the page's honesty beat. Code carried no such restriction and the module's own description said
 design was editable. The claim was dropped rather than softened.
 
+### A status label is a claim too - check whether a merchant can actually see it
+
+`status: 'beta'` in the registry is not the same as "merchants see Beta". One module's registry said
+beta while the badge rendered in exactly one place: a *collapsed* comparison table below the tier
+cards, past the extra-credits block, behind a click. On the tier cards themselves the beta badge had
+been deliberately suppressed for four months - while `Upcoming` badges on neighbouring rows rendered
+fine, so it was a decision, not a bug.
+
+Trace the label from the registry to the pixel: which component renders it, and how many
+interactions from a default view. **Do not put a status on a marketing page that the product itself
+declines to show** - it costs conversions and no in-app surface corroborates it. Keep the substance
+(the page-type limit, the tier) and drop the label.
+
+The inverse still holds: never *remove* a limitation because it is inconvenient. Ship the fact,
+drop the scary word only when no merchant-visible surface carries it.
+
 ### When sources disagree, trace to where the effect happens
 
 Do not rank sources by how official they look. The most official-looking source can still be
@@ -209,7 +282,20 @@ pricing-table name is the one a marketing page uses.
 
 **This is not keyword stuffing, and it is not a substitute for it either.** The target keyword
 belongs in the title tag and the lead paragraph; repeating it in every H2 reads as robotic and was
-corrected on this store. The product name and the keyword are two different jobs.
+corrected on this store. The product name and the keyword are two different jobs. Never trade copy
+length for a keyword - the budget in Step 3.45 wins.
+
+**When the surfaces disagree on the name, list them before choosing.** One feature was found
+carrying four merchant-visible names at once: the pricing comparison table, the editor's create
+modal, its delete modal, and the help centre - and the public pricing page carried no line for it
+at all. The rule above (pricing-table name wins) is the default, and it has one tie-breaker: **if
+the target keyword contains a different one of those names, the keyword wins.** A page that ranks
+for a name nobody in the app uses is still a page merchants land on; a page nobody lands on teaches
+nobody the name.
+
+Whichever loses, **bridge it once in the FAQ** - one sentence naming the in-app string - so a
+reader who goes looking in the app can find it. Then log the drift as a backlog item. Do not block
+the page on reconciling four surfaces.
 
 Weighs heaviest on a page whose distribution is LLM citation rather than search: an engine can only
 cite the name it read.
@@ -351,8 +437,13 @@ When you do:
   not undo a background on `thead`.
 - **Pre-flight the theme's bare-tag rules** instead of guessing which exist. Command and the
   current pagefly.io list: `references/pagefly-editor-mechanics.md`.
-- **No `<script>`.** PageFly's HTML element collapses scripts to one line, which silently
-  breaks anything relying on `//` comments or omitted semicolons.
+- **No `<script>` — with exactly one sanctioned exception.** The ban is a house rule, not a
+  platform limit: the HTML element *does* execute scripts on the storefront. It exists because the
+  element collapses a script to one line when saved, so a `//` comment or an omitted semicolon
+  kills it silently, and because the editor does not execute scripts at all, so a working block
+  looks dead on the canvas. The one approved exception is an animated section background —
+  `references/animated-section-background.md`, which carries the four conditions it stays approved
+  under. Anything else wanting a script gets its own review; do not generalise from that one.
 - **No HTML comments either.** The fragment is served verbatim on a public page, so a build note
   in `<!-- -->` ships to anyone reading source. Notes go in `build-order-*.md`; the `.html` file
   stays pure payload.
@@ -379,6 +470,24 @@ Before calling a page done:
 - Add the nav entry.
 - Lock a baseline on the **source** pages, not just the new one.
 - Read results D+7 / D+14 **from the day the links went live**, not from the publish date.
+
+### The six that get missed on every page built this way
+
+Three feature pages shipped by this method were swept a week later and **all three carried the same
+six misses**. They are not content mistakes; they are build steps with no natural prompt. Run them
+as a list.
+
+| # | Miss | Where it is fixed |
+|---|---|---|
+| 1 | `description_tag` empty | **Shopify Admin.** The PageFly editor only ever *reads* the SEO metafields; there is no writer in it. The app says so itself when a page is published |
+| 2 | `og:title` falling back to the site default | **Theme.** Nothing in the app touches `og:title`; PageFly writes a section, never the `<head>`. Usually a site-wide fix, so it will not be yours alone |
+| 3 | No `FAQPage` JSON-LD despite the page having an FAQ | **In the editor** - there is a shipped one-click generator in the CRO Center drawer. Two conditions to confirm first: its audit is written around product pages, and the schema is only emitted at publish when the Q&A is built from an accordion element, so hand-typed text drops it silently |
+| 4 | No inbound links | **In the editor, on the other pages.** See the orphan rule above |
+| 5 | Images with no alt | **In the editor** - the image element has an alt field and seeds it from the media library |
+| 6 | Target keyword absent from the body | **Copy.** Measure it: count the exact phrase before and after. Two pages went to review at zero occurrences of theirs |
+
+Three of the six cannot be done from the editor at all (1, 2, and the nav half of 4). Schedule them
+with whoever owns Admin and the theme **before** the page is due, or the page ships with them open.
 
 ### Two pre-publish checks that are not about links
 
@@ -446,12 +555,17 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Block list decided from content, before any harvesting
 - [ ] Any NEW harvest written back into `section-library.md` with the date
 - [ ] Layouts identified by geometry, not by element counts (only when harvesting)
-- [ ] No two blocks answer the same question
+- [ ] No two blocks answer the same question; every table row checked against the rest of the page (Step 2.5)
+- [ ] The block list has a "why this matters" block, and it is concrete situations rather than adjectives
+- [ ] Headings name what the product does, not what the platform makes hard
+- [ ] Required disclosure placed in the spec strip and FAQ, not made the visible content of a block
 - [ ] Each new string written to the length of the string it replaces; hero lead ~19 words, not a TLDR
 - [ ] On the duplicate path the copy budget came from the donor page, not from the library table
 - [ ] One file is the page spec; the others reference it instead of restating it
 - [ ] Each harvested section named on save, and Status re-read in the app before insert
 - [ ] Every claim traced to code; flags read live, not from seed
+- [ ] Every status label (beta / upcoming) traced from registry to pixel; nothing on the page the product declines to show
+- [ ] All merchant-visible names for the feature listed before one was chosen; the loser bridged once in the FAQ and logged
 - [ ] Claims read from the **production** branch, not the checked-out one; flag state checked separately from code
 - [ ] Limitations scored in the claim table exactly like capabilities
 - [ ] Where sources disagreed, the answer came from the code that executes, not from the most official-looking source
@@ -461,7 +575,7 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Sections published before use
 - [ ] Each reused instance unsynced (except deliberately shared blocks)
 - [ ] Page custom CSS pasted for every inserted section that requires it (`section-library.md` names which, and it is per page - a global section does not carry it)
-- [ ] Custom HTML self-contained, no `<script>`, no `rem` units
+- [ ] Custom HTML self-contained, no `rem` units, and no `<script>` unless it is the sanctioned animated background under all four of its conditions
 - [ ] Custom HTML sets no padding / max-width / background of its own - the wrapping section owns those
 - [ ] Custom HTML's left and right edges measured against a neighbouring section's content row, and they match
 - [ ] Every bare tag in the custom HTML reset against the theme's element selectors
@@ -475,6 +589,7 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Inbound links live; baseline locked; read date set from link-live day
 - [ ] Tier claim reconciled with the store's pricing page and the in-app comparison table, and the pricing page fixed in the same pass
 - [ ] Every URL going into a button status-checked before it was written
+- [ ] The six recurring misses run as a list (meta description, og:title, FAQ schema, inbound links, image alt, keyword in body); the three needing Admin or theme scheduled with their owner
 - [ ] Store never fetched in parallel (`measure-a-page.md` step 0); any "not found" from your own tooling confirmed with a positive control (anti-pattern #23)
 - [ ] Progress handed back as an Artifact with a rendered block-by-block mock, not as a file path
 - [ ] Artifact contains open items only; anything resolved was deleted, not marked done

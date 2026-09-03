@@ -1,0 +1,78 @@
+<style>
+.pf-fgrid-section{position:relative;isolation:isolate;overflow:hidden}
+.pf-fgrid-section > canvas.pf-fgrid{position:absolute;inset:0;z-index:-1;pointer-events:none;display:block}
+
+.pf-why-card{
+  background:#0A0E1A;
+  border:1px solid rgba(255,255,255,.10);
+  transition:transform .3s cubic-bezier(.2,.7,.3,1),
+             border-color .3s ease,
+             background-color .3s ease,
+             box-shadow .3s ease;
+}
+.pf-why-card:hover{
+  transform:translateY(-3px);
+  background:#0D1226;
+  border-color:rgba(140,146,255,.45);
+  box-shadow:0 12px 32px -14px rgba(83,90,247,.45);
+}
+@media (prefers-reduced-motion:reduce){
+  .pf-why-card,.pf-why-card:hover{transition:none;transform:none}
+}
+</style>
+
+<script>
+(function(){
+  var hosts = [].slice.call(document.querySelectorAll('.pf-fgrid-section'));
+  if (!hosts.length) { return; }
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SQ = 4, GAP = 9, P = SQ + GAP, CHANCE = 1.2, MAX_OPACITY = 0.10;
+  var COLOR = '140,146,255';
+  var items = hosts.map(function(host){
+    var cv = document.createElement('canvas');
+    cv.className = 'pf-fgrid';
+    host.insertBefore(cv, host.firstChild);
+    return { host: host, cv: cv, ctx: cv.getContext('2d'), cols: 0, rows: 0, op: null, w: 0, h: 0 };
+  });
+  function measure(o){
+    var r = o.host.getBoundingClientRect();
+    if (!r.width || !r.height) { return; }
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    o.w = r.width; o.h = r.height;
+    o.cv.width = Math.round(r.width * dpr);
+    o.cv.height = Math.round(r.height * dpr);
+    o.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    o.cols = Math.ceil(r.width / P); o.rows = Math.ceil(r.height / P);
+    o.op = new Float32Array(o.cols * o.rows);
+    for (var i = 0; i < o.op.length; i++) { o.op[i] = Math.random(); }
+  }
+  function measureAll(){ items.forEach(measure); }
+  measureAll();
+  window.addEventListener('resize', measureAll);
+  var last = performance.now();
+  function frame(t){
+    var dt = Math.min((t - last) / 1000, 0.1); last = t;
+    for (var k = 0; k < items.length; k++) {
+      var o = items[k];
+      if (!o.op) { continue; }
+      if (!reduce) {
+        for (var i = 0; i < o.op.length; i++) {
+          if (Math.random() < CHANCE * dt) { o.op[i] = Math.random(); }
+        }
+      }
+      var ctx = o.ctx;
+      ctx.clearRect(0, 0, o.w, o.h);
+      for (var y = 0; y < o.rows; y++) {
+        for (var x = 0; x < o.cols; x++) {
+          var a = o.op[y * o.cols + x] * MAX_OPACITY;
+          if (a < 0.005) { continue; }
+          ctx.fillStyle = 'rgba(' + COLOR + ',' + a.toFixed(3) + ')';
+          ctx.fillRect(x * P, y * P, SQ, SQ);
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
