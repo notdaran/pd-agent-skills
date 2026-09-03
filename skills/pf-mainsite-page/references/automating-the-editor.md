@@ -65,10 +65,24 @@ Do not double-click to edit on canvas. Use the inspector's content box. The same
    and `offsetParent===null` for hidden. Save it with the tool's `filePath` and diff it against
    the spec offline. This replaces the entire "find the old string" phase.
 2. Per string: find the outline row by `data-pf-id` prefix, click its `.main-element`, wait ~1.7s.
-3. The inspector's content box is the `[contenteditable="true"]` whose class contains `w-100`.
+   Clicking the node in the **sandbox** works too and is the only way to reach an element whose
+   outline branch is collapsed - dispatch `mousedown`/`mouseup`/`click` on it with real coordinates.
+3. **Gate on the `General` tab before every write.** The content box only exists on `General`; the
+   inspector reverts to `Styling` when the selected element changes type. Skipping this check is a
+   **silent no-op**: `execCommand` returns `true`, nothing changes, and a ten-string batch reports
+   success having written nothing. This happened once and cost a full re-run.
+
+   ```js
+   const tab = [...d.querySelectorAll('[role=tab]')].find(t => t.textContent.trim() === 'General')
+   if (tab && tab.getAttribute('aria-selected') !== 'true') { tab.click(); await sleep(900) }
+   ```
+4. The inspector's content box is the `[contenteditable="true"]` whose class contains `w-100`.
    Select all of it with a Range, then `document.execCommand('insertText', false, newText)`.
-4. Verify by re-reading the sandbox node's `textContent` (`innerText` is empty for anything inside
-   a collapsed accordion — that is not a failed write).
+5. Verify by re-reading the sandbox node's `textContent` (`innerText` is empty for anything inside
+   a collapsed accordion — that is not a failed write). **Re-query the node from the sandbox
+   document first.** A write re-renders the subtree, so the reference you held is detached and
+   still carries the old text: verifying through it reports "unchanged" for a write that landed.
+   Both false directions are now on record - step 3 gives a false pass, this gives a false fail.
 
 The snapshot-and-grep loop below still works but costs ~4 tool calls per string.
 
@@ -94,6 +108,23 @@ then `execCommand('foreColor', false, '#FFFFFF')` over the same range.
 The URL picker has a protocol dropdown (`https://` / `http://` / `/` / `This page`) separate from
 the text box. For a relative link set the dropdown to `/` and the box to `pages/foo` — do not type
 the leading slash into the box. Confirm with the picker's own **Select** button.
+
+**Finding that button is the hard part, and getting it wrong loses the edit silently.** Measured
+2026-09-03:
+
+- **`Select` sits at the very bottom of the drawer, under the collections list** — far below the URL
+  box, with a `Link to` picker and a long scrolling list of collections between them. It reads as
+  the collections picker's button. It is not; it commits the whole drawer.
+- **`Enter` in the URL box cancels.** The drawer closes, the Action panel still shows the old URL,
+  and nothing warns you.
+- **Typing the value is not committing it.** The box keeps the new value across close and reopen,
+  which looks like it saved. The element's `data.href` is unchanged until `Select` is clicked.
+- **`Select` can read as `disabled` on the first pass** and enable after the drawer is reopened.
+  If it is disabled, close and reopen the picker rather than fighting the field.
+- **Verify against the API, never the panel.** Read `data.href` on the element from
+  `/api/page/<id>` after saving. The inspector's `URL:` line is not reliably reactive - it showed
+  the stale URL for several minutes across reopens while the edit was genuinely uncommitted, so it
+  cannot distinguish "not applied" from "applied, not repainted".
 
 ## Creating the page
 
@@ -153,6 +184,17 @@ batch and hand it to a person in the middle of the build, not at the end.
   empty it. Works both as a real `press_key` and as a synthetic `keydown` with `metaKey:true`.
   Two uses beyond a host for a hand-dragged element: duplicate-then-empty gives a `Custom.HTML`
   host, and duplicate-then-keep-one-`Paragraph` gives a text strip with **no hand-drag at all**.
+
+  **Third use, measured 2026-09-03: duplicate-then-trim builds a whole new content block.** A
+  four-tile block was made from the page's five-tile block in one `Meta+D` plus six deletes (the
+  spare tile, the button row, four images), then ten string writes. No insert, no unsync, no page
+  CSS paste, no hand-drag. Where the block list needs a layout the page already has *at a different
+  tile count*, this is the cheapest path by a wide margin.
+
+  Two things it costs, both easy to miss: the duplicate lands **immediately after its donor**, so
+  the two sit adjacent and look identical until you re-theme it (anti-pattern #24), and the
+  children keep the donor's ids only in your notes - **re-read the new section's subtree from the
+  sandbox to get the new ids** before writing to it.
 - **The `Delete` key does work** — measured 2026-08-27, contradicting the earlier note here.
   Select the element (click its outline row's `.main-element`), then dispatch
   `KeyboardEvent('keydown',{key:'Delete',keyCode:46,bubbles:true})` on `document`. Deleting a
@@ -164,6 +206,35 @@ batch and hand it to a person in the middle of the build, not at the end.
   the outline keeps showing "Flex section". Target rows by `data-pf-id` instead of by name.
 - **Emptying a duplicated section** is one `Delete` per direct child. A harvested bento section
   has 3-6 direct children, so it is seconds, not minutes.
+
+## Editing a `Custom.HTML` element: it is Monaco
+
+Select the element, `General` tab, **Open code editor**. The editor is **Monaco**, and the a11y
+node is a bare `native-edit-context` div inside `.overflow-guard` — typing into it is slow and
+lossy for a multi-KB fragment. Drive the model directly instead, then click **Done**:
+
+```js
+const m = w.monaco.editor.getModels()[0]
+m.setValue(newSource)                  // or m.setValue(patch(m.getValue()))
+```
+
+`Done` closes the modal; the page still needs a normal **Save** afterwards. Reading
+`m.getValue()` first is also the correct way to honour anti-pattern #21 — it is the live element's
+source, which the file in `plans/` is not.
+
+## Duplicating a page
+
+From the Pages list: **tick the row's checkbox → `More actions` → `Duplicate`**. The copy appears
+immediately as `<name> - copy`, unpublished.
+
+The two icon buttons on each row are **Analytics** and **Preview** — neither is a `...` menu, and
+clicking the first navigates away from the list. There is no per-row duplicate action.
+
+Read the new page's id from `/api/pages?limit=5&type=page` rather than guessing it, then run the
+Step 3.6 gate checks against `/api/page/<newId>` before touching anything: `editorVersion`,
+`customCSS` length, and every section's `type` (a `GlobalSection` that survived as a reference is
+still `GlobalSection`; content sections that were already local read `FlexSection`, which is what
+lets you skip unsync entirely).
 
 ## Saving
 

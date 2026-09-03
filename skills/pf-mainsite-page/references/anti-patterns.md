@@ -354,3 +354,74 @@ Cheapest forms of the control:
 **Related.** Same family as #15 (the collapsed outline node that made a section look empty) and #20
 (the editor canvas that made a broken block look fine). All three are a tool answering a narrower
 question than the one you asked, and the answer looking exactly like the one you wanted.
+
+---
+
+## 24. Building a block by duplicating another block on the same page, and inheriting its ground
+
+**What happened.** A four-tile benefits block was created by selecting the five-card block above it
+and pressing `Meta+D`, then deleting the spare tile, the button row and the images. Correct
+technique - it needs no insert, no unsync and no CSS paste. What came with it was the donor's
+entire visual identity, and the duplicate landed **directly underneath its donor**. Two adjacent
+blocks, same light gradient, same card style: they read as one long section with a heading dropped
+in the middle. The operator caught it from a screenshot.
+
+The block was also meant to be the page's one dark beat. The page's colour rhythm was supposed to
+run dark, dark, light, **dark**, light, dark; what shipped to preview was dark, dark, light,
+light, light, dark.
+
+**Why the automated check missed it.** The verification pass read `getComputedStyle(section).backgroundColor`
+and got `rgba(0, 0, 0, 0)` for both sections - so it reported no background at all and moved on.
+The light gradient was a **`background-image`**, and the probe never looked at it. Same family as
+#23: the probe answered a narrower question than the one being asked, and the answer looked clean.
+
+**Do instead.**
+
+- Decide the duplicate's ground **when you decide to duplicate**, not after looking at it. A block
+  created by duplication starts life visually identical to the block it will sit next to, and
+  adjacency is the default, not the exception.
+- Re-theming a section is three properties, not one: `background-color`, `background-image`
+  (set it to `none` - a donor gradient survives a colour change), and the **text colour**. Flipping
+  a section's ground to dark without the text colour gives dark text on a dark ground.
+- When you check, read all of them. `backgroundColor` alone is a false negative:
+
+  ```js
+  const cs = getComputedStyle(document.querySelector('SECTION_SELECTOR'))
+  ;[cs.backgroundColor, cs.backgroundImage.slice(0, 40)]
+  ```
+- Read the page's colour rhythm as a sequence before calling the build done - list every section's
+  ground top to bottom and look at the run. Two identical grounds in a row is the tell, and it is
+  invisible one section at a time.
+
+---
+
+## 25. Building from the copy file after the review rounds moved to the artifact
+
+**What happened.** The page spec folder held `copy-markets.md`, written at 11:50 and described by
+the skill as the build input. Seven rounds of copy review then ran **in the review artifact**,
+finishing at 15:19. The build started at 15:20.
+
+By then the copy file was wrong in three structural ways, not three cosmetic ones: it still
+required a "Beta" label the owner had since removed from the page, it still specified block 4 as a
+`Custom.HTML` table when block 4 had become a four-tile benefits block, and it still called the
+feature "Market versions" after the naming had changed twice. Building from it would have produced
+a different page with a different block count.
+
+Nothing flagged the drift. Both files sat in the same folder, both looked current, and the skill's
+own guidance points at the `.md` one.
+
+**Why it happens.** Step 7 splits the deliverables as *machine-consumed input stays in `plans/`,
+human-consumed output is an Artifact*. That split is right up until the operator starts **reviewing
+copy in the artifact**, which is exactly what the artifact is for. From the first accepted change,
+the artifact is the copy of record and the `copy-*.md` is a draft with a stale timestamp.
+
+**Do instead.**
+
+- **Compare mtimes before building.** If the artifact is newer than `copy-*.md`, the copy file is
+  not the build input until proven otherwise. One command, and it is the whole check:
+  `ls -lt copy-*.md review-artifact.html`
+- Pick one and mark the other. Either write each accepted round back into `copy-*.md` as it is
+  agreed, or stamp a stale banner at the top of the copy file naming the artifact as the source.
+  Never leave two live copies of the copy.
+- A review round that changes a **block list** - not just wording - has invalidated the build order
+  and the per-element mapping too, not only the copy. Re-read those before building.

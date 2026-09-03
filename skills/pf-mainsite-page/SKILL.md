@@ -300,6 +300,32 @@ the page on reconciling four surfaces.
 Weighs heaviest on a page whose distribution is LLM citation rather than search: an engine can only
 cite the name it read.
 
+### When the feature name contains the platform's own product name
+
+A feature built on top of a named platform capability tends to be named after it, and the result
+reads as the platform's feature rather than yours. `Shopify Markets localization` is a page about
+**PageFly**, and every heading on it said something Shopify appears to own. The operator caught it
+on sight; nobody in three rounds of copy review had.
+
+The keyword makes it worse, not better: the target keyword *was* that exact phrase, so the SEO rule
+and the attribution rule pull in opposite directions and the writer resolves the collision silently
+in favour of whichever they were thinking about.
+
+**Do this instead.** Detect the collision when you write Step 3.4's heading list: does the feature
+name, as written, start with another company's product name? If it does, do not choose. Put both
+options and the cost in front of whoever owns the page:
+
+- **Vendor-first** (`PageFly Markets localization`) - unambiguous ownership, loses exact-match on
+  the keyword.
+- **Keyword-first** (`Shopify Markets localization`) - keeps the match, reads as the platform's.
+- **Split the jobs** - vendor-first in the H1's opening, the platform's term in the same line where
+  it is factually correct (`... for each Shopify Market`). Usually the answer, never automatically
+  the answer.
+
+Whatever is chosen, write the discarded option and its cost into the build order. This is a page
+owner's trade-off, and the value the skill adds is forcing it to be made once, out loud, rather
+than drifting between rounds.
+
 ## Step 3.45 — A harvested section carries an implied copy length. Write to it.
 
 The layout was designed around the words that were in it. Swap in copy of a different size and the
@@ -531,6 +557,25 @@ in which the operator can review copy before the build. A bullet list of heading
 So the split is: **machine-consumed input stays in `plans/`; human-consumed output is an Artifact.**
 Do not also write a `plan.md` status file - that is the file the Artifact replaces.
 
+### The split inverts the moment copy is reviewed in the artifact
+
+That table is right until the operator starts **approving copy changes in the artifact**, which is
+what the rendered mock is for. From the first accepted change, the artifact holds the copy of record
+and `copy-*.md` is a stale draft that still looks like the build input - because this file says it
+is one.
+
+It has already cost a build: seven rounds of review ran in the artifact while `copy-*.md` sat four
+hours out of date, wrong about the feature name, wrong about whether a "Beta" label was required,
+and wrong about the block list. Anti-pattern #25 has the detail.
+
+**Before building, compare mtimes** - `ls -lt copy-*.md review-artifact.html`. If the artifact is
+newer, it is the build input until proven otherwise. Then pick one and mark the other: either write
+each accepted round back into `copy-*.md`, or stamp a stale banner at its top naming the artifact.
+Never leave two live copies of the copy.
+
+And note what a review round can invalidate. A wording change touches only the copy; a change to
+the **block list** invalidates the build order and the per-element mapping too.
+
 ### Rules for the artifact itself
 
 - Framing, labels and explanation in whatever language the operator reads; **the page copy being
@@ -562,6 +607,7 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Each new string written to the length of the string it replaces; hero lead ~19 words, not a TLDR
 - [ ] On the duplicate path the copy budget came from the donor page, not from the library table
 - [ ] One file is the page spec; the others reference it instead of restating it
+- [ ] `copy-*.md` confirmed newer than the review artifact, or the artifact used as the build input and the copy file stamped stale (`ls -lt`)
 - [ ] Each harvested section named on save, and Status re-read in the app before insert
 - [ ] Every claim traced to code; flags read live, not from seed
 - [ ] Every status label (beta / upcoming) traced from registry to pixel; nothing on the page the product declines to show
@@ -572,6 +618,7 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Spec carries a gate inventory: every condition under which the feature is invisible in-app
 - [ ] H1 and every feature-referring H2 use the `displayName` from `cro-modules.ts`, not a descriptive stand-in
 - [ ] Target keyword lives in the title tag and lead, not repeated across every H2
+- [ ] If the feature name opens with another company's product name, the ownership-vs-keyword trade-off was put to the page owner and the discarded option recorded
 - [ ] Sections published before use
 - [ ] Each reused instance unsynced (except deliberately shared blocks)
 - [ ] Page custom CSS pasted for every inserted section that requires it (`section-library.md` names which, and it is per page - a global section does not carry it)
@@ -580,6 +627,9 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Custom HTML's left and right edges measured against a neighbouring section's content row, and they match
 - [ ] Every bare tag in the custom HTML reset against the theme's element selectors
 - [ ] Custom HTML checked in preview, not on the canvas
+- [ ] Any block built by duplicating another block on the same page was re-themed: `background-color`, `background-image`, and text colour
+- [ ] Section grounds listed top to bottom and read as a sequence - no two identical grounds adjacent
+- [ ] Where a fragment styles PageFly's own elements, the result was verified by `getComputedStyle`, not by the rule existing
 - [ ] Page spec has all three parts, including the per-element mapping
 - [ ] Editor version matches the harvested sections before the page is created
 - [ ] Every unsync re-verified after the batch, before the first save
