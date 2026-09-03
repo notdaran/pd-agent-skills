@@ -3,6 +3,37 @@
 All snippets run against a published page on `pagefly.io` via a browser tool.
 For anything inside the Shopify admin app iframe, see the last section.
 
+## 0. Fetch one page at a time, through a real browser
+
+This step exists because skipping it produces answers rather than errors.
+
+**Never crawl the store in parallel.** A concurrent fetch trips the CDN's bot challenge, and the
+challenge answers **`200` with a "verifying your connection" page**. Nothing fails. The HTML
+parses, every selector below returns an empty array, and every grep answers "not found" - which
+reads exactly like a real finding. Most of a several-hundred-page sweep once came back that way and
+was believed for a while.
+
+Command-line fetching is fine for one page at a time and unreliable in bulk. A real browser passes
+the challenge; `curl` in a loop does not.
+
+**Detect it before trusting a sweep.** Any of these is enough:
+
+```bash
+grep -l "Verifying your connection\|_cf_chl" *.html   # the challenge page's own markers
+```
+
+or check the byte size: a real page on this store runs into the hundreds of kilobytes, the
+challenge page is under ten.
+
+**Run a positive control before believing a negative.** Before concluding "page X does not mention
+Y", prove the same pipeline finds something you already know is on that page. A sweep that cannot
+find a string you can see with your own eyes is a broken sweep, not a finding. This applies to your
+own shell loops too, not just to the fetch - see anti-pattern #23.
+
+**A summary is not evidence.** A claim that will send someone off to edit a page has to come from
+the page's raw text, read directly. A model-written summary of the page is fine for orientation and
+not fine as the basis for the edit.
+
 ## 1. Is this page built from native elements or an HTML blob?
 
 ```js

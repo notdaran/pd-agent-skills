@@ -96,20 +96,11 @@ Everything else the old Step 1 measured - which pages are native builds, what ro
 section has - existed to *find* a layout. The library names layouts directly, so that search is
 over. Run it only when Step 2 says you actually have to harvest.
 
-### Measuring the live store: three ways to get plausible-looking nonsense
-
-All three were hit in a single session, and all three are silent - they return output that parses,
-greps and reads like an answer.
-
-- **Never fetch the store in parallel.** A concurrent crawl trips the CDN's bot challenge, which
-  answers `200` with a "verifying your connection" page. Most of a several-hundred-page sweep came
-  back that way and was believed for a while. Read pages one at a time, through a real browser.
-- **A negative result from your own tooling needs a positive control.** A shell loop reported a
-  file as missing on a branch where it exists; run directly, the same command found it. Before
-  concluding "X is not there", prove the tool can still find something you know is there.
-- **A summary is not evidence.** A claim that will make someone go and edit a page has to come from
-  the raw text, read directly. A model-written summary of a page is fine for orientation and not
-  fine as the basis for the edit.
+**Whenever you do measure the live store, read `measure-a-page.md` step 0 first.** Fetching the
+store wrongly does not fail, it answers: a parallel crawl comes back as the CDN's challenge page
+with a `200`, and every search over it then reports a clean, believable "not found". That step
+carries the detection, the positive control that has to precede any negative result, and why a
+summary of a page is not evidence for editing it. The habit behind it is anti-pattern #23.
 
 ## Step 2 — Harvest only what the library is missing
 
@@ -484,7 +475,7 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Inbound links live; baseline locked; read date set from link-live day
 - [ ] Tier claim reconciled with the store's pricing page and the in-app comparison table, and the pricing page fixed in the same pass
 - [ ] Every URL going into a button status-checked before it was written
-- [ ] Store never fetched in parallel; any "not found" from your own tooling confirmed with a positive control
+- [ ] Store never fetched in parallel (`measure-a-page.md` step 0); any "not found" from your own tooling confirmed with a positive control (anti-pattern #23)
 - [ ] Progress handed back as an Artifact with a rendered block-by-block mock, not as a file path
 - [ ] Artifact contains open items only; anything resolved was deleted, not marked done
 - [ ] No `plan.md` status file written alongside the Artifact

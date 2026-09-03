@@ -316,3 +316,41 @@ compare the section's rendered height against its neighbours. Both numbers are i
 that would have shipped into the public page source, and the `rem` units that render at 87.5% under
 the theme's `html{font-size:14px}`. All three are one habit: the fragment file is not a document,
 it is a fragment.
+
+---
+
+## 23. Believing a negative result from your own tooling
+
+**What happened.** Twice in one session, a tool reported an absence that was not real, and both
+reports looked like findings rather than failures.
+
+A bulk fetch of the store came back as the CDN's bot-challenge page, served with `200`. Every
+subsequent search over those files answered "not found", and one of those non-answers - "the
+pricing page never mentions this feature" - was nearly written into a report.
+
+Later, a shell loop reported two files as missing from a branch. Run directly, one command at a
+time, the same check found both. The loop had swallowed its own error.
+
+**Why it keeps happening.** A negative result arrives in the same shape as a positive one: no
+error, no warning, just an empty list. Absence reads as information. And unlike a wrong positive,
+nothing downstream contradicts it - you simply proceed on a page of the world that has a hole in
+it.
+
+It is worse here than in most work because the deliverable is claims about a product. A false
+absence becomes "the feature does not do X" on a public page.
+
+**Do instead.** Never accept "X is not there" from your own tooling without a **positive control**:
+run the same pipeline against something you already know is present. If it cannot find that, the
+pipeline is broken and the absence means nothing.
+
+Cheapest forms of the control:
+
+- Searching pages for a string: first search for a string you can see on that page yourself.
+- Checking whether a file exists on a branch: run the check directly on one path before trusting a
+  loop over many.
+- Any bulk fetch: check one file's size or title before searching all of them - see
+  `measure-a-page.md` step 0.
+
+**Related.** Same family as #15 (the collapsed outline node that made a section look empty) and #20
+(the editor canvas that made a broken block look fine). All three are a tool answering a narrower
+question than the one you asked, and the answer looking exactly like the one you wanted.
