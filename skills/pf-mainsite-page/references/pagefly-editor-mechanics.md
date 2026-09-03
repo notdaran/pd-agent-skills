@@ -178,3 +178,56 @@ PF
 - **The editor canvas is not the storefront.** It does not load these theme stylesheets, so a
   collision is invisible in the editor and shows up only in preview or live. Same shape as the
   `<script>` trap above: the canvas is a false negative for anything in `Custom.HTML`.
+
+### When the fragment styles PageFly's own elements, not its own markup
+
+Everything above assumes the usual case: the fragment brings its own markup and styles it. There is
+a second, legitimate use - the fragment carries **only** a `<style>` (and sometimes a `<script>`),
+and targets PageFly-rendered elements through classes you set in the inspector's
+**Advanced - HTML class** field. A background canvas behind a section, a hover treatment on a row
+of cards, a per-section colour override. The element renders nothing itself.
+
+This case has a different failure mode and the "self-contained, scoped" advice does not cover it.
+
+**Boundary with `animated-section-background.md`:** this section owns the general mechanic - how a
+fragment wins against the editor's own styling, and how to verify it. That file owns one worked
+example of the pattern (a flickering-grid layer behind a section), its tuned values and its
+paste-ready asset. Do not restate one in the other.
+
+- **Specificity is not enough. Use `!important`.** Measured on `pagefly.io`, 2026-09-03, on a
+  `FlexBlock` carrying a `pf-why-card` class: `.pf-why-card{background:#0A0E1A}` lost, and so did
+  `.pf-fgrid-section .pf-why-card{...}` - two classes, beating a single-class rule. The computed
+  value stayed the editor's own `rgba(255,255,255,.3)`. `!important` won.
+
+  **The competing rule was never identified.** Walking `document.styleSheets` and testing
+  `element.matches(rule.selectorText)` returned *zero* matching background rules, including the
+  fragment's own - so the winning declaration is in a sheet that walk cannot read. Do not repeat the
+  guess that was written into the build notes for this page ("styled-components injects later");
+  that was an inference, not a measurement. What is measured is the outcome: **two classes lose,
+  `!important` wins.**
+
+- **A class you set in the inspector is appended, not substituted.** The element keeps its generated
+  classes (`sc-jlGhtx haTrZt pf-229_`) and yours lands after them. You are overriding a live styling
+  system, not styling a blank node.
+
+- **Verify by computed value, never by the rule existing.** The rule being present in the DOM proves
+  nothing here. Read back what actually won:
+
+  ```js
+  const el = document.querySelector('.your-class')
+  getComputedStyle(el).backgroundColor          // must equal what you set
+  ```
+
+- **Where the fragment lives does not matter, as long as it is on the page.** A `<script>` that does
+  `document.querySelectorAll('.your-section-class')` finds its target from any section. That is what
+  makes this pattern survive the no-element-insertion limit: an existing `Custom.HTML` element
+  anywhere on the page can host it. A host section holding nothing but such a fragment renders at
+  **0px** height, so it costs no layout - measured on the same page. Do not delete that element
+  looking for tidiness; a browser agent cannot drag a new one in to replace it.
+
+- **The `Custom.HTML` "own no box" rule (#22) still holds, with one carve-out.** The fragment must
+  still not give *itself* padding, a max-width or a gutter. Deliberately theming a *different*
+  section through a class you assigned is a different act and is fine - but it means that section's
+  appearance now lives in a `Custom.HTML` element rather than in its own inspector settings. Say so
+  in the build order, or the next person will change the background in the Styling tab and find it
+  does not take.

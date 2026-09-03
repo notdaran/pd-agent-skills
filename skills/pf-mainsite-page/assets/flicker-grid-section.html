@@ -2,22 +2,30 @@
 .pf-fgrid-section{position:relative;isolation:isolate;overflow:hidden}
 .pf-fgrid-section > canvas.pf-fgrid{position:absolute;inset:0;z-index:-1;pointer-events:none;display:block}
 
-.pf-why-card{
-  background:#0A0E1A;
-  border:1px solid rgba(255,255,255,.10);
+.pf-fgrid-section{
+  background-color:#030712 !important;
+  background-image:none !important;
+}
+.pf-fgrid-section h1,.pf-fgrid-section h2,
+.pf-fgrid-section h3,.pf-fgrid-section h4{color:rgba(255,255,255,.96) !important}
+.pf-fgrid-section p{color:rgba(255,255,255,.64) !important}
+
+.pf-fgrid-section .pf-why-card{
+  background:#0A0E1A !important;
+  border:1px solid rgba(255,255,255,.10) !important;
   transition:transform .3s cubic-bezier(.2,.7,.3,1),
              border-color .3s ease,
              background-color .3s ease,
              box-shadow .3s ease;
 }
-.pf-why-card:hover{
+.pf-fgrid-section .pf-why-card:hover{
   transform:translateY(-3px);
-  background:#0D1226;
-  border-color:rgba(140,146,255,.45);
+  background:#0D1226 !important;
+  border-color:rgba(140,146,255,.45) !important;
   box-shadow:0 12px 32px -14px rgba(83,90,247,.45);
 }
 @media (prefers-reduced-motion:reduce){
-  .pf-why-card,.pf-why-card:hover{transition:none;transform:none}
+  .pf-fgrid-section .pf-why-card,.pf-fgrid-section .pf-why-card:hover{transition:none;transform:none}
 }
 </style>
 
