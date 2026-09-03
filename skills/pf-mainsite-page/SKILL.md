@@ -4,9 +4,10 @@ description: |
   Use when building or rebuilding a marketing page on pagefly.io (a Shopify store,
   separate from the app) inside the PageFly editor - feature landing pages, GAP pages,
   spoke pages. Carries the named global-section library the store already has, so a new
-  page is assembled from existing layouts (insert + unsync + rewrite) rather than
-  measured or hand-written. Also covers claim verification against code, the one case
-  that still needs `Custom.HTML`, and keeping the new page off the orphan list.
+  page is assembled from existing layouts - either by duplicating a page already shipped,
+  or by insert + unsync + rewrite - rather than measured or hand-written. Also covers
+  claim verification against code, the one case that still needs `Custom.HTML`, and
+  keeping the new page off the orphan list.
   Triggers on: "dung trang tren pagefly.io", "build landing page cho feature X",
   "trang GAP", "mainsite page", "tao trang /pages/... tren mainsite".
   NOT for: UI inside the Shopify embedded admin app (different surface, different
@@ -46,14 +47,14 @@ human step sits.
 | 3 | **Choose how each block is made**: existing section → native element → `Custom.HTML`, in that order | you |
 | 4 | **Map the block list onto `references/section-library.md`.** Measure or harvest only what it cannot cover (Steps 1–2 below) | you |
 | 5 | **Lock the page spec**: block list + copy + per-element mapping (Step 3.5 below) | you |
-| 6 | **Build the skeleton**: create the page, unsync, order the sections | agent |
+| 6 | **Build the skeleton** by whichever path Step 3.6 chose: duplicate a shipped page, or create + insert + unsync | agent |
 | 7 | **One handover** — every element that must be dragged in by hand, in a single batch | person |
 | 8 | **Fill everything**: text, HTML, links, delete the inherited leftovers | agent |
 | 9 | **Save. Never publish.** | agent |
 | 10 | **Ship inbound links with the page** and lock the baseline (Step 6 below) | you |
 | — | **Every progress hand-back goes to the operator as an Artifact** (Step 7 below), at each stage above, not only at the end | you |
 
-Three things decide whether this is fast or slow:
+Four things decide whether this is fast or slow:
 
 - **Step 3 order is not a preference.** Reaching for `Custom.HTML` before checking the element
   vocabulary is anti-pattern #4. It also buys a manual step, because new elements cannot be
@@ -62,6 +63,9 @@ Three things decide whether this is fast or slow:
   the agent re-derives it mid-build. Anti-pattern #19.
 - **Step 7 sits in the middle, not at the end.** Leaving the drags until last means two handovers,
   because the agent still has to fill the content of whatever was dragged in. Anti-pattern #18.
+- **Step 3.6 decides how much of the build is mechanical.** Duplicating a shipped page skips the
+  insert, the unsync of every block, and the page-CSS paste - the three places builds break. It is
+  not always available, and it is not a replacement for the insert path. The test is in Step 3.6.
 
 Before Step 6 runs, two gates must pass: **editor version matches the harvested sections**
 (Unsync is locked across Legacy/Gen2), and **every unsync is re-verified** before the first save.
@@ -91,6 +95,21 @@ Two facts to carry into that block, both wrong before:
 Everything else the old Step 1 measured - which pages are native builds, what row rhythm each
 section has - existed to *find* a layout. The library names layouts directly, so that search is
 over. Run it only when Step 2 says you actually have to harvest.
+
+### Measuring the live store: three ways to get plausible-looking nonsense
+
+All three were hit in a single session, and all three are silent - they return output that parses,
+greps and reads like an answer.
+
+- **Never fetch the store in parallel.** A concurrent crawl trips the CDN's bot challenge, which
+  answers `200` with a "verifying your connection" page. Most of a several-hundred-page sweep came
+  back that way and was believed for a while. Read pages one at a time, through a real browser.
+- **A negative result from your own tooling needs a positive control.** A shell loop reported a
+  file as missing on a branch where it exists; run directly, the same command found it. Before
+  concluding "X is not there", prove the tool can still find something you know is there.
+- **A summary is not evidence.** A claim that will make someone go and edit a page has to come from
+  the raw text, read directly. A model-written summary of a page is fine for orientation and not
+  fine as the basis for the edit.
 
 ## Step 2 — Harvest only what the library is missing
 
@@ -136,6 +155,51 @@ and status must trace to source.
 Content rules, tone of voice, ICP and the SEO/LLM-citation layers belong to the **content layer**,
 not to this skill. Get them from there.
 
+### Which ref to read
+
+Three refs answer three different questions. A marketing page describes **today**, so its claims are
+read from the branch that is in production.
+
+| Ref | Answers |
+|---|---|
+| the branch you have checked out | what you are building. Never a source for a claim |
+| the integration branch | what is merged and will ship. A promise, not a fact |
+| **the production branch** | **what merchants have today** - the one a claim must match |
+
+Evidence: a working branch a few dozen commits behind production still carried a cohort constant
+that production had deliberately deleted. Writing the page from it would have
+shipped a limitation that does not exist, aimed at exactly the merchants the feature was built for.
+
+Production code is still only half the gate. **A deployed feature can be flag-off.** Check both, and
+read the flag from the live dashboard, not from a doc that quotes it.
+
+### Limitations need the same proof as capabilities
+
+The claim table scores "X cannot be done" the same way it scores "X can be done". A false limitation
+is not the safe direction: it makes the product look worse than it is, and it is just as wrong.
+
+Evidence: a doc said a market version locks the page layout, and that was nearly shipped
+as the page's honesty beat. Code carried no such restriction and the module's own description said
+design was editable. The claim was dropped rather than softened.
+
+### When sources disagree, trace to where the effect happens
+
+Do not rank sources by how official they look. The most official-looking source can still be
+partial: a live pricing constant turned out to be only the margin, not the charge.
+
+Find the code that **executes** and read the arithmetic there - from the handler down to the
+function that mutates the thing being claimed about. Four sources disagreed on one number; the answer came
+from following the request into the function that writes the balance.
+
+### Gate inventory - what makes the feature invisible
+
+A feature page needs a list of every condition under which a merchant on the right plan still sees
+nothing: page type, surface (page versus section), screen width, tier, cohort, flag. It goes in the
+spec, next to the claim table.
+
+It pays three times: the FAQ answers come out of it, whoever records the demo needs it so they do
+not lose an hour to "the button is not there", and support tickets arrive from exactly these gates.
+
 ## Step 3.4 — Name the feature in the headings
 
 A feature page whose H1 and H2s never say the feature's name is not a feature page. It teaches the
@@ -169,7 +233,12 @@ mapping (Step 3.5) already puts old and new side by side - use that column as a 
 as a lookup.
 
 **The per-slot word budget lives in `references/section-library.md`.** Read it before writing, not
-after the block looks wrong. Range at time of writing: a hero lead holds 19 words, a section lead
+after the block looks wrong.
+
+**When the page is built by duplicating another (Step 3.6), the budget is the donor page's strings,
+not that table.** The library's numbers describe the named sections in it; a shipped page usually
+also carries blocks it built for itself, whose slots are a different size - measured once at roughly
+twice the length of the library's comparable slots. Read the string you are about to replace. Range at time of writing: a hero lead holds 19 words, a section lead
 11-20, a bento tile 6-18.
 
 It has been got wrong twice on this store: the Page Checkup hero at 42 words and the AEO hero at
@@ -204,7 +273,47 @@ Part 3 is what turns the build into mechanical work, and it is the part that get
 The "needs a new element" list is also the Step 7 handover list, so it has to exist before
 building starts, not after.
 
+## Step 3.6 — Choose the build path: duplicate a shipped page, or insert sections
+
+Two paths. Neither replaces the other, and the choice is made here, before anything is built.
+
+**The test: does the block list match the skeleton of a page already shipped?** Same section types,
+same count or fewer.
+
+| | Duplicate a shipped page | Insert sections and unsync |
+|---|---|---|
+| Use when | The block list matches a page already shipped. Typically the third or later page in one family | No shipped page has that shape, the donor is missing a layout you need, editor versions differ, or this is the first page of a family |
+| Skips | The insert, the unsync of every block, and the page custom CSS paste | nothing |
+| Costs | You inherit the donor's defects | the three steps above |
+
+The three steps duplication skips are the three that break builds: an unsync that silently reverts
+(anti-pattern #17), the page CSS this file already calls "the step that gets forgotten", and the
+insert itself.
+
+**Pick the donor by block count, not by subject.** Deleting a spare block out of a duplicate is
+cheap; adding a missing one costs an insert plus an unsync plus the CSS paste. The donor is the
+shipped page whose skeleton is the smallest superset of the new block list.
+
+**Read the donor before copying it.** Duplication carries defects forward. A donor picked for its
+skeleton still set its own padding, its own max-width and `rem` units inside `clamp()` in its
+`Custom.HTML` block - the exact three things anti-pattern #22 and Step 5 exist to prevent. Fix them in
+the copy, or the page ships them a second time.
+
+**Four things to confirm in the editor before duplicating.** None may be assumed:
+
+1. Does the duplicate carry the page custom CSS, or does it have to be pasted again.
+2. Does the shared closing CTA stay a reference, or get flattened into a local section.
+3. Do the sections arrive already local - this is what removes the unsync step, and it is the whole
+   reason to take this path.
+4. Does the editor version match.
+
+Write the four answers into the build order. The next build reads them instead of re-deriving them.
+
 ## Step 4 — Assemble with global sections
+
+Step 4 describes the **insert** path. On the duplicate path the sections arrive with the page and
+most of this becomes a verification pass rather than a build step - but the closing CTA rule below
+still holds, and the version-mismatch trap still applies.
 
 Read `references/pagefly-editor-mechanics.md` for how global sections behave, and
 `references/automating-the-editor.md` before driving the editor with a browser agent.
@@ -280,6 +389,20 @@ Before calling a page done:
 - Lock a baseline on the **source** pages, not just the new one.
 - Read results D+7 / D+14 **from the day the links went live**, not from the publish date.
 
+### Two pre-publish checks that are not about links
+
+- **Reconcile the tier claim with the store's own pricing page.** A feature page that says "from
+  plan X" while the pricing page one click away says plan Y is broken on arrival, and the merchant
+  buys the wrong plan. The module list on a pricing page is typically hand-typed rather than read
+  from the registry, so it drifts every time a module changes tier - and it drifts in one direction,
+  because a module that gained a cheaper tier is the change nobody remembers to publish. Check the
+  pricing page and the in-app comparison table against the registry, and fix the pricing page in the
+  same pass as the launch.
+- **Status-check every URL before it goes into a button.** The hero's secondary button deep-links a
+  help-centre article. A help centre that has been restructured leaves those links pointing at 404s,
+  and nothing else in the build catches it: the button looks fine, it just goes nowhere. `curl` the
+  URL you are about to write into the page.
+
 ---
 
 ## Step 7 — Hand progress back as an Artifact, not a file
@@ -315,6 +438,10 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - Explain in operator terms, never in build terms. "The layout you inserted is not switched on yet,
   so the page shows *Removed section*" lands; "section unpublished" does not.
 - A blocker states **what breaks if it is ignored**, not just that it is unresolved.
+- **Open items only.** When something is resolved, delete it from the artifact - do not convert it
+  into a green "done" card, and never into a card explaining why an earlier version was wrong. Test
+  each card by asking what the reader still has to *do* with it; no answer means the card goes. The
+  operator has asked for this three times.
 - Republish the same file path to update it in place. One artifact per page-build project, kept
   current, beats a new URL per checkpoint.
 
@@ -323,15 +450,21 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 ## Checklist
 
 - [ ] `references/section-library.md` read before anything else; block list mapped against it
+- [ ] Build path chosen deliberately (Step 3.6), not by habit; on the duplicate path the donor was read for inherited defects first, and the four editor questions answered
 - [ ] Tokens measured only for a `Custom.HTML` block, and measured today rather than recalled
 - [ ] Block list decided from content, before any harvesting
 - [ ] Any NEW harvest written back into `section-library.md` with the date
 - [ ] Layouts identified by geometry, not by element counts (only when harvesting)
 - [ ] No two blocks answer the same question
 - [ ] Each new string written to the length of the string it replaces; hero lead ~19 words, not a TLDR
+- [ ] On the duplicate path the copy budget came from the donor page, not from the library table
 - [ ] One file is the page spec; the others reference it instead of restating it
 - [ ] Each harvested section named on save, and Status re-read in the app before insert
 - [ ] Every claim traced to code; flags read live, not from seed
+- [ ] Claims read from the **production** branch, not the checked-out one; flag state checked separately from code
+- [ ] Limitations scored in the claim table exactly like capabilities
+- [ ] Where sources disagreed, the answer came from the code that executes, not from the most official-looking source
+- [ ] Spec carries a gate inventory: every condition under which the feature is invisible in-app
 - [ ] H1 and every feature-referring H2 use the `displayName` from `cro-modules.ts`, not a descriptive stand-in
 - [ ] Target keyword lives in the title tag and lead, not repeated across every H2
 - [ ] Sections published before use
@@ -349,5 +482,9 @@ Do not also write a `plan.md` status file - that is the file the Artifact replac
 - [ ] Hand-drag list handed over as one batch mid-build, not at the end
 - [ ] Save confirmed against the API, not the UI. Not published
 - [ ] Inbound links live; baseline locked; read date set from link-live day
+- [ ] Tier claim reconciled with the store's pricing page and the in-app comparison table, and the pricing page fixed in the same pass
+- [ ] Every URL going into a button status-checked before it was written
+- [ ] Store never fetched in parallel; any "not found" from your own tooling confirmed with a positive control
 - [ ] Progress handed back as an Artifact with a rendered block-by-block mock, not as a file path
+- [ ] Artifact contains open items only; anything resolved was deleted, not marked done
 - [ ] No `plan.md` status file written alongside the Artifact
