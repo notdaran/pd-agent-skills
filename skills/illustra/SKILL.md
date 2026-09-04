@@ -30,9 +30,11 @@ composing (step 4).
      template to clone** - relabeling a neighbor's composition reads as that neighbor, not the feature.
      Two cards in a section share VISUAL LANGUAGE but differ in CONCEPT; if you can't name what makes
      this art distinct from its neighbors, rethink before drawing.
-   - **Rule 1 - MODE.** Where will it live? Capture a neighbor reference, pick **Mode A** (light
-     website-card) or **Mode B** (dark-glass). Destination-driven, no fixed default. Dark
-     marketing-site cards use the `--mkdark-*` palette + frost-chip badges. A **dual-view** (one illus
+   - **Rule 1 - MODE + how the destination is BUILT.** Where will it live? Capture a neighbor
+     reference, pick **Mode A** (light website-card) or **Mode B** (dark-glass). Destination-driven,
+     no fixed default. Ask in the same breath **how that section is built** - a section built in the
+     **PageFly editor** caps the art at ONE bled edge (R19); asking later means re-laying out the set.
+     Dark marketing-site cards use the `--mkdark-*` palette + frost-chip badges. A **dual-view** (one illus
      showing in-app config AND live storefront) splits palette by role: config = light/white,
      storefront = dark.
    - **Rule 2 - ASSET-TYPE per element.** Real app UI = a **real screenshot crop, NEVER
@@ -51,7 +53,8 @@ composing (step 4).
    ones differ (R17) - mirror the axis, invert the hierarchy, or flip the cascade. Deciding this after
    the fact means rebuilding a card. Apply the **composition rules** (index below; full text + the load-bearing gotchas in
    style-guide "Composition" + "Sizing"). Run the R9 edge self-audit as you place.
-5. **Render & preview-on-card.** `node scripts/render.mjs <canvas.html> outputs/<name>.png --width W
+5. **Render & preview-on-card.** (On a PF-built destination, run the R19 alpha-margin check on every
+   PNG before handing it over.) `node scripts/render.mjs <canvas.html> outputs/<name>.png --width W
    --height H` (from skill root). Drop the PNG on a copy of the destination card and run the
    **match-neighbors review** (intake rule 3). **For a SET: build the destination preview grid FIRST**
    (all N at their real display width, one page) and re-render it after every pass - then NAME each
@@ -87,6 +90,7 @@ Apply during step 4. Each is a compressed directive; **full text + the failure e
 | R16 | A too-rich capture: STACK a panel on the fuller screenshot so the key parts peek out - never crop it down to a single-label fragment. |
 | R17 | A SET of illustrations must differ in COMPOSITION, not only content: adjacent cards may NOT share a skeleton (same side primary / same side satellite / same tag slots). Vary by mirroring the axis (mirror the panel's internal alignment too), inverting the hierarchy, or flipping the cascade direction. Gate 0 = concept distinct, intake rule 3 = visual language shared, R17 = composition distinct. |
 | R18 | A chip / micro-label sitting ON a line (divider, fold rule, axis, connector) needs an OPAQUE background - a wash lets the rule run through the text. Use `color-mix(... var(--brand-accent) 11%, var(--inset-bg))`, don't lower alpha. |
+| R19 | Illustration going into a **PageFly-built section**: bleed **ONE edge only** (in practice the bottom); every other edge keeps >=25-30px transparent margin. PF's flex container cannot clip the card's border-radius, so a left+right+bottom bleed paints the card's rounded bottom corners square. Containment (a sheet filling a phone frame) is not a bleed. Verify with an alpha-channel margin measurement, never by eye. Hand-coded / `overflow:hidden` destinations are exempt. |
 
 **Sizing** (full in style-guide "Sizing"): author at logical px, render at 2x; crop the stage **tight**
 to the content (a few px margin; bento-card illus run small, e.g. ~732x540, not 1200x900); **round

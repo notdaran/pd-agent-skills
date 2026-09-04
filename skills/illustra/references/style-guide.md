@@ -323,6 +323,38 @@ matching the live PF marketing feature cards.)
   "divider đang đè lên the fold"). Keep the intended colour at full opacity with
   `color-mix(in srgb, var(--brand-accent) 11%, var(--inset-bg))` instead of lowering alpha. A
   wash-backed chip is fine only where it sits on a flat surface with nothing running beneath it.
+- **R19 - Destination clips the corners: on a PageFly-built section, bleed ONE edge only.** An
+  illustration dropped into a section built in the **PageFly editor** sits in a flex container, and
+  the image element there **cannot be clipped by the card's border-radius**. So art that runs to the
+  frame on **three sides (left + right + bottom)** paints opaque pixels into the card's rounded
+  bottom corners: the card renders with **square white corners** while its neighbours stay rounded
+  (member: "cơ chế của pf đang là flex container ko cắt được border radius cho ảnh full bleed"). This
+  is a DESTINATION constraint, not a taste call - it does not show up in the illustration itself, only
+  once the PNG is placed.
+  - **The cap: at most ONE bled edge, in practice the bottom.** Every other edge keeps a transparent
+    margin - big enough for the panel's own soft shadow (**>=25-30px** logical). One bled edge is safe
+    because what the card has to round is the CORNERS, not the edge: with side margins intact, both
+    corners next to the bled edge stay transparent and the card's radius still reads.
+  - **A panel that "wants" to bleed a side instead ends inside the frame** with its full radius +
+    shadow on that side (R3a). Pull the cluster in and let panels overlap deeper to keep cohesion -
+    do not shrink everything until the composition goes weak.
+  - **Containment is not a bleed.** A drawer sheet filling the inner width of a phone frame shares
+    that frame's vertical edges on purpose (UI inside UI) - that is correct, and unrelated to this
+    rule, which is only about art touching the STAGE edge.
+  - **Verify by measuring the alpha channel, never by eye** - a faint shadow reaching the edge is
+    invisible in review and still fills the corner:
+    ```python
+    from PIL import Image
+    im = Image.open(f).convert('RGBA'); w, h = im.size; a = im.getchannel('A')
+    left  = next(x for x in range(w)      if max(a.getpixel((x, y)) for y in range(h)) > 8)
+    right = next(x for x in range(w-1,-1,-1) if max(a.getpixel((x, y)) for y in range(h)) > 8)
+    top   = next(y for y in range(h)      if max(a.getpixel((x, y)) for x in range(w)) > 8)
+    ```
+    Report the three margins + which edge bleeds; anything at 0 on a PF destination is the defect.
+  - **A hand-coded destination (or one whose wrapper clips with `overflow:hidden`) is exempt** - there
+    a multi-edge bleed is still the R3b/R4 look. The gate is intake rule 1: ASK how the section is
+    built before composing (the whole cart-drawer set had to be re-laid out afterwards because it was
+    not asked).
 
 ## The 3 intake rules (decide BEFORE composing)
 Run these at intake (SKILL workflow step 0). They are why v1/v2 went wrong: no mode gate ->
@@ -338,8 +370,12 @@ defaulted dark on a light card; no asset-type gate -> fabricated app UI in HTML.
    cannot name what makes this card's art distinct from its neighbors, stop and rethink the concept
    before drawing. (Distinct from rule 3 below: rule 3 keeps the VISUAL fit, gate 0 keeps the CONCEPT
    distinct - matching the look while cloning the idea is exactly the v1 failure.)
-1. **MODE.** Determine where the illustration will live, capture a neighbor reference screenshot,
-   then pick Mode A (light website-card) or Mode B (dark-glass). Destination-driven; no fixed default.
+1. **MODE + how the destination is BUILT.** Determine where the illustration will live, capture a
+   neighbor reference screenshot, then pick Mode A (light website-card) or Mode B (dark-glass).
+   Destination-driven; no fixed default. In the same breath ask **how that section is built**: a
+   section built in the **PageFly editor** caps the art at ONE bled edge (R19 - its flex container
+   cannot clip the card's border-radius, so a 3-side bleed squares off the card's rounded corners).
+   Answer it BEFORE composing; retro-fitting the cap means re-laying out every illustration in the set.
 2. **ASSET-TYPE per depicted element.** Classify each thing shown:
    - **Real app UI** (distinctive Shopify/Polaris screens: editor panels, drawers, inspectors, code
      editor, the Page Checkup drawer) -> **real screenshot, cut into pieces, composited. NEVER
@@ -400,7 +436,8 @@ defaulted dark on a light card; no asset-type gate -> fabricated app UI in HTML.
   space that's hard to place on the page - the member has to fight surrounding whitespace ("cho lên
   page sẽ bị thừa không gian xquanh khó xử lý"). The art's bounding box, not a fixed canvas, sets the
   stage size; bento-card illus run small (e.g. ~732x540, not 1200x900). A bled edge (R3b) has ZERO
-  margin - it runs to the stage edge.
+  margin - it runs to the stage edge; on a PageFly-built destination only ONE edge may do that, and
+  every other edge keeps >=25-30px of transparent margin (R19).
 - **Round more at small display size.** Card illustrations render small on the page, so default radii
   (`--r-md` 8px) look near-square there. Use generous rounding on panels (`--r-xround` 28px) and bump
   inner image/blocks to `--r-xxl` (14px) so corners read as intentionally rounded at the displayed
