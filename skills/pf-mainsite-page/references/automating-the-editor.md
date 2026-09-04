@@ -58,6 +58,48 @@ Do not double-click to edit on canvas. Use the inspector's content box. The same
 **Heading**, **Paragraph** and **Button** — the box is labelled `Heading text` / `Paragraph text` /
 `Button text` but behaves identically.
 
+### Fastest path: write the element stores directly
+
+Measured 2026-09-03 (44 strings) and again 2026-09-04 (44 strings): from inside the editor frame,
+every string on the page can be written in **one** `evaluate_script` call, with no selection, no
+tab gating and no `execCommand`:
+
+```js
+const s = pagefly.getElementStore(elementId)
+s.updateState({ data: { ...s.state.data, value: 'new text' } })   // ordinary text
+s.updateState({ data: { ...s.state.data, label: 'new question' } }) // Accordion3.Header
+```
+
+Get the ids from `/api/page/<id>` (each item's `_id`) and walk from the `Body` item to put them in
+document order. FAQ answers are the `Paragraph4` under `Accordion3.Flex.Content`. `data.value` is
+**HTML**, so write `&amp;` for `&` and inline links as `<a href="/pages/foo" style="color: rgb(140,
+146, 255);">`.
+
+**Verify from the element stores, never from `pageStore.state.items`** — `items` is not the render
+source and keeps stale values, so sweeping it for leftover donor strings reports false results.
+Canvas `innerText` is also empty for anything inside a collapsed accordion; that is not a failed
+write.
+
+### The trap that costs the whole batch: `pageStore.updateState` reverts every element
+
+**Set the page title and handle BEFORE writing any string, never after.**
+
+Measured 2026-09-04. 44 strings written and verified (canvas and stores both correct), then:
+
+```js
+pageStore.updateState({ title, shopifyPage: { ...pageStore.state.shopifyPage, handle } })
+```
+
+and **all 44 strings reverted to the donor page's text.** Any `pageStore.updateState` re-hydrates
+every element from `pageStore.state.items`, which is the stale copy described above. Title and
+handle live on `pageStore` itself, so they survive the element writes — the reverse is not true.
+
+Order that works: `pageStore.updateState` for title/handle → element-store writes → Save. After the
+first element write, do not touch `pageStore` again until the save is confirmed.
+
+Recovery is cheap if you kept the batch: re-run it. The expensive part is not noticing, because the
+canvas repaints the old text quietly and a save then persists the donor's copy.
+
 **Do it inside `evaluate_script`, batched** (measured 2026-08-27: ~45 strings in six calls):
 
 1. Read the whole page first, in one call, from the sandbox iframe:
@@ -177,6 +219,56 @@ tools and none inserted anything:
 **Plan around it, do not fight it.** See the pipeline below: collect every hand-drag into one
 batch and hand it to a person in the middle of the build, not at the end.
 
+### But you rarely need the catalog — duplicate a sibling and move it instead
+
+Corrected 2026-09-04. The drawer is still unusable, and that no longer means "a person must drag
+it". If an element of the wanted type already exists anywhere in the section, `Meta+D` plus a
+`children` rewrite puts a new one exactly where you want it, with no drag:
+
+1. Select the existing element (dispatch `mousedown`/`mouseup`/`click` on its `[data-pf-id]` node in
+   the sandbox, then confirm `selectedElementSubscription.state.id`).
+2. `Meta+D`. The copy lands **immediately after its original**, inside the same parent.
+3. Move it: `pagefly.getElementStore(parentId).updateState({ children: [...newOrder] })`.
+4. Rewrite its text, then restyle it (next section).
+
+**Rewriting a parent's `children` array works and is the thing that unlocks this** — the note above
+that "outline drag does not work under automation" is still true, but ordering is not limited to
+drag. Read the parent's current `children` first and reorder that array; do not invent ids.
+
+Two uses measured on `/pages/cart-drawer`, both of which the build order had scheduled as hand-drags:
+
+- The donor hero had **one** button; the page needed two. Duplicated the button, reordered to put
+  the secondary first, set its label, href and `linkTarget: '_blank'`.
+- The hero needed a fine-print line **below the button row**. Duplicated the lead `Paragraph`, which
+  lands above the buttons, then reordered to `[heading, lead, buttonBlock, newParagraph, video]`.
+
+Net effect: that build finished with **zero** hand-drags. Only media replacement stayed manual. Do
+not put "drag in a Paragraph / a Button" on the handover list until you have tried this.
+
+### Styling a duplicate: the inspector fields take a scripted write
+
+A duplicate inherits its donor's styling, so a secondary button comes out looking primary. The
+Styling tab's colour and size fields are plain `input[type=text]` — no need to open the colour
+picker:
+
+```js
+const set = (inp, v) => { Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype, 'value').set.call(inp, v)
+  inp.dispatchEvent(new Event('input', {bubbles:true}))
+  inp.dispatchEvent(new Event('change', {bubbles:true}))
+  inp.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', keyCode:13, bubbles:true})) }
+```
+
+Find each field by walking up from its label text (`Background color`, `Content color`, `Font size`)
+to the nearest ancestor holding an `input[type=text]`. Select the element first and click the
+**Styling** tab with the real MCP `click` — it is a Radix tab and ignores a synthetic `.click()`.
+Verify with `getComputedStyle` on the sandbox node, not by the field's own value.
+
+**Take the numbers from a page that already shipped, not from judgement.** `/pages/heatmap`'s hero
+is the reference pair: secondary `background rgb(255,255,255)` / `color rgb(77,73,73)` / hover
+`rgb(242,247,255)`, primary `rgb(74,76,246)` / `rgb(255,255,255)` / hover `rgb(48,50,215)`. Read
+them live from `/api/page/<id>` → `styles[]` rather than pasting these, in case they move.
+
 ## What does work
 
 - **`Meta+D` duplicates in place**, immediately after the original. This is the way to create a
@@ -244,6 +336,15 @@ lets you skip unsync entirely).
 - A "Save page" popover appears with its own **Save**; tick "Don't remind me again" once.
 - **Verify the save against the API, not the UI**: `/api/pages?limit=1&type=page` and read
   `updatedAt`. Fetch it from inside the app iframe (see `measure-a-page.md` §6).
+- **Give the read 6-7 seconds, and add a cache-buster** (`?t=${Date.now()}`). Measured 2026-09-04: a
+  read 4.5s after the click returned the *previous* `updatedAt` and none of the new content, on a
+  save that had in fact landed. Reading too early looks exactly like a failed save, and the obvious
+  response — click Save again, or redo the edits — is how a good page gets damaged. Re-read before
+  concluding anything.
+- `#pf-button-save-page` did persist on every attempt in that session, so the "hidden proxy" warning
+  above is about reliability, not a rule to avoid it. Filter buttons by exact text `Save` and assert
+  you matched exactly one: its neighbours are `Save and publish` and
+  `TRIGGER_PUBLISH_AFTER_CONFIRM_ON_PUBLISH`, and hitting either publishes the page.
 - Save only. **Publish is a human decision.**
 
 ## Gates that must run before anything else

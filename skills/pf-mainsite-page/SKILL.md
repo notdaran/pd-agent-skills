@@ -57,8 +57,10 @@ human step sits.
 Four things decide whether this is fast or slow:
 
 - **Step 3 order is not a preference.** Reaching for `Custom.HTML` before checking the element
-  vocabulary is anti-pattern #4. It also buys a manual step, because new elements cannot be
-  created by a browser agent — see `references/automating-the-editor.md`.
+  vocabulary is anti-pattern #4. It also risks a manual step: a browser agent cannot pull a new
+  element out of the catalog drawer. It **can** duplicate an element of that type that already
+  exists on the page and move the copy into position, which usually removes the handover
+  entirely — see `references/automating-the-editor.md`.
 - **Step 5 is the whole game.** Layout plus copy is not enough; without the per-element mapping
   the agent re-derives it mid-build. Anti-pattern #19.
 - **Step 2 is cheap to get wrong and expensive to notice.** A block with no job survives all the way
@@ -713,6 +715,10 @@ the **block list** invalidates the build order and the per-element mapping too.
 - [ ] Editor version matches the harvested sections before the page is created
 - [ ] Every unsync re-verified after the batch, before the first save
 - [ ] Hidden per-device variants in harvested sections rewritten too
+- [ ] Every "needs a new element" item tried as duplicate-and-reorder first; only what genuinely
+      cannot be built that way went on the hand-drag list
+- [ ] Page title and handle set BEFORE any string is written (`pageStore.updateState` after the
+      strings reverts every one of them)
 - [ ] Hand-drag list handed over as one batch mid-build, not at the end
 - [ ] Save confirmed against the API, not the UI. Not published
 - [ ] Inbound links live; baseline locked; read date set from link-live day
