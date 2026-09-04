@@ -131,6 +131,14 @@ block's rhythm even when every token is right. Treat these as a budget, not a su
 | `Light bento 2+3` | section lead | **20** |
 | `Light bento 2+3` | large tile | **18** |
 | `Light bento 2+3` | small tile | **6 - 15** |
+| `Light bento 2+3` | each tile heading | **4 - 5** (see note) |
+
+**The heading row is not a harvested measurement.** It is the range the operator accepted on the
+page in review 2026-09-04, after rejecting 8 words and then 6 as too long for that same slot. Treat
+it as a ceiling that has been tested on a real review, not as the original section's geometry, and
+replace it with a measured number the next time that section is open in the editor. No other section
+in this table has had its heading slots measured at all - for those, count the string you are
+replacing (SKILL.md Step 3.45).
 
 **Unconstrained**, because they are not part of a harvested layout: the FAQ accordion body (it is
 collapsed until opened) and any `Custom.HTML` block. The 40-60 word paragraph an LLM will quote

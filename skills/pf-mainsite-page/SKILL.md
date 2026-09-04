@@ -63,6 +63,9 @@ Four things decide whether this is fast or slow:
   entirely — see `references/automating-the-editor.md`.
 - **Step 5 is the whole game.** Layout plus copy is not enough; without the per-element mapping
   the agent re-derives it mid-build. Anti-pattern #19.
+- **Copy has a pre-flight, and it is not the end checklist.** Step 3.42 names the five inputs that
+  must exist in writing before the first string. The checklist at the end of this file is the second
+  pass; it has never been able to be the first.
 - **Step 2 is cheap to get wrong and expensive to notice.** A block with no job survives all the way
   to review looking like content, because it is usually a table. Step 2.5 is the test.
 - **Step 7 sits in the middle, not at the end.** Leaving the drags until last means two handovers,
@@ -247,6 +250,38 @@ Beware the trap that produced the first two rejections: the parallel-phrase rule
 problem-stating heading needs solution-stating cards. That is true and it is not permission for the
 heading to state the problem. On the "why" block it never is.
 
+### A card heading says what the merchant gets, not what the screen shows
+
+The rule above governs the block's H2. It stops there, and the cards underneath get written as
+labels for the UI - which is what they are from the writer's seat, because the writer is looking at
+the section while writing it. Five cards went to review on one build reading `See the full sales
+funnel`, `Three ways customers buy`, `Down to a single page`, `Two periods, side by side`,
+`What it does not count`. Every one names a screen, none names an outcome. The owner's words:
+*"card 5 What it does not count nghe chả giống benefit của tính năng gì"*.
+
+| Rejected | Shipped |
+|---|---|
+| `See the full sales funnel` | `Find the step that loses the sale` |
+| `Three ways customers buy` | `See which buy button actually earns` |
+| `Down to a single page` | `Fix one page, not an average` |
+| `Two periods, side by side` | `Prove the fix worked` |
+| `What it does not count` | `Only pages you can fix` |
+
+The body under each card is usually already fine - it was written to explain the capability and it
+still explains it under the new heading. This is a heading-only defect; fix it as a heading-only
+pass rather than reopening the block.
+
+**A card heading never opens on a negation.** `What it does not count` is a disclosure wearing a
+heading's clothes. The block-level rule further up sends required disclosure to the FAQ, and a card
+sits one level below that, with one difference: a scope limit that defines what the numbers *mean*
+has to stay on the card, because a merchant who reads the funnel without it will mis-read it. Keep
+the fact, flip the axis - what the exclusion buys them is that every row left in the report is
+something they can act on.
+
+**Re-heading a negation orphans the body's first sentence.** `What it does not count` was answered
+by `Sessions on your theme's pages.` - a fragment with no subject once the heading stops asking the
+question. Re-read the first sentence of every body you re-headed and make it a sentence again.
+
 ## Step 3 — Verify every claim against code, not against docs
 
 The page will make factual claims about a PageFly feature. Every number, capability
@@ -395,14 +430,55 @@ Whatever is chosen, write the discarded option and its cost into the build order
 owner's trade-off, and the value the skill adds is forcing it to be made once, out loud, rather
 than drifting between rounds.
 
+## Step 3.42 — Copy pre-flight: what must be on the desk before the first string
+
+Every build step below has a reference the agent reads immediately before acting, so its rules fire
+while the work is still cheap. Copy had no equivalent: its rules sat across Steps 2.5, 3, 3.4 and
+3.45 as prose, then repeated in a checklist that runs after the page is written. A rule that only
+fires at the end is not a rule, it is a post-mortem - which is why the same copy defects reached
+review on consecutive builds while every build-stage rule held.
+
+**Five things exist before the first string is written.** Not "are known" - exist, in the spec file,
+in writing:
+
+1. **The word count of every string being replaced**, in the per-element mapping column (Step 3.45).
+2. **The feature's `displayName`** resolved through `en.json`, plus the other merchant-visible names
+   and which one won (Step 3.4).
+3. **The claim table**, read from the production branch, limitations scored the same way as
+   capabilities, plus the gate inventory (Step 3).
+4. **The block list with each block's job in one line**, and the "why" layer named as concrete
+   situations rather than adjectives (Step 2.5).
+5. **The ground of each block, top to bottom** (Step 3.5).
+
+Missing any of the five means you are still speccing, not writing. Writing anyway is what produces
+copy that reads well sentence by sentence and is wrong at the level nobody re-reads.
+
+**Three defects a sentence-level read will never catch**, because each is only visible when a string
+is compared with something outside itself. Run them per string while writing, not at the end:
+
+| Defect | Compare against | Rule |
+|---|---|---|
+| String too long for its slot | the count from item 1 | Step 3.45 |
+| Heading names a screen instead of an outcome | the block's job from item 4 | Step 2.5 |
+| Two cards saying one thing | every other card on the page | Step 2.5 |
+
+The end-of-file checklist still runs. It is the second pass, not the first.
+
 ## Step 3.45 — A harvested section carries an implied copy length. Write to it.
 
 The layout was designed around the words that were in it. Swap in copy of a different size and the
 block stops looking like the site, even though every token is correct.
 
-**Before writing a block's copy, read the length of the string it replaces.** The per-element
-mapping (Step 3.5) already puts old and new side by side - use that column as a budget, not just
-as a lookup.
+**Before writing a block's copy, count the words in the string it replaces and write the number
+into the per-element mapping (Step 3.5), next to the slot.** Not "read the length" - count it. That
+column then holds old string, new string, and the number the new string has to come in under.
+
+**This is a write-time step, not a review step.** It sat in the end-of-build checklist for months
+and was missed anyway, because by the time that checklist runs the copy is written, reviewed and
+expensive to shorten, so the check degrades into "is this close enough" instead of "what was the
+number". Counting first costs seconds and removes a round trip: on one build a 5-word card heading
+was replaced with 8, then 6, then 5, across three review rounds, and not one of those rounds was
+about anything except length.
 
 **The per-slot word budget lives in `references/section-library.md`.** Read it before writing, not
 after the block looks wrong.
@@ -446,6 +522,12 @@ One file. Three parts, not two:
    replaces. Plus two lists: **delete these** (the leftovers the harvest brings along - logo
    strips, "Brands using X", stray CTAs), and **needs a new element** (the blocks that require an
    element that does not exist yet).
+
+**The block list carries each block's ground, read top to bottom as a sequence.** Two identical
+grounds landing adjacent is a layout defect that costs a re-theme after the build (anti-pattern
+#24), and it is free to fix here by reordering one line. The decision belongs to whoever writes the
+block list; the build-stage references carrying the same rule only reach whoever is already pasting
+the second block in, by which point the fix is three CSS properties instead of a reorder.
 
 Part 3 is what turns the build into mechanical work, and it is the part that gets skipped.
 The "needs a new element" list is also the Step 7 handover list, so it has to exist before
@@ -679,12 +761,15 @@ the **block list** invalidates the build order and the per-element mapping too.
 - [ ] No two **cards** anywhere on the page carry the same sentence, across blocks as well as within one
 - [ ] Every sentence read aloud against "what do I get" - no asides, advice, roadmap promises or inside baseball
 - [ ] The "why" block's H2 has the product name as its subject and what it does as its predicate
+- [ ] Every card heading names an outcome rather than a screen, and none opens on a negation
 - [ ] Each lead's closing sentence sits on the same axis as its opening
 - [ ] `most / every / all / always / never / any` grepped in the finished copy; each hit traces to the claim table or is cut
 - [ ] `—` grepped in the copy **and** in the review artifact; count is zero
 - [ ] The block list has a "why this matters" block, and it is concrete situations rather than adjectives
 - [ ] Headings name what the product does, not what the platform makes hard
 - [ ] Required disclosure placed in the spec strip and FAQ, not made the visible content of a block
+- [ ] Copy pre-flight (Step 3.42) run before the first string: all five inputs exist in writing
+- [ ] Word count of every replaced string written into the per-element mapping BEFORE the new string was written
 - [ ] Each new string written to the length of the string it replaces; hero lead ~19 words, not a TLDR
 - [ ] On the duplicate path the copy budget came from the donor page, not from the library table
 - [ ] One file is the page spec; the others reference it instead of restating it
