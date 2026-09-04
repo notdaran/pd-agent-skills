@@ -425,3 +425,89 @@ the artifact is the copy of record and the `copy-*.md` is a draft with a stale t
   Never leave two live copies of the copy.
 - A review round that changes a **block list** - not just wording - has invalidated the build order
   and the per-element mapping too, not only the copy. Re-read those before building.
+
+---
+
+## 26. Fixing only the sentence that was pointed at
+
+**What happened.** The page owner rejected one heading and one lead on a feature page. Both
+were rewritten, the artifact was republished, and the owner came straight back with the same class
+of defect in five other places: a second heading that also only stated the problem, a lead that
+closed on a setup detail, an FAQ answer carrying a piece of reading advice, another promising a
+roadmap fix, and a third with a line of inside baseball. None of them had been looked at, because
+none of them had been pointed at.
+
+The round before that had gone the same way with em dashes: the owner named the rule, the two
+sentences he quoted were fixed, and thirty-seven others survived to the next review.
+
+**Why it happens.** A rejection arrives attached to a specific sentence, so it reads as a bug report
+about that sentence. It is almost never that. The owner is naming a *class*, and they are naming it
+from the first instance they happened to scroll past.
+
+**Do instead.** Treat every piece of copy feedback as a class, not an instance. Before republishing:
+write down the rule in one line, then sweep **both pages** for it and fix every hit in the same
+pass. Where the rule is mechanical, grep for it (`—`, `most`, `every`, `all`, `never`) rather than
+re-reading by eye. Then say in the hand-back how many places it turned up - the count is what tells
+the owner the sweep actually happened.
+
+Step 3.45 already says this for copy length ("fix the whole page in one pass, not the slot that was
+pointed at"). It is not a length rule. It applies to every review round.
+
+---
+
+## 27. Reading a missing filter as proof of scope
+
+**What happened.** A near-miss on an analytics feature page, and it would have shipped as the
+page's headline differentiator.
+
+The question was one of scope: does the report cover the merchant's whole store, or only the pages
+built with the product? The help centre said pages-built-with-the-product only. The code appeared to
+say otherwise: the filter builder sets the page id to `undefined` when none is passed, so an empty
+page id drops the filter entirely, and the store-level dashboard calls it with no page id at all.
+No filter, therefore no restriction, therefore store-wide. It went into the spec as the strongest
+verifiable claim on the page.
+
+It is wrong. The filtering happens at **emission**, two layers earlier: the storefront script only
+publishes its analytics events when a page id from the builder exists, several of the platform's
+own pixel events are not on the send allowlist at all and never leave the browser, and the order
+webhook only emits a purchase for line items the builder created. The query has no filter because
+the dataset never contained anything else. A tooltip on that very screen said so, in as many
+words.
+
+**Why it happens.** A missing `WHERE` clause is a strong, legible signal, and it answers the
+question you asked - *does the query restrict scope?* - while the question you meant was *what is
+in the table?* Same family as #23: the tool answered a narrower question and the answer looked like
+the one you wanted.
+
+**Do instead.** Scope is decided where data is **produced**, not where it is read. Trace it forward
+from the emitter: what fires, under what guard, what gets dropped before it is sent, what the
+ingestion writes. Only then read the query. And when a doc and your code reading disagree, that is
+not the doc being stale by default - it is a coin flip until you have traced the producer.
+
+**Cheapest tell that you are about to make this mistake:** your conclusion contradicts a string the
+product itself renders to merchants. Search the UI for the claim before writing it down.
+
+---
+
+## 28. Quoting a code comment about a feature flag's live state
+
+**What happened.** The registry entry for a module carried a long, careful comment stating that the
+Unleash flag gating it defaults **off in production**, and describing exactly what merchants see in
+that state. That was written into the page spec as a publish blocker: do not ship the page, the
+feature may be dark.
+
+The flag had been on since two months earlier. The operator opened the dashboard and it was enabled
+in both environments.
+
+**Why it happens.** This comment was not a lazy one - it was the most informative prose in the file,
+and it explained a real mechanism correctly. That is exactly what makes it persuasive. But a flag's
+value is not a property of the code, and nothing forces the comment to be updated when the rollout
+moves.
+
+**Do instead.** #2 and #3 already cover seed values and stale comments. The specific case worth
+naming: **a comment that asserts a flag's live state is the same error class as reading `seed.ts`.**
+Cite it as "the code expects the flag to be off by default", never as "the flag is off". The live
+dashboard is the only source, and it is a human step - schedule it, do not defer it to publish day.
+
+The claim that survives either way is the mechanism: what merchants see when it is off. That is in
+the code and is worth having in the spec.

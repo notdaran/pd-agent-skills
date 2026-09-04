@@ -164,6 +164,13 @@ elsewhere, the block has no job. Delete it and give the slot to layer 1.
 Deleting it is also cheaper to build - both of those blocks were `Custom.HTML`, and rewriting them
 as native tile blocks removed two hand-written fragments from the build.
 
+**The same test applies one level down, to individual cards.** A "how you read it" block and a
+"what you get" block are different jobs, so they read as safely different - and then one card in
+each ends up saying the identical sentence. It happened on one build: a card in the "three steps"
+block and a card in the "why you need it" block carried the same sentence word for word, and the
+duplicate survived a whole review round because the two blocks look nothing alike. Read every card
+body against every other card body on the page, not just block against block.
+
 ### Required disclosure goes in the FAQ, not on the front of a block
 
 A support matrix whose visible content was four rows of "Not released" is factually right and reads
@@ -188,6 +195,55 @@ redirect app, no second site`. Those three are how they solve it today without y
 `The offer does not travel / The proof does not travel / The season does not travel` is writing for
 rhythm. Three cards, one idea, and the reader stops reading by the third. Vary the construction;
 keep the parallel meaning.
+
+### Write like a salesperson, not an essayist
+
+The reader is a merchant deciding whether to pay, not someone reading a post. Every sentence has to
+answer *what do I get*. A sentence that comments on the page's own content instead - an aside, a
+piece of advice, a bit of narration - reads as a blog and gets cut by the page owner on sight.
+
+The four shapes that keep appearing, all caught on one build:
+
+| Shape | Caught in the wild | What it should have been |
+|---|---|---|
+| **Aside about the reader** | `Three steps, and the third is the one merchants forget` | `Three steps from a blank canvas to a live drawer on your storefront` |
+| **Advice on how to read the product** | `Treat the shape and the gaps as the signal, not the last digit` | (delete - the FAQ already gave the fact) |
+| **Roadmap promise** | `same thing, two names, and PageFly is tidying that up` | (delete - state the name, stop) |
+| **Inside baseball** | `and unlike most CRO features it is not granted to grandfathered stores` | `stores on an older plan do not have it` |
+
+The test, read aloud: **is this sentence telling the merchant what they get, or telling them
+something interesting about the sentence before it?** The second one is a blog.
+
+**A lead's closing sentence stays on the same axis as its opening.** One hero opened on what the
+merchant gets and closed on `No tracking code to install` - a setup detail. It reads as a non
+sequitur even though it is true. The fix was to close on positioning instead: `Built into PageFly,
+no third-party app.` Same length, same axis.
+
+### The "why" block's heading names your product and what it does
+
+This is the correction to the rule below about matching heading and cards, and it outranks it.
+
+A heading that only states the problem is not a reason to buy. Both of these went to review and both
+were rejected, in consecutive rounds on the same build:
+
+- ❌ `Your theme already shows a subtotal and a button.`
+- ❌ `Knowing the conversion rate does not tell you what to change.`
+
+The owner's words: *"nó phải kiểu PF <feature> tells you... chứ?? m đang nêu problem thì có"*.
+
+**Subject of the H2 is the product's name. Predicate is what it does for them.**
+
+- ✅ `PageFly Heatmaps show you the part of the page shoppers never reach.`
+- ✅ `PageFly AI Page Checkup names what to fix before you publish.`
+
+The problem still gets stated - it moves into the **lead**, and the lead turns back to the product
+in its second half (`One number tells you conversion fell. PageFly tells you the step, the page,
+and what it costs you in a week.`). Cards then carry four distinct specifics of the promise, none
+of them restating the heading.
+
+Beware the trap that produced the first two rejections: the parallel-phrase rule further down says a
+problem-stating heading needs solution-stating cards. That is true and it is not permission for the
+heading to state the problem. On the "why" block it never is.
 
 ## Step 3 — Verify every claim against code, not against docs
 
@@ -220,6 +276,17 @@ shipped a limitation that does not exist, aimed at exactly the merchants the fea
 
 Production code is still only half the gate. **A deployed feature can be flag-off.** Check both, and
 read the flag from the live dashboard, not from a doc that quotes it.
+
+### A universal claim about the merchant's own store is a claim too
+
+`on most Shopify stores it does nothing except add the items up` shipped to review as scene-setting,
+not as a claim. The owner rejected it in one line: *"chưa chắc nhé, cnay phụ thuộc vào theme chứ kp
+Shopify store, đừng có mà tuyên bố bừa"*. Default cart behaviour is a property of the merchant's
+**theme**, and nothing in the claim table could support a statement about most stores.
+
+Grep the finished copy for `most`, `every`, `all`, `always`, `never`, `any`. Each hit either traces
+to a row in the claim table or comes out. Statements about the merchant's own setup - their theme,
+their traffic, their habits - almost never trace, because the product's code says nothing about them.
 
 ### Limitations need the same proof as capabilities
 
@@ -357,6 +424,12 @@ is where the template already has room, rather than cutting them from the page.
 **The hero lead is not the LLM-citation TLDR, and neither is any other section lead.** Every lead
 inside a harvested section is on a budget. The 40-60 word quotable paragraph goes in the FAQ body
 or the `Custom.HTML` block - the only two slots on the page with no layout constraint.
+
+**House punctuation: no em dash, anywhere.** Hyphen, colon, or a sentence break. This is an
+operator rule for every English string that ships, and it is easy to file mentally under "app UI
+strings" and then break on a marketing page - which is what happened here, after two prior
+reminders. Before handing copy back, grep for `—` and expect zero. Also grep the artifact, which is
+copy too.
 
 **A "closing fact" per section has no slot.** Wanting one means a hand-dragged element per section.
 Fold the fact into the FAQ or the HTML block.
@@ -601,6 +674,12 @@ the **block list** invalidates the build order and the per-element mapping too.
 - [ ] Any NEW harvest written back into `section-library.md` with the date
 - [ ] Layouts identified by geometry, not by element counts (only when harvesting)
 - [ ] No two blocks answer the same question; every table row checked against the rest of the page (Step 2.5)
+- [ ] No two **cards** anywhere on the page carry the same sentence, across blocks as well as within one
+- [ ] Every sentence read aloud against "what do I get" - no asides, advice, roadmap promises or inside baseball
+- [ ] The "why" block's H2 has the product name as its subject and what it does as its predicate
+- [ ] Each lead's closing sentence sits on the same axis as its opening
+- [ ] `most / every / all / always / never / any` grepped in the finished copy; each hit traces to the claim table or is cut
+- [ ] `—` grepped in the copy **and** in the review artifact; count is zero
 - [ ] The block list has a "why this matters" block, and it is concrete situations rather than adjectives
 - [ ] Headings name what the product does, not what the platform makes hard
 - [ ] Required disclosure placed in the spec strip and FAQ, not made the visible content of a block
