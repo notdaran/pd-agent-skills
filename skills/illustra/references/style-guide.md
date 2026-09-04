@@ -35,6 +35,11 @@ the PF marketing website feature cards.**
     REAL app screenshot (member: "UI t dùng luôn screenshot từ app"), not a white panel. What carries
     across BOTH modes is the *principle*: a concept/dummy surface and a real-UI surface must be told
     apart by a deliberate palette/treatment split, never rendered the same.
+- **A translucent WARM tint laid over the periwinkle concept palette goes muddy.** `--accent-yellow`
+  over `--concept-img` / `--concept-bar` composites to a grey-olive that reads as a render fault, not
+  as heat (the failure: the mid scroll-depth band turned the product tiles grey). For a warm-to-cool
+  ramp on a Mode-A concept surface use `--accent-red` -> `--accent-peach` -> `--accent-peach-soft` ->
+  `--brand-accent-soft`, and keep every tint low (~12-24%) so the periwinkle underneath survives.
 
 ### Mode B - dark-glass (App Store screenshots)
 Dark navy, glass, glow.
@@ -355,6 +360,16 @@ matching the live PF marketing feature cards.)
     a multi-edge bleed is still the R3b/R4 look. The gate is intake rule 1: ASK how the section is
     built before composing (the whole cart-drawer set had to be re-laid out afterwards because it was
     not asked).
+- **R20 - Markers on a frame: square the frame, then verify EVERY marker landed.** A selection / crop
+  frame that carries corner handles must have **square corners** (`border-radius: 0`). Handles placed
+  at the corner coordinates of a *rounded* frame float off the curve and read as careless (member:
+  "4 cái ô vuông trông ko khớp vào khung ... slop"). Anchor each handle by its own two edges
+  (`left`/`top`, `right`/`top`, ...) offset by half its total size so it straddles the corner exactly.
+  Then **confirm every member of a repeated marker set (4 handles, N chips, N dots) actually rendered
+  where it should** - one stray marker discredits the whole illustration, and it is invisible in the
+  code. The trap that produced this: the frame ALSO held a label `<div>`, so `i:nth-child(1..4)` was
+  off by one, the 4th handle matched no rule and fell back to its static in-flow position INSIDE the
+  frame. On any part whose children are mixed, select with `nth-of-type` or explicit classes.
 
 ## The 3 intake rules (decide BEFORE composing)
 Run these at intake (SKILL workflow step 0). They are why v1/v2 went wrong: no mode gate ->
@@ -409,6 +424,13 @@ defaulted dark on a light card; no asset-type gate -> fabricated app UI in HTML.
      adjacent cards that produce the SAME sentence fail R17 - fix before done. Building the preview
      grid is NOT the check; stating the skeletons explicitly is. (This session had the grid rendered
      and still shipped the repeat, because the comparison was never made out loud.)
+   - **A spacing / padding complaint: if you are not certain WHICH box the member means, ASK before
+     touching anything.** "The padding of this card is off" can mean the panel drawn inside the
+     illustration, the destination bento card, or the PNG's own transparent margin - three different
+     fixes. Do NOT resolve it by measuring whatever the arrow or circle lands on: an annotation drawn
+     over a screenshot is often a little off-target, so re-measuring it can point at the wrong box
+     just as confidently (member: "nhiều khi t khoanh hơi lệch m lại hiểu nhầm thì sao"). One short
+     question costs one message; guessing wrong costs a render, a review cycle and trust.
 
 ## Hard rules
 1. **Brand vars only.** Never hardcode a color/radius/shadow - always `var(--...)`.
@@ -442,3 +464,10 @@ defaulted dark on a light card; no asset-type gate -> fabricated app UI in HTML.
   (`--r-md` 8px) look near-square there. Use generous rounding on panels (`--r-xround` 28px) and bump
   inner image/blocks to `--r-xxl` (14px) so corners read as intentionally rounded at the displayed
   scale, matching the neighbours ("bo góc đang hơi vuông so với các card khác").
+- **Never hard-code the `height` of a padded UI panel - it silently eats the bottom padding.** A `.ui`
+  panel with `padding: 15px 17px` and 88px of content inside a fixed `height: 96px` leaves 8px at the
+  bottom against 17px at the sides, and the member reads it as unbalanced padding on the card
+  (`#filt`, the Device filter). Let the panel size itself from padding + content - an absolutely
+  positioned panel takes auto height - and set only the width. Where a height is genuinely needed,
+  VERIFY on the render, not in the code: PIL-scan the panel's bbox and its innermost block's bbox,
+  then compare all four gaps.

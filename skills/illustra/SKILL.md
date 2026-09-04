@@ -66,7 +66,7 @@ composing (step 4).
    the member asks.
 6. **Harvest.** Run the kit-governance scan; propose any reusable bespoke part.
 
-## Composition rule index (R1-R18)
+## Composition rule index (R1-R20)
 Apply during step 4. Each is a compressed directive; **full text + the failure each prevents is in
 `references/style-guide.md` "Composition"** - consult it for the rule you're applying.
 
@@ -91,6 +91,7 @@ Apply during step 4. Each is a compressed directive; **full text + the failure e
 | R17 | A SET of illustrations must differ in COMPOSITION, not only content: adjacent cards may NOT share a skeleton (same side primary / same side satellite / same tag slots). Vary by mirroring the axis (mirror the panel's internal alignment too), inverting the hierarchy, or flipping the cascade direction. Gate 0 = concept distinct, intake rule 3 = visual language shared, R17 = composition distinct. |
 | R18 | A chip / micro-label sitting ON a line (divider, fold rule, axis, connector) needs an OPAQUE background - a wash lets the rule run through the text. Use `color-mix(... var(--brand-accent) 11%, var(--inset-bg))`, don't lower alpha. |
 | R19 | Illustration going into a **PageFly-built section**: bleed **ONE edge only** (in practice the bottom); every other edge keeps >=25-30px transparent margin. PF's flex container cannot clip the card's border-radius, so a left+right+bottom bleed paints the card's rounded bottom corners square. Containment (a sheet filling a phone frame) is not a bleed. Verify with an alpha-channel margin measurement, never by eye. Hand-coded / `overflow:hidden` destinations are exempt. |
+| R20 | A frame carrying corner handles must have SQUARE corners - handles at the corners of a rounded frame float off the curve and read as slop. Anchor each handle by its own two edges, then VERIFY every member of a repeated marker set actually landed (mixed children -> `nth-of-type`, never `nth-child`). |
 
 **Sizing** (full in style-guide "Sizing"): author at logical px, render at 2x; crop the stage **tight**
 to the content (a few px margin; bento-card illus run small, e.g. ~732x540, not 1200x900); **round
@@ -109,7 +110,7 @@ Full text in `references/style-guide.md` "Hard rules":
 | Path | Role |
 |---|---|
 | `references/brand.css` | Brand preset: Layer A identity (shared) + Mode A light + Mode B dark-glass. **Swap to rebrand.** Every token documented inline. |
-| `references/style-guide.md` | Mode A/B visual language, the 3 intake rules, the full composition rules R1-R18, hard rules, sizing. |
+| `references/style-guide.md` | Mode A/B visual language, the 3 intake rules, the full composition rules R1-R20, hard rules, sizing. |
 | `references/component-catalog.md` | The kit index: Tier-A parts, asset-type classification, Tier-B backlog, drawn-parts log. |
 | `components/*.html` | Self-contained vector "lego" snippets (`il-` prefixed). Copy into the canvas. |
 | `templates/canvas.html` | Starting point: transparent `#stage`, brand.css + Poppins wired. |
